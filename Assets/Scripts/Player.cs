@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +6,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField]
     private float _speed = 3.5f;
     private Vector3 _direction;
+    private float _verticalStartPosition = -2.0f;
+    private float _horizontalStartPosition = 0f;
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -11.4f;
@@ -16,11 +16,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(0, -2, 0);
+        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, 0);
     }
 
     // Update is called once per frame
     void Update()
+    {
+        CalculateMovement();
+    }
+
+    private void CalculateMovement()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
         bool shouldTeleport = transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit;
