@@ -23,15 +23,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     void Update()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
-        
-        if (transform.position.y >= _topMovementLimit)
-        {
-            transform.position = new Vector3(transform.position.x, _topMovementLimit, 0);
-        } else if (transform.position.y <= _bottomMovementLimit)
-        {
-            transform.position = new Vector3(transform.position.x, _bottomMovementLimit, 0);
-        }
-        
+
+        float yClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
+        transform.position = new Vector3(transform.position.x, yClamped, 0);
+
         if (transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit)
         {
             transform.position = new Vector3(-transform.position.x, transform.position.y, 0);
