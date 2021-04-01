@@ -10,6 +10,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _direction;
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
+    private float _leftMovementLimit = -11.4f;
+    private float _rightMovementLimit = 11.4f;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         } else if (transform.position.y <= _bottomMovementLimit)
         {
             transform.position = new Vector3(transform.position.x, _bottomMovementLimit, 0);
+        }
+        
+        if (transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit)
+        {
+            transform.position = new Vector3(-transform.position.x, transform.position.y, 0);
         }
     }
 
