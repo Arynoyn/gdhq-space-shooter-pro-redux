@@ -12,7 +12,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -11.4f;
     private float _rightMovementLimit = 11.4f;
-    private float _zPos = 0;
+    private float _zPos = 0f;
 
     // Start is called before the first frame update
     void Start()
