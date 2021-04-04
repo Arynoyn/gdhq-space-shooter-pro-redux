@@ -3,8 +3,10 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, Controls.IPlayerActions
 {
-    [SerializeField]
-    private float _speed = 3.5f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private float _movementSpeed = 3.5f;
+    [SerializeField] private float _fireRate = 0.15f;
+    
     private Vector3 _direction;
     private float _verticalStartPosition = -2.0f;
     private float _horizontalStartPosition = 0f;
@@ -13,6 +15,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _leftMovementLimit = -11.4f;
     private float _rightMovementLimit = 11.4f;
     private float _zPos = 0f;
+
+    private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
+    private float _nextFire = -1f;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -28,7 +34,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
-        transform.Translate(_direction * (_speed * Time.deltaTime));
+        transform.Translate(_direction * (_movementSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
         float xPos = transform.position.x;
@@ -51,6 +57,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        if (context.started && Time.time > _nextFire)
+        {
+            _nextFire = Time.time + _fireRate;
+            Vector3 laserSpawnOffset = transform.position + _laserOffset;
+            Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
+        }
     }
 }
