@@ -156,6 +156,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c3e4054942224b0c94533710988c0b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _laserPrefab: {fileID: 3455213165557180421, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
   _speed: 3.5
 --- !u!65 &194867981
 BoxCollider:
@@ -189,7 +190,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d5a7f7bdf9169476582c4b5a9d93dc14, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -227,7 +228,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 194867979}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -2.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -275,7 +276,19 @@ MonoBehaviour:
     m_ActionId: 85a73007-0368-4183-95e3-6ea941fe72ce
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 194867980}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnFire
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 4be15291-5a8d-4d12-8866-1878905a9fe4
     m_ActionName: Player/Fire[/Mouse/leftButton]
   m_NeverAutoSwitchControlSchemes: 0
