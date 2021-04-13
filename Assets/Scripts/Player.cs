@@ -19,12 +19,18 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
     private float _nextFire = -1f;
-    
+    private SpawnManager _spawnManager;
+
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
+        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+        if (_spawnManager == null)
+        {
+            Debug.LogError("Spawn Manager in Player class is NULL");
+        }
     }
 
     // Update is called once per frame
@@ -71,6 +77,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         _lives--;
         if (_lives < 1)
         {
+            _spawnManager.StopSpawningEnemies();
             Destroy(gameObject);
         }
     }
