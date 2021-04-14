@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 194867982}
   - component: {fileID: 194867980}
   - component: {fileID: 194867985}
+  - component: {fileID: 194867983}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -159,6 +160,7 @@ MonoBehaviour:
   _movementSpeed: 3.5
   _fireRate: 0.15
   _lives: 3
+  _animator: {fileID: 194867983}
 --- !u!212 &194867981
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -197,7 +199,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 934578703
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1b4a8fdd39d3a45d0a9ee484ad6800ec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -236,6 +238,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.375206, y: 4.3353953}
   m_EdgeRadius: 0
+--- !u!95 &194867983
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194867979}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3a9baac27bcb34a0fb302cc38a23a6bb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!4 &194867984
 Transform:
   m_ObjectHideFlags: 0
@@ -460,7 +481,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1388213739
-  m_SortingLayer: 2
+  m_SortingLayer: -2
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 351f30ffb741fd643b82bde90a222699, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

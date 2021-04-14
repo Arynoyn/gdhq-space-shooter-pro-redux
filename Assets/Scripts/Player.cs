@@ -7,6 +7,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private float _movementSpeed = 3.5f;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
+    [SerializeField] private Animator _animator;
     
     private Vector3 _direction;
     private float _verticalStartPosition = -2.0f;
@@ -20,6 +21,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
     private SpawnManager _spawnManager;
+    private bool _isMovingRight;
+    private bool _isMovingLeft;
 
 
     // Start is called before the first frame update
@@ -31,6 +34,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             Debug.LogError("Spawn Manager in Player class is NULL");
         }
+
+        if (_animator == null)
+        {
+            Debug.LogError("Player Animator in Player class is NULL");
+        }
     }
 
     // Update is called once per frame
@@ -41,6 +49,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
+        _animator.SetBool("isTurningLeft", _direction.x < 0);
+        _animator.SetBool("isTurningRight", _direction.x > 0);
         transform.Translate(_direction * (_movementSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
