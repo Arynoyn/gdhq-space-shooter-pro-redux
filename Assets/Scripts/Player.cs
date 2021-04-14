@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _rightMovementLimit = 11.4f;
     private float _zPos = 0f;
 
-    private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
+    private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
     private SpawnManager _spawnManager;
 
