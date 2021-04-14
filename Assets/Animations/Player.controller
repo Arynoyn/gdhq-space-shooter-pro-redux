@@ -179,7 +179,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_Turn_Left_anim
-  m_Speed: 1
+  m_Speed: 2.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -7520379571541127710}
@@ -206,7 +206,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_Return_To_Idle_From_Left
-  m_Speed: -1
+  m_Speed: -2.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8112651475241028148}
@@ -233,7 +233,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_Return_To_Idle_From_Right
-  m_Speed: -1
+  m_Speed: -2.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6751449680077479872}
@@ -260,7 +260,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Player_Turn_Right_anim
-  m_Speed: 1
+  m_Speed: 2.5
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6086329358691104649}
