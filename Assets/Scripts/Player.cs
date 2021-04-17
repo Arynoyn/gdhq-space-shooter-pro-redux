@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -31,7 +33,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     
     private bool _isMovingRight;
     private bool _isMovingLeft;
-
 
     // Start is called before the first frame update
     void Start()
@@ -109,6 +110,26 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _spawnManager.StopSpawningEnemies();
             Destroy(gameObject);
+        }
+    }
+
+    public void ActivatePowerup(PowerupTypeEnum type)
+    {
+        switch (type)
+        {
+            case PowerupTypeEnum.TripleShot:
+                _tripleShotActive = true;
+                StartCoroutine(TripleShotCooldownRoutine());
+                break;
+        }
+    }
+
+    IEnumerator TripleShotCooldownRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5.0f);
+            _tripleShotActive = false;
         }
     }
 }
