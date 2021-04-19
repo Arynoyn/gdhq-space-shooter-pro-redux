@@ -585,10 +585,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemySpawnRate: 5
-  _enemyPrefab: {fileID: 1286208098849473951, guid: f386738beee254c9d81008132fd5b3a1, type: 3}
+  _enemyPrefab: {fileID: 1286208098849473951, guid: c491348cccbc644b2857eff1d3f0c3b6, type: 3}
   _enemyContainer: {fileID: 1220603935}
   _powerups:
-  - {fileID: 3616918537776734448, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
+  - {fileID: 3616918537776734448, guid: 9f84de727bdbb4fabbf45163cacd15a0, type: 3}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
 --- !u!1 &1759096532
