@@ -335,63 +335,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!1001 &410836523
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 3616918537776734448, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_Name
-      value: Triple_Shot_Powerup
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_RootOrder
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 8.02
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3616918537776734461, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
 --- !u!1 &714084639
 GameObject:
   m_ObjectHideFlags: 0
@@ -641,9 +584,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 668e8a33df4d44b3c9da998069a18f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnRate: 5
+  _enemySpawnRate: 5
   _enemyPrefab: {fileID: 1286208098849473951, guid: f386738beee254c9d81008132fd5b3a1, type: 3}
   _enemyContainer: {fileID: 1220603935}
+  _powerups:
+  - {fileID: 3616918537776734448, guid: f6b2cb7cadd4a4f29bab90d15727439b, type: 3}
+  _powerupMinSpawnRate: 3
+  _powerupMaxSpawnRate: 7
 --- !u!1 &1759096532
 GameObject:
   m_ObjectHideFlags: 0
