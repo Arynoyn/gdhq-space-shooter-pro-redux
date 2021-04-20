@@ -589,6 +589,7 @@ MonoBehaviour:
   _enemyContainer: {fileID: 1220603935}
   _powerups:
   - {fileID: 3616918537776734448, guid: 9f84de727bdbb4fabbf45163cacd15a0, type: 3}
+  - {fileID: 6250229221671125355, guid: 547926d42d3964d5a89c9c6bc010c57e, type: 3}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
 --- !u!1 &1759096532
