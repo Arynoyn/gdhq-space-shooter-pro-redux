@@ -108,6 +108,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_lives < 1)
         {
             _spawnManager.StopSpawningEnemies();
+            _spawnManager.StopSpawningPowerups();
             Destroy(gameObject);
         }
     }
@@ -133,19 +134,13 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     IEnumerator TripleShotCooldownRoutine()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(5.0f);
-            _tripleShotActive = false;
-        }
+        yield return new WaitForSeconds(5.0f);
+        _tripleShotActive = false;
     }
     
     IEnumerator SpeedBoostCooldownRoutine()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(5.0f);
-            _speedBoostActive = false;
-        }
+        yield return new WaitForSeconds(5.0f);
+        _speedBoostActive = false;
     }
 }
