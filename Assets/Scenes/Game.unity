@@ -157,10 +157,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _laserPrefab: {fileID: 3455213165557180421, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
+  _tripleShotPrefab: {fileID: 3761578932506858463, guid: cb43666bc2e5747eda8decfbd9faa902, type: 3}
   _movementSpeed: 3.5
   _fireRate: 0.15
   _lives: 3
   _animator: {fileID: 194867983}
+  _tripleShotActive: 0
 --- !u!212 &194867981
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -502,8 +504,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966463591}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0769, y: 0.7429, z: 0}
-  m_LocalScale: {x: 1.3122289, y: 1.1376, z: 1}
+  m_LocalPosition: {x: 0.0117, y: 1.0363, z: 0}
+  m_LocalScale: {x: 1.0745707, y: 1.0831923, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -582,9 +584,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 668e8a33df4d44b3c9da998069a18f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnRate: 5
-  _enemyPrefab: {fileID: 1286208098849473951, guid: f386738beee254c9d81008132fd5b3a1, type: 3}
+  _enemySpawnRate: 5
+  _enemyPrefab: {fileID: 1286208098849473951, guid: c491348cccbc644b2857eff1d3f0c3b6, type: 3}
   _enemyContainer: {fileID: 1220603935}
+  _powerups:
+  - {fileID: 3616918537776734448, guid: 9f84de727bdbb4fabbf45163cacd15a0, type: 3}
+  _powerupMinSpawnRate: 3
+  _powerupMaxSpawnRate: 7
 --- !u!1 &1759096532
 GameObject:
   m_ObjectHideFlags: 0

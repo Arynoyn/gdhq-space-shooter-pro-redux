@@ -1,9 +1,16 @@
+using System;
+using System.Collections;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviour, Controls.IPlayerActions
 {
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private float _movementSpeed = 3.5f;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
@@ -20,10 +27,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
+    [SerializeField] private bool _tripleShotActive = false;
+
     private SpawnManager _spawnManager;
+    
     private bool _isMovingRight;
     private bool _isMovingLeft;
-
 
     // Start is called before the first frame update
     void Start()
@@ -38,6 +47,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_animator == null)
         {
             Debug.LogError("Player Animator in Player class is NULL");
+        }
+        
+        if (_laserPrefab == null)
+        {
+            Debug.LogError("Laser Prefab in Player class is NULL");
+        }
+        
+        if (_tripleShotPrefab == null)
+        {
+            Debug.LogError("Triple Shot Prefab in Player class is NULL");
         }
     }
 
@@ -77,8 +96,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (context.started && Time.time > _nextFire)
         {
             _nextFire = Time.time + _fireRate;
-            Vector3 laserSpawnOffset = transform.position + _laserOffset;
-            Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
+            Vector3 playerPosition = transform.position;
+            Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
+            GameObject shotPrefab = _tripleShotActive ? _tripleShotPrefab : _laserPrefab;
+            Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
         }
     }
 
@@ -89,6 +110,26 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _spawnManager.StopSpawningEnemies();
             Destroy(gameObject);
+        }
+    }
+
+    public void ActivatePowerup(PowerupTypeEnum type)
+    {
+        switch (type)
+        {
+            case PowerupTypeEnum.TripleShot:
+                _tripleShotActive = true;
+                StartCoroutine(TripleShotCooldownRoutine());
+                break;
+        }
+    }
+
+    IEnumerator TripleShotCooldownRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5.0f);
+            _tripleShotActive = false;
         }
     }
 }
