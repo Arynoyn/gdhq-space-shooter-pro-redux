@@ -12,6 +12,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private float _movementSpeed = 3.5f;
+    [SerializeField] private float _speedBoostModifier = 2.0f;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
     [SerializeField] private Animator _animator;
@@ -27,12 +28,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
-    [SerializeField] private bool _tripleShotActive = false;
-
+    [SerializeField] private bool _tripleShotActive;
+    [SerializeField] private bool _speedBoostActive;
     private SpawnManager _spawnManager;
-    
-    private bool _isMovingRight;
-    private bool _isMovingLeft;
 
     // Start is called before the first frame update
     void Start()
@@ -68,9 +66,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
+        float modifiedSpeed = _speedBoostActive ? _movementSpeed * _speedBoostModifier : _movementSpeed;
         _animator.SetBool("isTurningLeft", _direction.x < 0);
         _animator.SetBool("isTurningRight", _direction.x > 0);
-        transform.Translate(_direction * (_movementSpeed * Time.deltaTime));
+        transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
         float xPos = transform.position.x;
@@ -109,6 +108,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_lives < 1)
         {
             _spawnManager.StopSpawningEnemies();
+            _spawnManager.StopSpawningPowerups();
             Destroy(gameObject);
         }
     }
@@ -118,18 +118,29 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         switch (type)
         {
             case PowerupTypeEnum.TripleShot:
+                if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = true;
-                StartCoroutine(TripleShotCooldownRoutine());
+                StartCoroutine(nameof(TripleShotCooldownRoutine));
                 break;
+            case PowerupTypeEnum.SpeedBoost:
+                if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
+                _speedBoostActive = true;
+                StartCoroutine(nameof(SpeedBoostCooldownRoutine));
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }
     }
 
     IEnumerator TripleShotCooldownRoutine()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(5.0f);
-            _tripleShotActive = false;
-        }
+        yield return new WaitForSeconds(5.0f);
+        _tripleShotActive = false;
+    }
+    
+    IEnumerator SpeedBoostCooldownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _speedBoostActive = false;
     }
 }
