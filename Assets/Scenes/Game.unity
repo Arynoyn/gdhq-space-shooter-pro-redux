@@ -159,10 +159,13 @@ MonoBehaviour:
   _laserPrefab: {fileID: 3455213165557180421, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
   _tripleShotPrefab: {fileID: 3761578932506858463, guid: cb43666bc2e5747eda8decfbd9faa902, type: 3}
   _movementSpeed: 3.5
+  _speedBoostModifier: 2
   _fireRate: 0.15
   _lives: 3
   _animator: {fileID: 194867983}
-  _tripleShotActive: 0
+  _maxShieldStrength: 3
+  _shieldsActive: 0
+  _shieldStrength: 0
 --- !u!212 &194867981
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -590,6 +593,7 @@ MonoBehaviour:
   _powerups:
   - {fileID: 3616918537776734448, guid: 9f84de727bdbb4fabbf45163cacd15a0, type: 3}
   - {fileID: 6250229221671125355, guid: 547926d42d3964d5a89c9c6bc010c57e, type: 3}
+  - {fileID: 976374845931642115, guid: 6caa1d494581447cabc0ebbb6d9e2ae4, type: 3}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
 --- !u!1 &1759096532
