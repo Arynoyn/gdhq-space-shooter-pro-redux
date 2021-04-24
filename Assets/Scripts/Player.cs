@@ -47,7 +47,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             Debug.LogError("Spawn Manager in Player class is NULL");
         }
         
-        _shieldVisualizer = GameObject.Find("Shield_Visualizer");
+        _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
         if (_shieldVisualizer == null)
         {
             Debug.LogError("Shield Visualizer in Player class is NULL");
