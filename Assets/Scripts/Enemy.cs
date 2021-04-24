@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    //Enemy Properties
+    [SerializeField] private int _pointValue = 10;
+    
+    //Movement Properties
     [SerializeField] private float _movementSpeed = 4.0f;
     private float _screenLimitTop = 8.0f;
     private float _screenLimitBottom = -5.0f;
@@ -9,6 +13,7 @@ public class Enemy : MonoBehaviour
     private float _screenLimitRight = 8f;
     private float _zPos = 0f;
     
+
     void Update()
     {
         transform.Translate(Vector3.down * (_movementSpeed * Time.deltaTime));
@@ -25,15 +30,14 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Player player = other.gameObject.GetComponent<Player>();
-            if (player != null)
-            {
-                player.Damage();
-            }
+            if (player != null) { player.Damage(); }
             Destroy(gameObject);
         }
 
         if (other.CompareTag("Laser"))
         {
+            Player player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
+            if (player != null) { player.IncreaseScore(_pointValue); }
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
