@@ -91,7 +91,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        _uiManager.SetScoreText(_score);
+        _uiManager.SetScore(_score);
+        _uiManager.SetLives(_lives);
     }
 
     void Update()
@@ -148,6 +149,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _lives--;
+            _uiManager.SetLives(_lives);
             if (_lives < 1)
             {
                 _spawnManager.StopSpawningEnemies();
@@ -184,7 +186,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     public void IncreaseScore(int value)
     {
         _score += value;
-        _uiManager.SetScoreText(_score);
+        _uiManager.SetScore(_score);
     }
 
     IEnumerator TripleShotCooldownRoutine()
