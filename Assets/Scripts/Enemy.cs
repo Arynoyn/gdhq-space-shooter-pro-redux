@@ -1,7 +1,12 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
+    //Player Reference
+    private Player _player;
+    
     //Enemy Properties
     [SerializeField] private int _pointValue = 10;
     
@@ -12,7 +17,11 @@ public class Enemy : MonoBehaviour
     private float _screenLimitLeft = -8f;
     private float _screenLimitRight = 8f;
     private float _zPos = 0f;
-    
+
+    private void Start()
+    {
+        _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
+    }
 
     void Update()
     {
@@ -29,15 +38,13 @@ public class Enemy : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Player player = other.gameObject.GetComponent<Player>();
-            if (player != null) { player.Damage(); }
+            if (_player != null) { _player.Damage(); }
             Destroy(gameObject);
         }
 
         if (other.CompareTag("Laser"))
         {
-            Player player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
-            if (player != null) { player.IncreaseScore(_pointValue); }
+            if (_player != null) { _player.IncreaseScore(_pointValue); }
             Destroy(other.gameObject);
             Destroy(gameObject);
         }
