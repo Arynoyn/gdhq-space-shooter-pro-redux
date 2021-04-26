@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,70 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
+    [Header("Player Score")]
     [SerializeField] private Text _scoreText;
-    [SerializeField] private Text _gameOverText;
-    [SerializeField] private Sprite[] _livesImages;
+
+    [Header("Player Lives")]
     [SerializeField] private Image _livesDisplay;
+    [SerializeField] private Sprite[] _livesImages;
+
+    [Header("Game Over Text")]
+    [SerializeField] private Text _gameOverText;
+    [SerializeField] private Text _restartText;
+    [SerializeField] private float _gameOverFlashRate = 0.5f;
+    private bool _isGameOverTextNull;
+    private bool _isScoreTextNull;
+    private bool _isLivesDisplayNull;
+    private bool _isLivesImagesNull;
+    private bool _isRestartTextNull;
+
+    private void Start()
+    {
+        _isScoreTextNull = _scoreText == null;
+        _isLivesDisplayNull = _livesDisplay == null;
+        _isLivesImagesNull = _livesImages == null;
+        _isGameOverTextNull = _gameOverText == null;
+        _isRestartTextNull = _restartText == null;
+        if (_isScoreTextNull) { Debug.Log("Score Text object on UI Manager is NULL"); }
+        if (_isLivesDisplayNull) { Debug.Log("Lives Display Image on UI Manager is NULL"); }
+        if (_isLivesImagesNull) { Debug.Log("Lives Images Array on UI Manager is NULL"); }
+        if (_isGameOverTextNull) { Debug.Log("Game Over Text object on UI Manager is NULL"); }
+        if (_isRestartTextNull) { Debug.Log("Restart Text object on UI Manager is NULL"); }
+    }
 
     public void SetScore(int score)
     {
-        _scoreText.text = score.ToString();
+        if (!_isScoreTextNull) { _scoreText.text = score.ToString(); }
+        if (!_isGameOverTextNull) { _gameOverText.gameObject.SetActive(false); }
+        if (!_isRestartTextNull) { _restartText.gameObject.SetActive(false); }
     }
 
     public void SetLives(int lives)
     {
-        _livesDisplay.sprite = _livesImages[lives];
+        if (_isLivesDisplayNull || _isLivesImagesNull) { return; }
+        if (_livesImages.Length >= lives)
+        {
+            _livesDisplay.sprite = _livesImages[lives];
+        }
+        else
+        {
+            Debug.LogError($"Index {lives} is out of bounds of the array of lives images");
+        }
     }
 
     public void DisplayGameOver()
     {
-        _gameOverText.gameObject.SetActive(true);
+        if (!_isGameOverTextNull) {_gameOverText.gameObject.SetActive(true);}
+        if (!_isRestartTextNull) {_restartText.gameObject.SetActive(true);}
+        StartCoroutine(GameOverFlashRoutine());
+    }
+
+    IEnumerator GameOverFlashRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(_gameOverFlashRate);
+            if (!_isGameOverTextNull) {_gameOverText.gameObject.SetActive(!_gameOverText.gameObject.activeSelf);}
+        }
     }
 }
