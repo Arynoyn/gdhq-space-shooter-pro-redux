@@ -17,10 +17,25 @@ public class Enemy : MonoBehaviour
     private float _screenLimitLeft = -8f;
     private float _screenLimitRight = 8f;
     private float _zPos = 0f;
+    
+    //Animation Properties
+    private Animator _animator;
+    private Collider2D _collider;
 
     private void Start()
     {
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
+        _animator = GetComponent<Animator>();
+        if (_animator == null)
+        {
+            Debug.LogError("Animator is NULL in Enemy");
+        }
+        
+        _collider = GetComponent<Collider2D>();
+        if (_collider == null)
+        {
+            Debug.LogError("Collider is NULL in Enemy");
+        }
     }
 
     void Update()
@@ -39,14 +54,20 @@ public class Enemy : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             if (_player != null) { _player.Damage(); }
-            Destroy(gameObject);
+            if (_collider != null) { _collider.enabled = false; }
+            if (_animator != null) { _animator.SetTrigger("OnEnemyDeath"); }
+            var animationLength = 2.64f; // get dynamically from animator
+            Destroy(gameObject, animationLength);
         }
 
         if (other.CompareTag("Laser"))
         {
             if (_player != null) { _player.IncreaseScore(_pointValue); }
             Destroy(other.gameObject);
-            Destroy(gameObject);
+            if (_collider != null) { _collider.enabled = false; }
+            if (_animator != null) { _animator.SetTrigger("OnEnemyDeath"); }
+            var animationLength = 2.64f; // get dynamically from animator
+            Destroy(gameObject, animationLength);
         }
     }
 }
