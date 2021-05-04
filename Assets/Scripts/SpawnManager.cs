@@ -19,8 +19,11 @@ public class SpawnManager : MonoBehaviour
     private float _screenLimitRight = 8f;
     private float _screenLimitTop = 8.0f;
     private float _zPos = 0f;
-    private bool _spawnEnemies = true;
-    private bool _spawnPowerups = true;
+    private bool _spawnEnemies;
+    private bool _spawnPowerups;
+
+    [SerializeField] private float _spawnStartDelayTime = 2.0f;
+    private WaitForSeconds _spawnStartDelay;
 
     // Start is called before the first frame update
     private void Start()
@@ -29,16 +32,23 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.LogError("Powerups array on SpawnManager is NULL");
         }
-        if (!_powerups.Any())
+        else
         {
-            Debug.LogWarning("No powerups in array on SpawnManager");
+            if (!_powerups.Any())
+            {
+                Debug.LogWarning("No powerups in array on SpawnManager");
+            }if (!_powerups.Any())
+            {
+                Debug.LogWarning("No powerups in array on SpawnManager");
+            }
         }
-        StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnPowerupRoutine());
+        
+        _spawnStartDelay = new WaitForSeconds(_spawnStartDelayTime);
     }
 
     private IEnumerator SpawnEnemyRoutine()
     {
+        yield return _spawnStartDelay;
         
         while (_spawnEnemies)
         {
@@ -51,6 +61,7 @@ public class SpawnManager : MonoBehaviour
     
     private IEnumerator SpawnPowerupRoutine()
     {
+        yield return _spawnStartDelay;
         
         while (_spawnPowerups)
         {
@@ -63,7 +74,6 @@ public class SpawnManager : MonoBehaviour
                 var spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
                 Instantiate(_powerups[randomPowerupIndex], spawnPosition, Quaternion.identity, _enemyContainer.transform);
             }
-            
         }
     }
 
@@ -72,8 +82,22 @@ public class SpawnManager : MonoBehaviour
         _spawnEnemies = false;
     }
     
+    public void StartSpawningEnemies()
+    {
+        _spawnEnemies = true;
+        StartCoroutine(SpawnEnemyRoutine());
+    }
+    
     public void StopSpawningPowerups()
     {
         _spawnPowerups = false;
     }
+
+    public void StartSpawningPowerups()
+    {
+        _spawnPowerups = true;
+        StartCoroutine(SpawnPowerupRoutine());
+    }
+
+    
 }

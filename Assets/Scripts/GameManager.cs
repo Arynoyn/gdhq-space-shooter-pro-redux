@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         if (_isGameOver)
         {
-            SceneManager.LoadScene(SceneManager.GetSceneByName("Main_Menu").buildIndex);
+            SceneManager.LoadScene("Main_Menu");
         }
     }
 
@@ -41,6 +41,12 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
         _uiManager.DisplayGameOver();
         _spawnManager.StopSpawningEnemies();
         _spawnManager.StopSpawningPowerups();
+    }
+
+    public void StartGame()
+    {
+        _spawnManager.StartSpawningEnemies();
+        _spawnManager.StartSpawningPowerups();
     }
     
     public void SetScore(int score)
