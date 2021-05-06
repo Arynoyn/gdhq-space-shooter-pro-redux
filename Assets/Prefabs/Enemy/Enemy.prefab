@@ -147,6 +147,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointValue: 10
   _movementSpeed: 4
+  _enemyDestroyedAnimationName: Enemy_Destroyed_anim
+  _enemyDeathTriggerName: OnEnemyDeath
 --- !u!95 &2431147457561181898
 Animator:
   serializedVersion: 3
