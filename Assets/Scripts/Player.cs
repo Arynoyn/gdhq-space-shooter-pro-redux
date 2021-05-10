@@ -46,6 +46,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Animations / Visualizers
     private Animator _playerAnimator;
     private GameObject _shieldVisualizer;
+    private GameObject _rightEngineDamageVisualizer;
+    private GameObject _leftEngineDamageVisualizer;
     private static readonly int IsTurningLeft = Animator.StringToHash("isTurningLeft");
     private static readonly int IsTurningRight = Animator.StringToHash("isTurningRight");
 
@@ -64,7 +66,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             Debug.LogError("Game Manager in Player class is NULL");
         }
         
-        _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
+        _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
         if (_shieldVisualizer == null)
         {
             Debug.LogError("Shield Visualizer in Player class is NULL");
@@ -72,6 +74,26 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _shieldVisualizer.SetActive(false);
+        }
+
+        _rightEngineDamageVisualizer = transform.Find("Right_Engine_Damage_Visualizer")?.gameObject;
+        if (_rightEngineDamageVisualizer == null)
+        {
+            Debug.LogError("Right Engine Damage Visualizer in Player class is NULL");
+        }
+        else
+        {
+            _rightEngineDamageVisualizer.SetActive(false);
+        }
+        
+        _leftEngineDamageVisualizer = transform.Find("Left_Engine_Damage_Visualizer")?.gameObject;
+        if (_leftEngineDamageVisualizer == null)
+        {
+            Debug.LogError("Left Engine Damage Visualizer in Player class is NULL");
+        }
+        else
+        {
+            _leftEngineDamageVisualizer.SetActive(false);
         }
         
         if (_laserPrefab == null)
@@ -148,7 +170,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (_lives < 1)
             {
                 Destroy(gameObject);
-            } 
+            }
+            else
+            {
+                UpdateEngineDamageVisualizers(_lives);
+            }
         }
     }
 
@@ -180,6 +206,27 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         _score += value;
         _gameManager.SetScore(_score);
+    }
+    
+    private void UpdateEngineDamageVisualizers(int lives)
+    {
+        switch (lives)
+        {
+            case 3:
+                _leftEngineDamageVisualizer.SetActive(false);
+                _rightEngineDamageVisualizer.SetActive(false);
+                break;
+            case 2:
+                _leftEngineDamageVisualizer.SetActive(true);
+                _rightEngineDamageVisualizer.SetActive(false);
+                break;
+            case 1:
+                _leftEngineDamageVisualizer.SetActive(true);
+                _rightEngineDamageVisualizer.SetActive(true);
+                break;
+            default:
+                break;
+        }
     }
 
     IEnumerator TripleShotCooldownRoutine()

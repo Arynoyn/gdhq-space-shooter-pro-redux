@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8733882675216554988}
   - component: {fileID: 5187277135826080902}
   - component: {fileID: 2506193008431447351}
+  - component: {fileID: 2431147457561181898}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 934578703
-  m_SortingLayer: 1
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 3154912113cbb4a498df6f571c74e18c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -144,4 +145,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a27c4a6f573814e009fa63fcf3457a24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pointValue: 10
   _movementSpeed: 4
+  _enemyDestroyedAnimationName: Enemy_Destroyed_anim
+  _enemyDeathTriggerName: OnEnemyDeath
+--- !u!95 &2431147457561181898
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286208098849473951}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 85eab30a23ef44b55802a58a6a3256c7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
