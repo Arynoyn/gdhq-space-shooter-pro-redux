@@ -4,14 +4,14 @@ using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
-    //Player Reference
+    // Player Reference
     private Player _player;
     
-    //Enemy Properties
+    // Enemy Properties
     [SerializeField] private int _pointValue = 10;
     private bool _isDestroyed = false;
     
-    //Movement Properties
+    // Movement Properties
     [Header("Movement")]
     [Space]
     [SerializeField] private float _movementSpeed = 4.0f;
@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
     private float _screenLimitRight = 8f;
     private float _zPos = 0f;
     
-    //Animation Properties
+    // Animation Properties
     [Header("Animation")]
     [Space]
     [SerializeField] private string _enemyDestroyedAnimationName = "Enemy_Destroyed_anim";
@@ -30,6 +30,11 @@ public class Enemy : MonoBehaviour
     private Collider2D _collider;
     private float _deathAnimationLength;
     
+    // Audio Properties
+    [Header("Audio")]
+    [Space]
+    [SerializeField] private AudioClip _explosionSound;
+    private AudioSource _audioSource;
 
     private void Start()
     {
@@ -49,6 +54,10 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("Collider is NULL in Enemy");
         }
+        
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null) { Debug.LogError("Audio Source is missing on Enemy!"); }
+        if (_explosionSound == null) { Debug.LogError("Explosion Sound missing from Enemy!"); }
     }
 
     void Update()
@@ -70,6 +79,7 @@ public class Enemy : MonoBehaviour
             _isDestroyed = true;
             if (_collider != null) { _collider.enabled = false; }
             if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
+            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
             Destroy(gameObject, _deathAnimationLength);
         }
 
@@ -80,6 +90,7 @@ public class Enemy : MonoBehaviour
             _isDestroyed = true;
             if (_collider != null) { _collider.enabled = false; }
             if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
+            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
             Destroy(gameObject, _deathAnimationLength);
         }
     }
