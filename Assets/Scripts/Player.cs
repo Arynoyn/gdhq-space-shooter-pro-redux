@@ -34,11 +34,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
     
-    //Speed Boost Properties
+    // Speed Boost Properties
     [SerializeField] private float _speedBoostModifier = 2.0f;
     private bool _speedBoostActive;
     
-    //Shield Properties
+    // Shield Properties
     [SerializeField] private int _maxShieldStrength = 3;
     private bool _shieldsActive;
     private int _shieldStrength;
@@ -50,6 +50,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private GameObject _leftEngineDamageVisualizer;
     private static readonly int IsTurningLeft = Animator.StringToHash("isTurningLeft");
     private static readonly int IsTurningRight = Animator.StringToHash("isTurningRight");
+    
+    // Audio
+    [SerializeField] private AudioClip _laserSound;
+    private AudioSource _audioSource;
+    
 
 
     void Start()
@@ -105,6 +110,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             Debug.LogError("Triple Shot Prefab in Player class is NULL");
         }
+
+        _audioSource = GetComponent<AudioSource>();
+        if (_audioSource == null)
+        {
+            Debug.LogError("AudioSource in Player class is NULL");
+        }
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
@@ -152,6 +163,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
             GameObject shotPrefab = _tripleShotActive ? _tripleShotPrefab : _laserPrefab;
             Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
+            if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
         }
     }
 
