@@ -54,6 +54,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Audio
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
+    [SerializeField] private AudioClip _explosionSound;
     private AudioSource _audioSource;
     
 
@@ -175,11 +176,13 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _shieldStrength--;
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
+            _audioSource.PlayOneShot(_explosionSound);
         }
         else
         {
             _lives--;
             _gameManager.SetLives(_lives);
+            _audioSource.PlayOneShot(_explosionSound);
             if (_lives < 1)
             {
                 Destroy(gameObject);
