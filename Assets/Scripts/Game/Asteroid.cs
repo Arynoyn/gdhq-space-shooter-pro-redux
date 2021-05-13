@@ -10,7 +10,6 @@ public class Asteroid : MonoBehaviour
     [SerializeField] private GameManager _gameManager;
 
 
-    // Start is called before the first frame update
     void Start()
     {
         if (_explosionPrefab == null)
@@ -24,7 +23,6 @@ public class Asteroid : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         transform.Rotate(Vector3.forward * (_rotationSpeed * Time.deltaTime));
@@ -34,10 +32,21 @@ public class Asteroid : MonoBehaviour
     {
         if (other.CompareTag("Laser"))
         {
-            Destroy(other.gameObject);
-            if (_explosionPrefab != null) { Instantiate(_explosionPrefab, transform.position, Quaternion.identity); }
-            _gameManager.StartGame();
-            Destroy(gameObject);
+            Laser laser = other.GetComponent<Laser>();
+            if (laser == null)
+            {
+                Debug.LogError("Laser component missing on collided object in Asteroid");
+            }
+            else
+            {
+                LaserTypeEnum laserType = laser.GetOwnerType();
+                if (laserType != LaserTypeEnum.Player) { return; }
+                
+                Destroy(other.gameObject);
+                if (_explosionPrefab != null) { Instantiate(_explosionPrefab, transform.position, Quaternion.identity); }
+                _gameManager.StartGame();
+                Destroy(gameObject);
+            }
         }
     }
 }

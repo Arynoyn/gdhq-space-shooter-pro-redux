@@ -1,34 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
+#region
+
+using System;
 using UnityEngine;
+
+#endregion
 
 public class Laser : MonoBehaviour
 {
     [SerializeField] private float _speed = 8.0f;
+    [SerializeField] private LaserTypeEnum _type = LaserTypeEnum.Player;
+    private bool _hasParent;
     private float _screenLimitTop = 8.0f;
+    private float _screenLimitBottom = -5.0f;
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
+        _hasParent = transform.parent != null;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.Translate(Vector3.up * (_speed * Time.deltaTime));
-        if (transform.position.y > _screenLimitTop)
+        CalculateMovement();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (_type == LaserTypeEnum.Enemy && other.CompareTag("Player"))
         {
-            if (transform.parent != null)
-            {
-                Destroy(transform.parent.gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-            
+            Player player = other.GetComponent<Player>();
+            if (player == null) { Debug.LogError("Player is NULL during collision with Laser"); }
+            else { player.Damage(); }
+            DestroyLaser();
         }
+    }
+
+    private void CalculateMovement()
+    {
+        Vector3 movementDirection = _type switch
+        {
+            LaserTypeEnum.Player => Vector3.up,
+            LaserTypeEnum.Enemy => Vector3.down,
+            _ => throw new ArgumentOutOfRangeException(nameof(_type), $"Not expected Laser Type value: {_type}")
+        };
+        
+        transform.Translate(movementDirection * (_speed * Time.deltaTime));
+        if (transform.position.y > _screenLimitTop || transform.position.y < _screenLimitBottom)
+        {
+            DestroyLaser();
+        }
+    }
+
+    private void DestroyLaser()
+    {
+        if (_hasParent)
+        {
+            Destroy(transform.parent.gameObject);
+        }
+
+        Destroy(gameObject);
+    }
+
+    public LaserTypeEnum GetOwnerType()
+    {
+        return _type;
+    }
+
+    public void SetType(LaserTypeEnum type)
+    {
+        _type = type;
     }
 }
