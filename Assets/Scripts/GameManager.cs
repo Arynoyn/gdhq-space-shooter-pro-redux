@@ -35,6 +35,12 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
         }
     }
 
+    public void OnExitGame(InputAction.CallbackContext context)
+    {
+        Debug.Log("GameManager::OnExitGame - OnExitGame() Called");
+        Application.Quit();
+    }
+
     private void GameOver()
     {
         _isGameOver = true;

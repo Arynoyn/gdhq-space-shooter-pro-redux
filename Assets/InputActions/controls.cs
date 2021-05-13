@@ -247,6 +247,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Exit Game"",
+                    ""type"": ""Button"",
+                    ""id"": ""f1f04e14-ea4c-41ec-9986-b6457746ced2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -302,6 +310,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Restart Level"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""948be379-fdfd-4bfa-b8de-ff006ecf67f1"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse;Gamepad;Joystick;XR;Touch"",
+                    ""action"": ""Exit Game"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -378,6 +397,7 @@ public class @Controls : IInputActionCollection, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_RestartLevel = m_UI.FindAction("Restart Level", throwIfNotFound: true);
+        m_UI_ExitGame = m_UI.FindAction("Exit Game", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -469,11 +489,13 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_RestartLevel;
+    private readonly InputAction m_UI_ExitGame;
     public struct UIActions
     {
         private @Controls m_Wrapper;
         public UIActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @RestartLevel => m_Wrapper.m_UI_RestartLevel;
+        public InputAction @ExitGame => m_Wrapper.m_UI_ExitGame;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -486,6 +508,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RestartLevel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
                 @RestartLevel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
                 @RestartLevel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
+                @ExitGame.started -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
+                @ExitGame.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
+                @ExitGame.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -493,6 +518,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @RestartLevel.started += instance.OnRestartLevel;
                 @RestartLevel.performed += instance.OnRestartLevel;
                 @RestartLevel.canceled += instance.OnRestartLevel;
+                @ExitGame.started += instance.OnExitGame;
+                @ExitGame.performed += instance.OnExitGame;
+                @ExitGame.canceled += instance.OnExitGame;
             }
         }
     }
@@ -550,5 +578,6 @@ public class @Controls : IInputActionCollection, IDisposable
     public interface IUIActions
     {
         void OnRestartLevel(InputAction.CallbackContext context);
+        void OnExitGame(InputAction.CallbackContext context);
     }
 }
