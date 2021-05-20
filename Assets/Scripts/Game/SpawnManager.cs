@@ -1,8 +1,11 @@
 #region
 
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 #endregion
 
@@ -11,10 +14,11 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private float _enemySpawnRate = 5.0f;
     [SerializeField] private GameObject _enemyPrefab;
     [SerializeField] private GameObject _enemyContainer;
-    [SerializeField] private GameObject[] _powerups;
     [SerializeField] private int _powerupMinSpawnRate = 3;
     [SerializeField] private int _powerupMaxSpawnRate = 7;
     
+    private Dictionary<PowerupTypeEnum, GameObject> _powerupPrefabs;
+
     private float _screenLimitLeft = -8f;
     private float _screenLimitRight = 8f;
     private float _screenLimitTop = 8.0f;
@@ -28,16 +32,15 @@ public class SpawnManager : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        if (_powerups == null)
+        _powerupPrefabs = new Dictionary<PowerupTypeEnum, GameObject>();
+        InitializePowerupPrefabsDictionary();
+        if (_powerupPrefabs == null)
         {
             Debug.LogError("Powerups array on SpawnManager is NULL");
         }
         else
         {
-            if (!_powerups.Any())
-            {
-                Debug.LogWarning("No powerups in array on SpawnManager");
-            }if (!_powerups.Any())
+            if (!_powerupPrefabs.Any())
             {
                 Debug.LogWarning("No powerups in array on SpawnManager");
             }
@@ -67,14 +70,32 @@ public class SpawnManager : MonoBehaviour
         {
             int randomSpawnTime = Random.Range(_powerupMinSpawnRate, _powerupMaxSpawnRate + 1);
             yield return new WaitForSeconds(randomSpawnTime);
-            if (_powerups.Any())
+            if (_powerupPrefabs.Any())
             {
-                int randomPowerupIndex = Random.Range(0, _powerups.Length);
                 var xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
                 var spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
-                Instantiate(_powerups[randomPowerupIndex], spawnPosition, Quaternion.identity, _enemyContainer.transform);
+                
+                GameObject randomPowerup = GetRandomPowerupPrefab();
+                Instantiate(randomPowerup, spawnPosition, Quaternion.identity);
             }
         }
+    }
+
+    private GameObject GetRandomPowerupPrefab()
+    {
+        var powerupEnumValuesList = Enum.GetValues(typeof(PowerupTypeEnum)).Cast<PowerupTypeEnum>().ToList();
+
+        var minValue = powerupEnumValuesList.Min();
+        var maxValue = powerupEnumValuesList.Max();
+        var randomPowerupType = (PowerupTypeEnum) Random.Range((int) minValue, (int) maxValue + 1);
+
+        if (!_powerupPrefabs.TryGetValue(randomPowerupType, out var randomPowerup))
+        {
+            throw new ArgumentOutOfRangeException(nameof(randomPowerupType), randomPowerupType,
+                $"{randomPowerupType.ToString()} does not have a matching prefab in the dictionary");
+        }
+
+        return randomPowerup;
     }
 
     public void StopSpawningEnemies()
@@ -97,6 +118,21 @@ public class SpawnManager : MonoBehaviour
     {
         _spawnPowerups = true;
         StartCoroutine(SpawnPowerupRoutine());
+    }
+    
+    private void InitializePowerupPrefabsDictionary()
+    {
+        var myObjs = Resources.LoadAll("Prefabs/Powerups", typeof(Powerup));
+
+        //Debug.Log("printing myObs now...");
+        foreach (var thisObject in myObjs)
+        {
+            var powerUp = (Powerup) thisObject;
+            var powerupType = powerUp.GetPowerupType();
+            var powerupGameObject = powerUp.gameObject;
+            _powerupPrefabs.Add(powerupType, powerupGameObject);
+            Debug.Log("Powerup Found...  " + thisObject.name);
+        }
     }
 
     
