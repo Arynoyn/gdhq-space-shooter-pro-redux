@@ -238,20 +238,20 @@ public class @Controls : IInputActionCollection, IDisposable
         },
         {
             ""name"": ""UI"",
-            ""id"": ""cebeb21a-4151-4874-b1af-5ac3e72f9b3f"",
+            ""id"": ""6f17e2bf-7336-4370-9846-005a34a64290"",
             ""actions"": [
                 {
-                    ""name"": ""Restart Level"",
+                    ""name"": ""Exit Game"",
                     ""type"": ""Button"",
-                    ""id"": ""e0e46fa0-2e12-468a-ba70-b6001ba5cc78"",
+                    ""id"": ""28685d34-e4ac-47c4-80cc-e424ca7cd30a"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Exit Game"",
+                    ""name"": ""Restart Level"",
                     ""type"": ""Button"",
-                    ""id"": ""f1f04e14-ea4c-41ec-9986-b6457746ced2"",
+                    ""id"": ""e543c38c-d456-44ac-94fd-bbeb0e9902e5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -260,7 +260,7 @@ public class @Controls : IInputActionCollection, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""ef3abe8a-6655-46b4-8c7c-68a0358d30f7"",
+                    ""id"": ""3339ecbe-b839-47ec-97dc-642b0613600a"",
                     ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -271,7 +271,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""846c6455-5462-4126-9902-ddb8cba4774f"",
+                    ""id"": ""5e0a404a-ae77-413a-bc80-0f2e0572ad0a"",
                     ""path"": ""<Touchscreen>/primaryTouch/tap"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -282,7 +282,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1c4e1404-27f6-4f8e-8c4e-aa28c5e50b70"",
+                    ""id"": ""c07bcbde-91a9-4735-ad08-962aa3c0e088"",
                     ""path"": ""<Joystick>/trigger"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -293,7 +293,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""2f165266-1160-44c1-bda6-be1b7493f184"",
+                    ""id"": ""d984419c-519f-479e-9ad1-4d52a4eb397d"",
                     ""path"": ""<XRController>/{PrimaryAction}"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -304,7 +304,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""301cc381-b2e1-48e1-90c1-dbc4ab7f55f7"",
+                    ""id"": ""6232bbb8-4a13-416d-a058-78c12d91719d"",
                     ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -315,11 +315,11 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""948be379-fdfd-4bfa-b8de-ff006ecf67f1"",
+                    ""id"": ""7da09356-5af8-49ad-a0c6-db3414f134d0"",
                     ""path"": ""<Keyboard>/escape"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse;Gamepad;Joystick;XR;Touch"",
+                    ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Exit Game"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -396,8 +396,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_RestartLevel = m_UI.FindAction("Restart Level", throwIfNotFound: true);
         m_UI_ExitGame = m_UI.FindAction("Exit Game", throwIfNotFound: true);
+        m_UI_RestartLevel = m_UI.FindAction("Restart Level", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -488,14 +488,14 @@ public class @Controls : IInputActionCollection, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
-    private readonly InputAction m_UI_RestartLevel;
     private readonly InputAction m_UI_ExitGame;
+    private readonly InputAction m_UI_RestartLevel;
     public struct UIActions
     {
         private @Controls m_Wrapper;
         public UIActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @RestartLevel => m_Wrapper.m_UI_RestartLevel;
         public InputAction @ExitGame => m_Wrapper.m_UI_ExitGame;
+        public InputAction @RestartLevel => m_Wrapper.m_UI_RestartLevel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -505,22 +505,22 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
-                @RestartLevel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
-                @RestartLevel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
-                @RestartLevel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
                 @ExitGame.started -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
                 @ExitGame.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
                 @ExitGame.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
+                @RestartLevel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
+                @RestartLevel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
+                @RestartLevel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @RestartLevel.started += instance.OnRestartLevel;
-                @RestartLevel.performed += instance.OnRestartLevel;
-                @RestartLevel.canceled += instance.OnRestartLevel;
                 @ExitGame.started += instance.OnExitGame;
                 @ExitGame.performed += instance.OnExitGame;
                 @ExitGame.canceled += instance.OnExitGame;
+                @RestartLevel.started += instance.OnRestartLevel;
+                @RestartLevel.performed += instance.OnRestartLevel;
+                @RestartLevel.canceled += instance.OnRestartLevel;
             }
         }
     }
@@ -577,7 +577,7 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IUIActions
     {
-        void OnRestartLevel(InputAction.CallbackContext context);
         void OnExitGame(InputAction.CallbackContext context);
+        void OnRestartLevel(InputAction.CallbackContext context);
     }
 }
