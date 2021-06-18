@@ -488,6 +488,7 @@ MonoBehaviour:
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _powerupSound: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
+  _playerInput: {fileID: 194867985}
 --- !u!212 &194867981
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -660,13 +661,37 @@ MonoBehaviour:
     m_ActionId: 4be15291-5a8d-4d12-8866-1878905a9fe4
     m_ActionName: Player/Fire[/Mouse/leftButton]
   - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: e0e46fa0-2e12-468a-ba70-b6001ba5cc78
-    m_ActionName: UI/Restart Level[/Keyboard/r]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: f1f04e14-ea4c-41ec-9986-b6457746ced2
+      m_Calls:
+      - m_Target: {fileID: 539368435}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnExitGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 28685d34-e4ac-47c4-80cc-e424ca7cd30a
     m_ActionName: UI/Exit Game[/Keyboard/escape]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 539368435}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnRestartLevel
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e543c38c-d456-44ac-94fd-bbeb0e9902e5
+    m_ActionName: UI/Restart Level[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1115,7 +1140,6 @@ GameObject:
   m_Component:
   - component: {fileID: 539368436}
   - component: {fileID: 539368435}
-  - component: {fileID: 539368434}
   m_Layer: 0
   m_Name: Game_Manager
   m_TagString: Untagged
@@ -1123,76 +1147,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &539368434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 539368433}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: c76f26354902f45aebb0600575e92469, type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 85a73007-0368-4183-95e3-6ea941fe72ce
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4be15291-5a8d-4d12-8866-1878905a9fe4
-    m_ActionName: Player/Fire[/Mouse/leftButton,/Keyboard/space]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 539368435}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnRestartLevel
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: e0e46fa0-2e12-468a-ba70-b6001ba5cc78
-    m_ActionName: UI/Restart Level[/Keyboard/r]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 539368435}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnExitGame
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: f1f04e14-ea4c-41ec-9986-b6457746ced2
-    m_ActionName: UI/Exit Game[/Keyboard/escape]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: UI
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &539368435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6508,10 +6462,6 @@ MonoBehaviour:
   _enemySpawnRate: 5
   _enemyPrefab: {fileID: 1286208098849473951, guid: c491348cccbc644b2857eff1d3f0c3b6, type: 3}
   _enemyContainer: {fileID: 1220603935}
-  _powerups:
-  - {fileID: 3616918537776734448, guid: 9f84de727bdbb4fabbf45163cacd15a0, type: 3}
-  - {fileID: 6250229221671125355, guid: 547926d42d3964d5a89c9c6bc010c57e, type: 3}
-  - {fileID: 976374845931642115, guid: 6caa1d494581447cabc0ebbb6d9e2ae4, type: 3}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
   _spawnStartDelayTime: 2
