@@ -213,6 +213,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_shieldsActive)
         {
             _shieldStrength--;
+            SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
+            _gameManager.UpdateShieldStrength(_shieldStrength);
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
             _audioSource.PlayOneShot(_explosionSound);
@@ -237,6 +239,28 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             }
         }
     }
+    
+    private void SetShieldVisualizerColor(GameObject shieldVisualizer, int shieldStrength)
+    {
+        switch (shieldStrength)
+        {
+            case 3:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.white;
+                break;
+            case 2:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.green;
+                break;
+            case 1:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.red;
+                break;
+            case 0:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = new Color(0,0,0,0);
+                break;
+            default:
+                Debug.LogError("_shieldStrength value out of range");
+                break;
+        }
+    }
 
     public void ActivatePowerup(PowerupTypeEnum type)
     {
@@ -256,6 +280,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 break;
             case PowerupTypeEnum.Shields:
                 _shieldStrength = _maxShieldStrength;
+                SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
+                _gameManager.UpdateShieldStrength(_shieldStrength);
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 _audioSource.PlayOneShot(_powerupSound);

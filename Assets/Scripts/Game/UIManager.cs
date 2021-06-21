@@ -11,7 +11,11 @@ public class UIManager : MonoBehaviour
 
     [Header("Player Lives")]
     [SerializeField] private Image _livesDisplay;
-    [SerializeField] private Sprite[] _livesImages;
+    [SerializeField] private Sprite[] _livesImages = new Sprite[4];
+    
+    [Header("Player Shields")]
+    [SerializeField] private Image _shieldStrengthImage;
+    [SerializeField] private Sprite[] _shieldStrengthImages = new Sprite[4];
 
     [Header("Game Over Text")]
     [SerializeField] private Text _gameOverText;
@@ -55,6 +59,16 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError($"Index {lives} is out of bounds of the array of lives images");
         }
+    }
+    
+    public void UpdateShieldStrength(int shieldStrength)
+    {
+        GameObject imageGameObject = _shieldStrengthImage.gameObject;
+        GameObject parentGameObject = imageGameObject.transform.parent.gameObject;
+        
+        _shieldStrengthImage.sprite = _shieldStrengthImages[shieldStrength];
+        imageGameObject.SetActive(shieldStrength > 0);
+        parentGameObject.SetActive(shieldStrength > 0);
     }
 
     public void DisplayGameOver()

@@ -74,4 +74,9 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
             }
         }
     }
+
+    public void UpdateShieldStrength(int shieldStrength)
+    {
+        _uiManager.UpdateShieldStrength(shieldStrength);
+    }
 }
