@@ -4,6 +4,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField] private float _movementSpeed = 3.0f;
     [SerializeField] private PowerupTypeEnum _type = PowerupTypeEnum.TripleShot;
+    [SerializeField] private float _effectDuration = 5.0f; 
     
     private float _screenLimitBottom = -6.0f;
     void Update()
@@ -23,14 +24,18 @@ public class Powerup : MonoBehaviour
             var player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
-                player.ActivatePowerup(_type);
+                player.ActivatePowerup(this);
             }
             Destroy(gameObject);
         }
     }
-
     public PowerupTypeEnum GetPowerupType()
     {
         return _type;
+    }
+    
+    public float GetEffectDuration() 
+    { 
+        return _effectDuration; 
     }
 }
