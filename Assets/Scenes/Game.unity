@@ -516,8 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0f81ca05950647d899c6954bc3c103a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _lives: 3
-  _score: 0
+  _maxLives: 3
   _movementSpeed: 5
   _fireRate: 0.15
   _maxAmmoCount: 15

@@ -10,8 +10,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 {
     //Player Properties
     [Header("Player")]
-    [SerializeField] private int _lives = 3;
-    [SerializeField] private int _score;
+    [SerializeField] private int _maxLives = 3;
+    private int _score;
+    private int _lives;
     
     // Game State Managers
     [Header("Managers")]
@@ -80,6 +81,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     void Start()
     {
         _ammoCount = _maxAmmoCount;
+        _lives = _maxLives;
         
         _renderer = GetComponent<Renderer>();
         if (_renderer == null) { Debug.LogError("Renderer in Player class is NULL"); }
@@ -104,24 +106,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
 
         _rightEngineDamageVisualizer = transform.Find("Right_Engine_Damage_Visualizer")?.gameObject;
-        if (_rightEngineDamageVisualizer == null)
-        {
-            Debug.LogError("Right Engine Damage Visualizer in Player class is NULL");
-        }
-        else
-        {
-            _rightEngineDamageVisualizer.SetActive(false);
-        }
+        if (_rightEngineDamageVisualizer == null) { Debug.LogError("Right Engine Damage Visualizer in Player class is NULL"); }
         
         _leftEngineDamageVisualizer = transform.Find("Left_Engine_Damage_Visualizer")?.gameObject;
-        if (_leftEngineDamageVisualizer == null)
-        {
-            Debug.LogError("Left Engine Damage Visualizer in Player class is NULL");
-        }
-        else
-        {
-            _leftEngineDamageVisualizer.SetActive(false);
-        }
+        if (_leftEngineDamageVisualizer == null) { Debug.LogError("Left Engine Damage Visualizer in Player class is NULL"); }
+        
+        UpdateEngineDamageVisualizers(_lives);
         
         _thrusterVisualizer = transform.Find("Thruster")?.gameObject;
         if (_thrusterVisualizer == null) { Debug.LogError("Shield Visualizer in Player class is NULL"); }
@@ -229,7 +219,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _lives--;
             _gameManager.SetLives(_lives);
             _audioSource.PlayOneShot(_explosionSound);
-            if (_lives < 1)
+            if (_lives > 0)
+            {
+                UpdateEngineDamageVisualizers(_lives);
+            }
+            else
             {
                 _collider.enabled = false;
                 _renderer.enabled = false;
@@ -237,10 +231,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _rightEngineDamageVisualizer.SetActive(false);
                 _thrusterVisualizer.SetActive(false);
                 _playerInput.SwitchCurrentActionMap("UI");
-            }
-            else
-            {
-                UpdateEngineDamageVisualizers(_lives);
             }
         }
     }
@@ -296,6 +286,13 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _ammoCount = _maxAmmoCount;
                 _gameManager.UpdateAmmoCount(_ammoCount);
                 _audioSource.PlayOneShot(_powerupSound);
+                break;
+            case PowerupTypeEnum.Health:
+                if (_lives > 0 && _lives < _maxLives) { _lives++;  }
+                _gameManager.SetLives(_lives);
+                UpdateEngineDamageVisualizers(_lives);
+                _audioSource.PlayOneShot(_powerupSound);
+                Debug.Log("Health Powerup Collected");
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
