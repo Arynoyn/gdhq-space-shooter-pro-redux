@@ -25,7 +25,7 @@
                     "name": "Speed Boost",
                     "type": "Value",
                     "id": "e3e51d20-9d68-4fe9-b96a-b13eea81fc3f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
                 }

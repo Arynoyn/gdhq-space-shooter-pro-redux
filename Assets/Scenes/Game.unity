@@ -153,7 +153,7 @@ RectTransform:
   - {fileID: 1105969853}
   - {fileID: 132339722}
   m_Father: {fileID: 144554670}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -190,12 +190,12 @@ RectTransform:
   - {fileID: 880577620}
   - {fileID: 607383068}
   m_Father: {fileID: 144554670}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 187, y: -172}
-  m_SizeDelta: {x: 256, y: 60}
+  m_AnchoredPosition: {x: 187, y: -219}
+  m_SizeDelta: {x: 256, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &132339721
 GameObject:
@@ -369,6 +369,7 @@ RectTransform:
   m_Children:
   - {fileID: 327662739}
   - {fileID: 285504282}
+  - {fileID: 328425589}
   - {fileID: 22840764}
   - {fileID: 1932050382}
   - {fileID: 19460901}
@@ -518,11 +519,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxLives: 3
   _movementSpeed: 5
+  _verticalStartPosition: -2
+  _horizontalStartPosition: 0
   _fireRate: 0.15
   _maxAmmoCount: 15
   _laserPrefab: {fileID: 3455213165557180421, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
   _tripleShotPrefab: {fileID: 3761578932506858463, guid: cb43666bc2e5747eda8decfbd9faa902, type: 3}
   _sprayShotPrefab: {fileID: 188501191748951299, guid: 19f40a289cd1147eb9bf8d90b6623a97, type: 3}
+  _maxThrusterCharge: 100
+  _thrusterChargeCost: 1
+  _thrusterCooldownRate: 2
+  _thrusterRechargeRate: 1
+  _thrusterCharge: 0
   _speedBoostModifier: 2
   _maxShieldStrength: 3
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
@@ -1108,6 +1116,43 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -22}
   m_SizeDelta: {x: 400, y: 60}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!1 &328425588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 328425589}
+  m_Layer: 5
+  m_Name: Thruster_Display
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &328425589
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328425588}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1327601104}
+  - {fileID: 886079065}
+  m_Father: {fileID: 144554670}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 187, y: -169}
+  m_SizeDelta: {x: 256, y: 52}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &398219826
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1582,6 +1627,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 880577619}
   m_CullTransparentMesh: 1
+--- !u!224 &886079065 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+  m_PrefabInstance: {fileID: 1548805150698381194}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &886079067 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3658435347634964658, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+  m_PrefabInstance: {fileID: 1548805150698381194}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01c82cea6631f41eca7cc88de468e618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1105969852
 GameObject:
   m_ObjectHideFlags: 0
@@ -6677,6 +6738,85 @@ MonoBehaviour:
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
   _spawnStartDelayTime: 2
+--- !u!1 &1327601103
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1327601104}
+  - component: {fileID: 1327601106}
+  - component: {fileID: 1327601105}
+  m_Layer: 5
+  m_Name: Thruster_Display_label_txt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1327601104
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327601103}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 328425589}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 128, y: 60}
+  m_Pivot: {x: 0, y: 0.5}
+--- !u!114 &1327601105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327601103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 27
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 40
+    m_Alignment: 3
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'THRUST:'
+--- !u!222 &1327601106
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1327601103}
+  m_CullTransparentMesh: 1
 --- !u!1001 &1403131071
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6798,6 +6938,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e7510a88b877c44bca7f0f261051d45f, type: 3}
   - {fileID: 21300000, guid: 6140522ec62e9455ebd82e956d37c227, type: 3}
   _ammoText: {fileID: 607383070}
+  _thrusterDisplay: {fileID: 886079067}
   _gameOverText: {fileID: 1105969854}
   _restartText: {fileID: 132339723}
   _gameOverFlashRate: 0.5
@@ -12322,12 +12463,12 @@ RectTransform:
   - {fileID: 1168441383}
   - {fileID: 1624552927}
   m_Father: {fileID: 144554670}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 187, y: -226}
-  m_SizeDelta: {x: 256, y: 60}
+  m_AnchoredPosition: {x: 187, y: -270.00003}
+  m_SizeDelta: {x: 256, y: 52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1980217402
 GameObject:
@@ -17454,3 +17595,108 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2142911560}
   m_CullTransparentMesh: 1
+--- !u!1001 &1548805150698381194
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 328425589}
+    m_Modifications:
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 251
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 67
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1674439911271814238, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6322419553706107131, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_Name
+      value: Thruster Display_Progress_Bar
+      objectReference: {fileID: 0}
+    - target: {fileID: 7030907345589460514, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7030907345589460514, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 97a2f39227c7a42988ca0c03e4d1982d, type: 3}
