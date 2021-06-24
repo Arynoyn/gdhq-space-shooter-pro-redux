@@ -37,10 +37,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private int _maxAmmoCount = 15;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private GameObject _sprayShotPrefab;
     private bool _tripleShotActive;
+    private bool _sprayShotActive;
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
-    private int _ammoCount = 0;
+    private int _ammoCount;
     
     // Speed Boost Properties
     [Header("Speed")]
@@ -119,6 +121,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_laserPrefab == null) { Debug.LogError("Laser Prefab in Player class is NULL"); }
         
         if (_tripleShotPrefab == null) { Debug.LogError("Triple Shot Prefab in Player class is NULL"); }
+        
+        if (_sprayShotPrefab == null) { Debug.LogError("Spray Shot Prefab in Player class is NULL"); }
 
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null) { Debug.LogError("AudioSource in Player class is NULL"); }
@@ -179,7 +183,20 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _nextFire = Time.time + _fireRate;
                 Vector3 playerPosition = transform.position;
                 Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
-                GameObject shotPrefab = _tripleShotActive ? _tripleShotPrefab : _laserPrefab;
+                GameObject shotPrefab;
+                if (_tripleShotActive)
+                {
+                    shotPrefab = _tripleShotPrefab;
+                }
+                else if (_sprayShotActive)
+                {
+                    shotPrefab = _sprayShotPrefab;
+                }
+                else
+                {
+                    shotPrefab = _laserPrefab;
+                }
+
                 Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
                 if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
             }
@@ -263,6 +280,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         switch (type)
         {
             case PowerupTypeEnum.TripleShot:
+                if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
+                _sprayShotActive = false;
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
@@ -293,6 +312,14 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 UpdateEngineDamageVisualizers(_lives);
                 _audioSource.PlayOneShot(_powerupSound);
                 Debug.Log("Health Powerup Collected");
+                break;
+            case PowerupTypeEnum.SprayShot:
+                if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
+                _tripleShotActive = false;
+                if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
+                _sprayShotActive = true;
+                _audioSource.PlayOneShot(_powerupSound);
+                StartCoroutine(nameof(SprayShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -331,10 +358,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         yield return new WaitForSeconds(duration);
         _tripleShotActive = false;
     }
-    
+
     IEnumerator SpeedBoostCooldownRoutine(float duration)
     {
         yield return new WaitForSeconds(duration);
         _speedBoostActive = false;
+    }
+    
+    IEnumerator SprayShotCooldownRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _sprayShotActive = false;
     }
 }
