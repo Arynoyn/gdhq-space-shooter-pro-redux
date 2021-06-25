@@ -83,10 +83,18 @@ public class SpawnManager : MonoBehaviour
 
     private GameObject GetRandomPowerupPrefab()
     {
-        var powerupEnumValuesList = Enum.GetValues(typeof(PowerupTypeEnum)).Cast<PowerupTypeEnum>().ToList();
-
-        var minValue = powerupEnumValuesList.Min();
-        var maxValue = powerupEnumValuesList.Max();
+        // TODO: replace rare chance roll with weighted random system in phase II part 6 requirement 
+        //max value is exclusive thus we need 101 not 100 to include 100 as a possibility 
+        int rollForRarePowerup = Random.Range(1, 101); 
+        var rareChance = 75; 
+        var powerupEnumValuesList = Enum.GetValues(typeof(PowerupTypeEnum)).Cast<PowerupTypeEnum>().ToList(); 
+        if (rollForRarePowerup > rareChance) 
+        { 
+            var rarePowerupsToRemove = new List<PowerupTypeEnum> {PowerupTypeEnum.SprayShot}; 
+            powerupEnumValuesList.RemoveAll(p => rarePowerupsToRemove.Contains(p)); 
+        } 
+        var minValue = powerupEnumValuesList.Min(); 
+        var maxValue = powerupEnumValuesList.Max(); 
         var randomPowerupType = (PowerupTypeEnum) Random.Range((int) minValue, (int) maxValue + 1);
 
         if (!_powerupPrefabs.TryGetValue(randomPowerupType, out var randomPowerup))

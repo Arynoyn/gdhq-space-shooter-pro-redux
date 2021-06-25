@@ -9,17 +9,23 @@ using Vector3 = UnityEngine.Vector3;
 public class Player : MonoBehaviour, Controls.IPlayerActions
 {
     //Player Properties
-    [SerializeField] private int _lives = 3;
-    [SerializeField] private int _score;
+    [Header("Player")]
+    [SerializeField] private int _maxLives = 3;
+    private int _score;
+    private int _lives;
     
     // Game State Managers
+    [Header("Managers")]
     private GameManager _gameManager;
     
     // Movement Properties
+    [Header("Base Movement")]
     [SerializeField] private float _movementSpeed = 5f;
+    [SerializeField]private float _verticalStartPosition = -2.0f;
+    [SerializeField]private float _horizontalStartPosition = 0f;
     private Vector3 _direction;
-    private float _verticalStartPosition = -2.0f;
-    private float _horizontalStartPosition = 0f;
+    
+    // Play Space Boundaries Properties
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -11.4f;
@@ -27,18 +33,36 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _zPos = 0f;
 
     // Projectile Properties
+    [Header("Weapons")]
     [SerializeField] private float _fireRate = 0.15f;
+    [SerializeField] private int _maxAmmoCount = 15;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private GameObject _sprayShotPrefab;
     private bool _tripleShotActive;
+    private bool _sprayShotActive;
     private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
+    private int _ammoCount;
     
     // Speed Boost Properties
+    [Header("Thrusters")]
+    [SerializeField] private int _maxThrusterCharge = 100;
+    [SerializeField] private int _thrusterUseRate = 1;
+    [SerializeField] private int _thrusterRechargeRate = 1;
+    [SerializeField] private float _thrusterCooldownTime = 2.0f;
+    private int _thrusterCharge;
+    private bool _thrusterActived;
+    private bool _thrusterActive;
+    private bool _thrusterRecharging;
+    
+    // Speed Boost Properties
+    [Header("Speed Boost")]
     [SerializeField] private float _speedBoostModifier = 2.0f;
     private bool _speedBoostActive;
     
     // Shield Properties
+    [Header("Shields")]
     [SerializeField] private int _maxShieldStrength = 3;
     private bool _shieldsActive;
     private int _shieldStrength;
@@ -55,40 +79,38 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private BoxCollider2D _collider;
 
     // Audio
+    [Header("Audio")]
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
     [SerializeField] private AudioClip _explosionSound;
+    [SerializeField] private AudioClip _ammoDepletedSound;
     private AudioSource _audioSource;
     
     // Player Input
+    [Header("Input")]
     [SerializeField] private PlayerInput _playerInput;
+
     
 
 
     void Start()
     {
+        _lives = _maxLives;
+        _ammoCount = _maxAmmoCount;
+        _thrusterCharge = _maxThrusterCharge;
+        
+        
         _renderer = GetComponent<Renderer>();
-        if (_renderer == null)
-        {
-            Debug.LogError("Renderer in Player class is NULL");
-        }
+        if (_renderer == null) { Debug.LogError("Renderer in Player class is NULL"); }
+        
         _collider = GetComponent<BoxCollider2D>();
-        if (_renderer == null)
-        {
-            Debug.LogError("Collider in Player class is NULL");
-        }
+        if (_renderer == null) { Debug.LogError("Collider in Player class is NULL"); }
         
         _playerAnimator = GetComponent<Animator>();
-        if (_playerAnimator == null)
-        {
-            Debug.LogError("Animator in Player class is NULL");
-        }
+        if (_playerAnimator == null) { Debug.LogError("Animator in Player class is NULL"); }
         
         _gameManager = FindObjectOfType<GameManager>();
-        if (_gameManager == null)
-        {
-            Debug.LogError("Game Manager in Player class is NULL");
-        }
+        if (_gameManager == null) { Debug.LogError("Game Manager in Player class is NULL"); }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
         if (_shieldVisualizer == null)
@@ -101,51 +123,40 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
 
         _rightEngineDamageVisualizer = transform.Find("Right_Engine_Damage_Visualizer")?.gameObject;
-        if (_rightEngineDamageVisualizer == null)
-        {
-            Debug.LogError("Right Engine Damage Visualizer in Player class is NULL");
-        }
-        else
-        {
-            _rightEngineDamageVisualizer.SetActive(false);
-        }
+        if (_rightEngineDamageVisualizer == null) { Debug.LogError("Right Engine Damage Visualizer in Player class is NULL"); }
         
         _leftEngineDamageVisualizer = transform.Find("Left_Engine_Damage_Visualizer")?.gameObject;
-        if (_leftEngineDamageVisualizer == null)
-        {
-            Debug.LogError("Left Engine Damage Visualizer in Player class is NULL");
-        }
-        else
-        {
-            _leftEngineDamageVisualizer.SetActive(false);
-        }
+        if (_leftEngineDamageVisualizer == null) { Debug.LogError("Left Engine Damage Visualizer in Player class is NULL"); }
+        
+        UpdateEngineDamageVisualizers(_lives);
         
         _thrusterVisualizer = transform.Find("Thruster")?.gameObject;
-        if (_thrusterVisualizer == null)
-        {
-            Debug.LogError("Shield Visualizer in Player class is NULL");
-        }
+        if (_thrusterVisualizer == null) { Debug.LogError("Shield Visualizer in Player class is NULL"); }
         
-        if (_laserPrefab == null)
-        {
-            Debug.LogError("Laser Prefab in Player class is NULL");
-        }
+        if (_laserPrefab == null) { Debug.LogError("Laser Prefab in Player class is NULL"); }
         
-        if (_tripleShotPrefab == null)
-        {
-            Debug.LogError("Triple Shot Prefab in Player class is NULL");
-        }
+        if (_tripleShotPrefab == null) { Debug.LogError("Triple Shot Prefab in Player class is NULL"); }
+        
+        if (_sprayShotPrefab == null) { Debug.LogError("Spray Shot Prefab in Player class is NULL"); }
 
         _audioSource = GetComponent<AudioSource>();
-        if (_audioSource == null)
-        {
-            Debug.LogError("AudioSource in Player class is NULL");
-        }
+        if (_audioSource == null) { Debug.LogError("AudioSource in Player class is NULL"); }
+        
+        if (_laserSound == null) { Debug.LogError("Laser Sound missing from Player!"); }
+        if (_explosionSound == null) { Debug.LogError("Explosion Sound missing from Player!"); }
+        if (_powerupSound == null) { Debug.LogError("Powerup Sound missing from Player!"); }
+        if (_ammoDepletedSound == null) { Debug.LogError("Ammo Depleted Sound missing from Player!"); }
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        _gameManager.SetScore(_score);
-        _gameManager.SetLives(_lives);
+        if (_gameManager != null)
+        {
+            _gameManager.SetScore(_score);
+            _gameManager.SetLives(_lives);
+            _gameManager.UpdateAmmoCount(_ammoCount);
+            _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
+            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+        }
     }
 
     void Update()
@@ -155,9 +166,38 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
-        float modifiedSpeed = _speedBoostActive ? _movementSpeed * _speedBoostModifier : _movementSpeed;
+        _thrusterActive = _thrusterActived && _thrusterCharge > 0;
         _playerAnimator.SetBool(IsTurningLeft, _direction.x < 0);
         _playerAnimator.SetBool(IsTurningRight, _direction.x > 0);
+
+        if (_thrusterActive)
+        {
+            if (_thrusterRecharging)
+            {
+                StopCoroutine(nameof(ThrusterRechargeRoutine));
+                _thrusterRecharging = false;
+            }
+
+            
+            _thrusterCharge -= _thrusterCharge > 0 ? _thrusterUseRate : 0;
+            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            //TODO: Refactor Hacky Magic Numbers in local transforms below
+            _thrusterVisualizer.transform.localPosition = new Vector3(0, -3.1f, 0);
+            _thrusterVisualizer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        } else
+        {
+            //TODO: Refactor Hacky Magic Numbers in local transforms below
+            _thrusterVisualizer.transform.localPosition = new Vector3(0, -2f, 0);
+            _thrusterVisualizer.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
+            if (!_thrusterRecharging && _thrusterCharge < _maxThrusterCharge)
+            {
+                StartCoroutine(nameof(ThrusterRechargeRoutine));
+            }
+        }
+        
+        float modifiedSpeed = _speedBoostActive || _thrusterActive 
+            ? _movementSpeed * _speedBoostModifier 
+            : _movementSpeed;
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
@@ -173,7 +213,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(xPos, yPosClamped, _zPos);
     }
-
+    
     public void OnMove(InputAction.CallbackContext context)
     {
         _direction = context.ReadValue<Vector2>().normalized;
@@ -183,13 +223,41 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.started && Time.time > _nextFire)
         {
-            _nextFire = Time.time + _fireRate;
-            Vector3 playerPosition = transform.position;
-            Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
-            GameObject shotPrefab = _tripleShotActive ? _tripleShotPrefab : _laserPrefab;
-            Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
-            if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
+            if (_ammoCount > 0)
+            {
+                _ammoCount--;
+                _gameManager.UpdateAmmoCount(_ammoCount);
+                _nextFire = Time.time + _fireRate;
+                Vector3 playerPosition = transform.position;
+                Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
+                GameObject shotPrefab;
+                if (_tripleShotActive)
+                {
+                    shotPrefab = _tripleShotPrefab;
+                }
+                else if (_sprayShotActive)
+                {
+                    shotPrefab = _sprayShotPrefab;
+                }
+                else
+                {
+                    shotPrefab = _laserPrefab;
+                }
+
+                Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
+                if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
+            }
+            else
+            {
+                _audioSource.PlayOneShot(_ammoDepletedSound);
+            }
         }
+    }
+
+    public void OnSpeedBoost(InputAction.CallbackContext context)
+    {
+        if (context.performed) { _thrusterActived = true; }
+        if (context.canceled) { _thrusterActived = false; }
     }
 
     public void Damage()
@@ -197,6 +265,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_shieldsActive)
         {
             _shieldStrength--;
+            SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
+            _gameManager.UpdateShieldStrength(_shieldStrength);
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
             _audioSource.PlayOneShot(_explosionSound);
@@ -205,8 +275,13 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _lives--;
             _gameManager.SetLives(_lives);
+            _gameManager.ShakeCamera();
             _audioSource.PlayOneShot(_explosionSound);
-            if (_lives < 1)
+            if (_lives > 0)
+            {
+                UpdateEngineDamageVisualizers(_lives);
+            }
+            else
             {
                 _collider.enabled = false;
                 _renderer.enabled = false;
@@ -215,34 +290,77 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _thrusterVisualizer.SetActive(false);
                 _playerInput.SwitchCurrentActionMap("UI");
             }
-            else
-            {
-                UpdateEngineDamageVisualizers(_lives);
-            }
+        }
+    }
+    
+    private void SetShieldVisualizerColor(GameObject shieldVisualizer, int shieldStrength)
+    {
+        switch (shieldStrength)
+        {
+            case 3:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.white;
+                break;
+            case 2:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.green;
+                break;
+            case 1:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = Color.red;
+                break;
+            case 0:
+                shieldVisualizer.GetComponent<SpriteRenderer>().color = new Color(0,0,0,0);
+                break;
+            default:
+                Debug.LogError("_shieldStrength value out of range");
+                break;
         }
     }
 
-    public void ActivatePowerup(PowerupTypeEnum type)
+    public void ActivatePowerup(Powerup powerup)
     {
+        var type = powerup.GetPowerupType();
         switch (type)
         {
             case PowerupTypeEnum.TripleShot:
+                if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
+                _sprayShotActive = false;
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
-                StartCoroutine(nameof(TripleShotCooldownRoutine));
+                StartCoroutine(nameof(TripleShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
             case PowerupTypeEnum.SpeedBoost:
                 if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
                 _speedBoostActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
-                StartCoroutine(nameof(SpeedBoostCooldownRoutine));
+                StartCoroutine(nameof(SpeedBoostCooldownRoutine), powerup.GetEffectDuration());
                 break;
             case PowerupTypeEnum.Shields:
                 _shieldStrength = _maxShieldStrength;
+                SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
+                _gameManager.UpdateShieldStrength(_shieldStrength);
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 _audioSource.PlayOneShot(_powerupSound);
+                break;
+            case PowerupTypeEnum.Ammo:
+                _ammoCount = _maxAmmoCount;
+                _gameManager.UpdateAmmoCount(_ammoCount);
+                _audioSource.PlayOneShot(_powerupSound);
+                break;
+            case PowerupTypeEnum.Health:
+                if (_lives > 0 && _lives < _maxLives) { _lives++;  }
+                _gameManager.SetLives(_lives);
+                UpdateEngineDamageVisualizers(_lives);
+                _audioSource.PlayOneShot(_powerupSound);
+                Debug.Log("Health Powerup Collected");
+                break;
+            case PowerupTypeEnum.SprayShot:
+                if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
+                _tripleShotActive = false;
+                if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
+                _sprayShotActive = true;
+                _audioSource.PlayOneShot(_powerupSound);
+                StartCoroutine(nameof(SprayShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -275,16 +393,49 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 break;
         }
     }
-
-    IEnumerator TripleShotCooldownRoutine()
+    
+    private void RechargeThrusters()
     {
-        yield return new WaitForSeconds(5.0f);
+        if (_thrusterCharge < _maxThrusterCharge)
+        {
+            _thrusterCharge += _thrusterRechargeRate;
+        }
+        else
+        {
+            _thrusterCharge = _maxThrusterCharge;
+        }
+
+        _gameManager.UpdateThrusterCharge(_thrusterCharge);
+    }
+
+    IEnumerator TripleShotCooldownRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
         _tripleShotActive = false;
     }
-    
-    IEnumerator SpeedBoostCooldownRoutine()
+
+    IEnumerator SpeedBoostCooldownRoutine(float duration)
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(duration);
         _speedBoostActive = false;
+    }
+    
+    IEnumerator SprayShotCooldownRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _sprayShotActive = false;
+    }
+
+    IEnumerator ThrusterRechargeRoutine()
+    {
+        _thrusterRecharging = true;
+        yield return new WaitForSecondsRealtime(_thrusterCooldownTime);
+        while (_thrusterCharge < _maxThrusterCharge)
+        {
+            yield return new WaitForFixedUpdate();
+            RechargeThrusters();
+        }
+
+        _thrusterRecharging = false;
     }
 }

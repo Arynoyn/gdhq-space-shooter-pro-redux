@@ -98,8 +98,7 @@ public class Enemy : MonoBehaviour
     
     private void FireLaser()
     {
-        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
-        foreach (var laser in enemyLaser.GetComponentsInChildren<Laser>()) { laser.SetType(LaserTypeEnum.Enemy); }
+        Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
         _audioSource.PlayOneShot(_laserSound);
         CalculateNextFireTime();
     }

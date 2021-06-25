@@ -20,6 +20,14 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Speed Boost",
+                    "type": "Value",
+                    "id": "e3e51d20-9d68-4fe9-b96a-b13eea81fc3f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -202,7 +210,7 @@
                 {
                     "name": "",
                     "id": "8255d333-5683-4943-a58a-ccb207ff1dce",
-                    "path": "<XRController>/{PrimaryAction}",
+                    "path": "*/{PrimaryAction}",
                     "interactions": "",
                     "processors": "",
                     "groups": "XR",
@@ -218,6 +226,50 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b473e491-6dce-41f6-84a7-0e86c3c4eb37",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Joystick",
+                    "action": "Speed Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a11f5b2a-ac6e-4c7c-83bf-2681b84e3df6",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Speed Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8dc70cf-0035-4cb1-ba5a-c5572338e034",
+                    "path": "*/{SecondaryAction}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Speed Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "31e7dc6e-7198-4408-8672-3e931bdd56c3",
+                    "path": "<Touchscreen>/touch0/tap",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "Speed Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
