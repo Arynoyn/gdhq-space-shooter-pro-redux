@@ -31,6 +31,9 @@
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 /[Aa]ssets/GameDevHQ*
+/[Aa]ssets/com.teamon*
+/[Aa]ssets/[Ee]ditor/[Gg]it[Hh]ub*
+/[Aa]ssets/[Ee]ditor/[Ss]etting*
 
 # TextMesh Pro files
 /[Aa]ssets/TextMesh*Pro/
