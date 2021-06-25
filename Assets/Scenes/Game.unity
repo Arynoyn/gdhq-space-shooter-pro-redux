@@ -527,10 +527,9 @@ MonoBehaviour:
   _tripleShotPrefab: {fileID: 3761578932506858463, guid: cb43666bc2e5747eda8decfbd9faa902, type: 3}
   _sprayShotPrefab: {fileID: 188501191748951299, guid: 19f40a289cd1147eb9bf8d90b6623a97, type: 3}
   _maxThrusterCharge: 100
-  _thrusterChargeCost: 1
-  _thrusterCooldownRate: 2
+  _thrusterUseRate: 1
   _thrusterRechargeRate: 1
-  _thrusterCharge: 0
+  _thrusterCooldownTime: 2
   _speedBoostModifier: 2
   _maxShieldStrength: 3
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
@@ -12195,6 +12194,7 @@ GameObject:
   - component: {fileID: 1759096534}
   - component: {fileID: 1759096533}
   - component: {fileID: 1759096536}
+  - component: {fileID: 1759096537}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12265,7 +12265,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1801911443}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1759096536
 MonoBehaviour:
@@ -12327,6 +12327,18 @@ MonoBehaviour:
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
   m_AfterStackBundles: []
+--- !u!114 &1759096537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759096532}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cda981a4d39f44e8bad72c6d150c0c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1801911442
 GameObject:
   m_ObjectHideFlags: 0
@@ -12354,8 +12366,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2078055484}
   - {fileID: 1759096535}
+  - {fileID: 2078055484}
   - {fileID: 1726427938}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -17392,7 +17404,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1801911443}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2078055485
 Camera:

@@ -94,4 +94,9 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         _uiManager.UpdateThrusterCharge(thrusterCharge);
     }
+    
+    public void ShakeCamera()
+    {
+        _uiManager.ShakeCamera();
+    }
 }
