@@ -153,7 +153,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _gameManager.SetScore(_score);
             _gameManager.SetLives(_lives);
-            _gameManager.UpdateAmmoCount(_ammoCount);
+            _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
             _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
             _gameManager.UpdateThrusterCharge(_thrusterCharge);
         }
@@ -226,7 +226,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (_ammoCount > 0)
             {
                 _ammoCount--;
-                _gameManager.UpdateAmmoCount(_ammoCount);
+                _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _nextFire = Time.time + _fireRate;
                 Vector3 playerPosition = transform.position;
                 Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
@@ -344,7 +344,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 break;
             case PowerupTypeEnum.Ammo:
                 _ammoCount = _maxAmmoCount;
-                _gameManager.UpdateAmmoCount(_ammoCount);
+                _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             case PowerupTypeEnum.Health:
