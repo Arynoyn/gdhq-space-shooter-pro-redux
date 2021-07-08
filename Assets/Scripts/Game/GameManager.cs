@@ -99,4 +99,9 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         _uiManager.ShakeCamera();
     }
+
+    public ViewportBounds GetViewportBounds()
+    {
+        return _uiManager.GetViewportBounds();
+    }
 }

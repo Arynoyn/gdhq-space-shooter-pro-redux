@@ -10,8 +10,8 @@ public class Starfield : MonoBehaviour
     [SerializeField] private int _maxStars = 100;
     [SerializeField] private float _starSize = 0.1f;
     [SerializeField] private float _starSizeRange = 0.5f;
-    [SerializeField] private float _fieldWidth = 20f;
-    [SerializeField] private float _fieldHeight = 25f;
+    [SerializeField] private float _fieldWidth;
+    [SerializeField] private float _fieldHeight;
     [SerializeField] private bool _colorize = false;
     [SerializeField] private StarfieldColorizationEnum _colorization = StarfieldColorizationEnum.Green; 
     
@@ -51,8 +51,11 @@ public class Starfield : MonoBehaviour
 
     private void CalculateFieldCenter()
     {
-        _starFieldCenterXPos = _fieldWidth / 2.0f;
-        _starFieldCenterYPos = _fieldHeight / 2.0f;
+        var bgCameraPosition = _bgCamera.transform.position;
+        _fieldWidth = Mathf.Abs(_bgCamera.ViewportToWorldPoint(new Vector3(1, 1, bgCameraPosition.z)).x * 2);
+        _fieldHeight = Mathf.Abs(_bgCamera.ViewportToWorldPoint(new Vector3(1, 1, bgCameraPosition.z)).y * 2);
+        _starFieldCenterXPos = _bgCamera.ViewportToWorldPoint(new Vector3(0f, 0f, bgCameraPosition.z)).x;
+        _starFieldCenterYPos = _bgCamera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, bgCameraPosition.z)).y;
     }
 
     private void GenerateStarfield()

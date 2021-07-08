@@ -11,13 +11,25 @@ public class Laser : MonoBehaviour
     [SerializeField] private LaserTypeEnum _type = LaserTypeEnum.Player;
     [SerializeField] private float _trajectoryAngle = 0.0f;
     private bool _hasParent;
-    private float _screenLimitTop = 8.0f;
-    private float _screenLimitBottom = -5.0f;
+    private GameManager _gameManager;
+    private ViewportBounds _viewportBounds;
+    // private float _screenLimitTop = 8.0f;
+    // private float _screenLimitBottom = -5.0f;
 
 
     private void Start()
     {
         _hasParent = transform.parent != null;
+        _gameManager = FindObjectOfType<GameManager>();
+        if (_gameManager == null) { Debug.LogError("Game Manager is NULL on Laser!"); }
+        else
+        {
+            _viewportBounds = _gameManager.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Laser!");
+            }
+        }
     }
 
     private void Update()
@@ -41,7 +53,7 @@ public class Laser : MonoBehaviour
         Vector3 movementVector = (Quaternion.Euler(0, 0 , _trajectoryAngle) * Vector3.up).normalized;
         transform.Translate(movementVector * (_speed * Time.deltaTime));
         
-        if (transform.position.y > _screenLimitTop || transform.position.y < _screenLimitBottom)
+        if (transform.position.y > _viewportBounds.Top || transform.position.y < _viewportBounds.Bottom)
         {
             DestroyLaser();
         }
