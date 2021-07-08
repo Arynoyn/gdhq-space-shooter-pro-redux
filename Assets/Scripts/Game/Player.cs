@@ -13,9 +13,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private int _maxLives = 3;
     private int _score;
     private int _lives;
+    private float _height;
+    private float _width;
     
     // Game State Managers
-    [Header("Managers")]
+    // [Header("Managers")]
     private GameManager _gameManager;
     
     // Movement Properties
@@ -26,10 +28,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _direction;
     
     // Play Space Boundaries Properties
-    private float _topMovementLimit = 0f;
-    private float _bottomMovementLimit = -3.8f;
-    private float _leftMovementLimit = -11.4f;
-    private float _rightMovementLimit = 11.4f;
+    private ViewportBounds _viewportBounds;
+    [SerializeField] private float _playerMovementLimitFromTop = 0;
+    [SerializeField] private float _playerMovementLimitFromBottom = 0;
+    // [SerializeField] private float _playerMovementLimitFromLeft = 0; //TODO: For use if restricting movement on the horizontal axis
+    // [SerializeField] private float _playerMovementLimitFromRight = 0; //TODO: For use if restricting movement on the horizontal axis
+
+    private float _movementLimitTop;
+    private float _movementLimitBottom;
+    // private float _movementLimitLeft = 0; //TODO: For use if restricting movement on the horizontal axis
+    // private float _movementLimitRight = 0; //TODO: For use if restricting movement on the horizontal axis
     private float _zPos = 0f;
 
     // Projectile Properties
@@ -90,15 +98,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [Header("Input")]
     [SerializeField] private PlayerInput _playerInput;
 
-    
-
-
     void Start()
     {
         _lives = _maxLives;
         _ammoCount = _maxAmmoCount;
         _thrusterCharge = _maxThrusterCharge;
-        
         
         _renderer = GetComponent<Renderer>();
         if (_renderer == null) { Debug.LogError("Renderer in Player class is NULL"); }
@@ -151,11 +155,22 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         _score = 0;
         if (_gameManager != null)
         {
+            _viewportBounds = _gameManager.GetViewportBounds();
             _gameManager.SetScore(_score);
             _gameManager.SetLives(_lives);
             _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
             _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
             _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            
+            var playerDimensions = transform.localScale;
+            _width = playerDimensions.x;
+            _height = playerDimensions.y;
+
+            _movementLimitBottom = _viewportBounds.Bottom + _playerMovementLimitFromBottom + _height / 2;
+            _movementLimitTop = _viewportBounds.Top - _playerMovementLimitFromTop - _height / 2;
+            // _playerMovementLimitFromLeft = _viewportBounds.Left + _playerMovementLimitFromLeft + _width / 2; //TODO: For use if restricting movement on the horizontal axis
+            // _playerMovementLimitFromRight = _viewportBounds.Right - _playerMovementLimitFromRight - _width / 2; //TODO: For use if restricting movement on the horizontal axis
+            
         }
     }
 
@@ -199,16 +214,17 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             ? _movementSpeed * _speedBoostModifier 
             : _movementSpeed;
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
-        float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
+        float yPosClamped = Mathf.Clamp(transform.position.y, _movementLimitBottom, _movementLimitTop);
+        // float xPosClamped = Mathf.Clamp(transform.position.x, _movementLimitLeft, _movementLimitRight); //TODO: For use if restricting movement on the horizontal axis
         
         float xPos = transform.position.x;
-        if (xPos < _leftMovementLimit)
+        if (xPos < _viewportBounds.Left)
         {
-            xPos = _rightMovementLimit;
+            xPos = _viewportBounds.Right;
         }
-        else if (xPos > _rightMovementLimit)
+        else if (xPos > _viewportBounds.Right)
         {
-            xPos = _leftMovementLimit;
+            xPos = _viewportBounds.Left;
         }
         
         transform.position = new Vector3(xPos, yPosClamped, _zPos);

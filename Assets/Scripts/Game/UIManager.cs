@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +35,7 @@ public class UIManager : MonoBehaviour
 
     private Camera _camera;
     private CameraShake _cameraShaker;
-    
+
     private void Start()
     {
         _camera = Camera.main;
@@ -50,6 +51,7 @@ public class UIManager : MonoBehaviour
                 Debug.LogError("Camera Shaker is Null on UI Manager!");
             }
         }
+        
         _isScoreTextNull = _scoreText == null;
         if (_isScoreTextNull) { Debug.Log("Score Text object on UI Manager is NULL"); }
         
@@ -137,5 +139,24 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(_gameOverFlashRate);
             if (!_isGameOverTextNull) {_gameOverText.gameObject.SetActive(!_gameOverText.gameObject.activeSelf);}
         }
+    }
+
+    public ViewportBounds GetViewportBounds()
+    {
+        if (_camera != null)
+        {
+            var cameraPosition = _camera.transform.position;
+            var viewportBounds = new ViewportBounds
+            {
+                Top = _camera.ViewportToWorldPoint(new Vector3(0, 1, Mathf.Abs(cameraPosition.z))).y,
+                Bottom = _camera.ViewportToWorldPoint(new Vector3(0, 0, Mathf.Abs(cameraPosition.z))).y,
+                Left = _camera.ViewportToWorldPoint(new Vector3(0, 0, Mathf.Abs(cameraPosition.z))).x,
+                Right = _camera.ViewportToWorldPoint(new Vector3(1, 0, Mathf.Abs(cameraPosition.z))).x
+            };
+            return viewportBounds;
+        }
+
+        Debug.LogError("Main Camera is NULL on UI Manager");
+        return new ViewportBounds();
     }
 }

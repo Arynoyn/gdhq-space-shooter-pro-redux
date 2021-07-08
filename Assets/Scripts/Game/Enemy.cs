@@ -8,6 +8,9 @@ public class Enemy : MonoBehaviour
     // Player Reference
     private Player _player;
     
+    // Managers
+    private GameManager _gameManager;
+    
     // Enemy Properties
     [SerializeField] private int _pointValue = 10;
     private bool _isDestroyed = false;
@@ -16,10 +19,12 @@ public class Enemy : MonoBehaviour
     [Header("Movement")]
     [Space]
     [SerializeField] private float _movementSpeed = 4.0f;
-    private float _screenLimitTop = 8.0f;
+
+    private ViewportBounds _viewportBounds;
+    /*private float _screenLimitTop = 8.0f;
     private float _screenLimitBottom = -5.0f;
     private float _screenLimitLeft = -8f;
-    private float _screenLimitRight = 8f;
+    private float _screenLimitRight = 8f;*/
     private float _zPos = 0f;
     
     // Attack Properties
@@ -53,6 +58,17 @@ public class Enemy : MonoBehaviour
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
         if (_player == null) { Debug.LogError("Player is NULL on Enemy!"); }
         
+        _gameManager = FindObjectOfType<GameManager>();
+        if (_gameManager == null) { Debug.LogError("Game Manager is NULL on Enemy!"); }
+        else
+        {
+            _viewportBounds = _gameManager.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Enemy!");
+            }
+        }
+        
         if (_laserPrefab == null) { Debug.LogError("LaserPrefab is NULL on Enemy!"); }
         
         _animator = GetComponent<Animator>();
@@ -80,10 +96,10 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * (_movementSpeed * Time.deltaTime));
 
-        if (transform.position.y < _screenLimitBottom && !_isDestroyed)
+        if (transform.position.y < _viewportBounds.Bottom && !_isDestroyed)
         {
-            float randomXPos = Random.Range(_screenLimitLeft, _screenLimitRight);
-            transform.position = new Vector3(randomXPos, _screenLimitTop, _zPos);
+            float randomXPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+            transform.position = new Vector3(randomXPos, _viewportBounds.Top, _zPos);
         }
     }
     
