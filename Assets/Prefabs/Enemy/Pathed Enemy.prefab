@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pathPrefab: {fileID: 5430537538022589016, guid: 23da35ebcf0dd4263b77cb9fca8e418f, type: 3}
-  _movementSpeed: 2
+  _movementSpeed: 6
 --- !u!95 &5134479245956869729
 Animator:
   serializedVersion: 3
