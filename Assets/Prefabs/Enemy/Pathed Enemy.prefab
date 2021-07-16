@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fac5ad596005441c9dca5f58d72da8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pointValue: 10
+  _pointValue: 20
   _movementSpeed: 0
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
   _laserPrefab: {fileID: 8969576527210128884, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
@@ -167,8 +167,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b43d0a33e39c4e369a20c9070c0a9f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pathPrefab: {fileID: 5430537538022589016, guid: 23da35ebcf0dd4263b77cb9fca8e418f, type: 3}
-  _movementSpeed: 6
 --- !u!95 &5134479245956869729
 Animator:
   serializedVersion: 3

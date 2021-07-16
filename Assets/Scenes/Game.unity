@@ -1399,7 +1399,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &611520360
 Transform:
   m_ObjectHideFlags: 0
@@ -6857,10 +6857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e390deb48cb3448dbab511c81dbd4d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemySpawnRate: 3
-  _enemyPrefabs:
-  - {fileID: 1286208098849473951, guid: c491348cccbc644b2857eff1d3f0c3b6, type: 3}
-  - {fileID: 8585542470169761076, guid: 62b76473537b245a592bab2d9844c59e, type: 3}
+  _wavesConfig: {fileID: 11400000, guid: f10b3d49e2d9146c09e28b73af75d884, type: 2}
   _enemyContainer: {fileID: 1220603935}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
