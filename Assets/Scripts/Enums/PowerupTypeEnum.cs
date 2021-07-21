@@ -5,5 +5,6 @@ public enum PowerupTypeEnum
     Shields,
     Ammo,
     Health,
-    SprayShot
+    SprayShot,
+    Hazzard
 }
