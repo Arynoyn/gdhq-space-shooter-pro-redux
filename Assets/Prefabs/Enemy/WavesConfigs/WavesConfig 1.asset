@@ -16,5 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb887dc6e913a4cf581dc7645ebe44a1, type: 2}
   - {fileID: 11400000, guid: e5fea7ecfc1fd40b29375ff8cde5d584, type: 2}
   - {fileID: 11400000, guid: 9a95adf485d554db5a38c42050232723, type: 2}
-  _timeBetweenWaves: 15
+  _timeBetweenWaves: 5
   _startingWaveIndex: 0
