@@ -7,18 +7,18 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    [SerializeField] private float _speed = 8.0f;
-    [SerializeField] private LaserTypeEnum _type = LaserTypeEnum.Player;
-    [SerializeField] private float _trajectoryAngle = 0.0f;
+    [SerializeField] private protected float _speed = 8.0f;
+    [SerializeField] private protected LaserTypeEnum _type = LaserTypeEnum.Player;
+    [SerializeField] private protected float _trajectoryAngle = 0.0f;
+    [SerializeField] protected float _verticalOffset;
+    [SerializeField] protected float _horizontalOffset;
     private bool _hasParent;
     private GameManager _gameManager;
-    private ViewportBounds _viewportBounds;
-    // private float _screenLimitTop = 8.0f;
-    // private float _screenLimitBottom = -5.0f;
+    private protected ViewportBounds _viewportBounds;
 
-
-    private void Start()
+    protected virtual void Start()
     {
+        SetOffsetPosition();
         _hasParent = transform.parent != null;
         _gameManager = FindObjectOfType<GameManager>();
         if (_gameManager == null) { Debug.LogError("Game Manager is NULL on Laser!"); }
@@ -32,7 +32,7 @@ public class Laser : MonoBehaviour
         }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         CalculateMovement();
     }
@@ -41,10 +41,21 @@ public class Laser : MonoBehaviour
     {
         if (_type == LaserTypeEnum.Enemy && other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
-            if (player == null) { Debug.LogError("Player is NULL during collision with Laser"); }
-            else { player.Damage(); }
+            DamagePlayer(other);
             DestroyLaser();
+        }
+    }
+
+    protected static void DamagePlayer(Collider2D other)
+    {
+        Player player = other.GetComponent<Player>();
+        if (player == null)
+        {
+            Debug.LogError("Player is NULL during collision with Laser");
+        }
+        else
+        {
+            player.Damage();
         }
     }
 
@@ -87,5 +98,12 @@ public class Laser : MonoBehaviour
     {
         _trajectoryAngle = angle;
         transform.rotation = Quaternion.Euler(0,0, _trajectoryAngle);
+    }
+
+    protected virtual void SetOffsetPosition()
+    {
+        Vector3 verticalOffsetFix = transform.up * _verticalOffset;
+        Vector3 horizontalOffsetFix = transform.right * _horizontalOffset;
+        transform.position = transform.position + verticalOffsetFix + horizontalOffsetFix;
     }
 }

@@ -40,6 +40,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2644058947572708270}
     m_Modifications:
+    - target: {fileID: -7316936892593796436, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
+      propertyPath: _verticalOffset
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5116532420594164041, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -106,6 +110,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2644058947572708270}
     m_Modifications:
+    - target: {fileID: -7316936892593796436, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
+      propertyPath: _verticalOffset
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5116532420594164041, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -172,6 +180,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2644058947572708270}
     m_Modifications:
+    - target: {fileID: -7316936892593796436, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
+      propertyPath: _verticalOffset
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5116532420594164041, guid: 1418488bb688e4397911bef8e09327b1, type: 3}
       propertyPath: m_Sprite
       value: 

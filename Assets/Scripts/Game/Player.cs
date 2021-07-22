@@ -49,7 +49,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private GameObject _sprayShotPrefab;
     private bool _tripleShotActive;
     private bool _sprayShotActive;
-    private Vector3 _laserOffset = new Vector3(0f, 1.0f, 0f);
     private float _nextFire = -1f;
     private int _ammoCount;
     
@@ -244,8 +243,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _ammoCount--;
                 _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _nextFire = Time.time + _fireRate;
-                Vector3 playerPosition = transform.position;
-                Vector3 laserSpawnOffset = _tripleShotActive ? playerPosition : playerPosition + _laserOffset;
                 GameObject shotPrefab;
                 if (_tripleShotActive)
                 {
@@ -260,7 +257,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                     shotPrefab = _laserPrefab;
                 }
 
-                Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
+                Instantiate(shotPrefab, transform.position, Quaternion.identity);
                 if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
             }
             else
