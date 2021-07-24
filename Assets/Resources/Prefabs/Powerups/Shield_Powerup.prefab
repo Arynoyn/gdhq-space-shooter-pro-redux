@@ -138,6 +138,7 @@ MonoBehaviour:
   _movementSpeed: 3
   _type: 2
   _effectDuration: 0
+  _spawnWeight: 30
 --- !u!95 &976374845931642175
 Animator:
   serializedVersion: 3

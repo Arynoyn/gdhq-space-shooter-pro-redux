@@ -1,49 +1,49 @@
 #region
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 #endregion
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private WavesConfig _wavesConfig;
-    // [SerializeField] private List<GameObject> _enemyPrefabs;
+    [Header("Enemy Wave Spawning")] [SerializeField]
+    private WavesConfig _wavesConfig;
+
     [SerializeField] private GameObject _enemyContainer;
-    [SerializeField] private int _powerupMinSpawnRate = 3;
+
+    [Header("Powerup Spawning")] [SerializeField]
+    private int _powerupMinSpawnRate = 3;
+
     [SerializeField] private int _powerupMaxSpawnRate = 7;
-
     [SerializeField] private float _spawnStartDelayTime = 2.0f;
-
-    private Dictionary<PowerupTypeEnum, GameObject> _powerupPrefabs;
+    [SerializeField] private List<PowerupWeight> _powerupWeights;
 
     private GameManager _gameManager;
-    private ViewportBounds _viewportBounds;
-    // private float _screenLimitLeft = -8f;
-    // private float _screenLimitRight = 8f;
-    // private float _screenLimitTop = 8.0f;
+
+    private Dictionary<PowerupTypeEnum, GameObject> _powerupPrefabs;
     private bool _spawnEnemies;
     private bool _spawnPowerups;
     private WaitForSeconds _spawnStartDelay;
-    private float _zPos = 0f;
+    private ViewportBounds _viewportBounds;
     private bool _wavesConfigIsNotNull;
+    private float _zPos = 0f;
 
-    // Start is called before the first frame update
     private void Start()
     {
-        
         _wavesConfigIsNotNull = _wavesConfig != null;
         if (!_wavesConfigIsNotNull)
         {
             Debug.LogError("WaveConfig is NULL on SpawnManager!");
         }
-        
+
         _gameManager = FindObjectOfType<GameManager>();
-        if (_gameManager == null) { Debug.LogError("Game Manager is NULL on SpawnManager!"); }
+        if (_gameManager == null)
+        {
+            Debug.LogError("Game Manager is NULL on SpawnManager!");
+        }
         else
         {
             _viewportBounds = _gameManager.GetViewportBounds();
@@ -52,25 +52,23 @@ public class SpawnManager : MonoBehaviour
                 Debug.LogError("Viewport Bounds is NULL on SpawnManager!");
             }
         }
-        
-        /*if (_enemyPrefabs == null)
-        {
-            Debug.LogError("Enemy array on SpawnManager is NULL");
-        }
-        else
-        {
-            if (!_enemyPrefabs.Any()) Debug.LogWarning("No enemies in array on SpawnManager");
-        }*/
-        
+
         _powerupPrefabs = new Dictionary<PowerupTypeEnum, GameObject>();
         InitializePowerupPrefabsDictionary();
-        if (_powerupPrefabs == null)
+        if (_powerupPrefabs is { })
         {
-            Debug.LogError("Powerups array on SpawnManager is NULL");
+            if (_powerupPrefabs.Any())
+            {
+                InitializePowerupWeightsTable();
+            }
+            else
+            {
+                Debug.LogWarning("No powerups in array on SpawnManager");
+            }
         }
         else
         {
-            if (!_powerupPrefabs.Any()) Debug.LogWarning("No powerups in array on SpawnManager");
+            Debug.LogError("Powerups array on SpawnManager is NULL");
         }
 
         _spawnStartDelay = new WaitForSeconds(_spawnStartDelayTime);
@@ -82,13 +80,19 @@ public class SpawnManager : MonoBehaviour
 
         while (_spawnEnemies)
         {
-            if (!_wavesConfigIsNotNull) { continue; }
-            List<Wave> waves = _wavesConfig.GetWaves().ToList();
+            if (!_wavesConfigIsNotNull)
+            {
+                continue;
+            }
+
+            var waves = _wavesConfig.GetWaves().ToList();
             if (waves.Any())
             {
-                for (int currentWaveIndex = _wavesConfig.GetStartingWaveIndex(); currentWaveIndex < waves.Count; currentWaveIndex++)
+                for (var currentWaveIndex = _wavesConfig.GetStartingWaveIndex();
+                    currentWaveIndex < waves.Count;
+                    currentWaveIndex++)
                 {
-                    Wave currentWave = waves[currentWaveIndex];
+                    var currentWave = waves[currentWaveIndex];
                     yield return StartCoroutine(SpawnAllEnemiesInWave(currentWave));
                     yield return new WaitForSeconds(_wavesConfig.GetTimeBetweenWaves());
                 }
@@ -99,7 +103,8 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator SpawnAllEnemiesInWave(Wave currentWave)
     {
         if (currentWave is { })
-            for (int enemyCount = 0; enemyCount < currentWave.GetNumberOfEnemies(); enemyCount++)
+        {
+            for (var enemyCount = 0; enemyCount < currentWave.GetNumberOfEnemies(); enemyCount++)
             {
                 if (currentWave.HasPath)
                 {
@@ -109,10 +114,11 @@ public class SpawnManager : MonoBehaviour
                 {
                     SpawnNonPathedEnemies(currentWave);
                 }
-                
+
 
                 yield return new WaitForSeconds(currentWave.GetTimeBetweenSpawns());
             }
+        }
     }
 
     private void SpawnPathedEnemies(Wave currentWave)
@@ -128,7 +134,7 @@ public class SpawnManager : MonoBehaviour
                 Quaternion.identity,
                 _enemyContainer.transform);
 
-            EnemyPathing enemyPathing = instantiatedEnemy.GetComponent<EnemyPathing>();
+            var enemyPathing = instantiatedEnemy.GetComponent<EnemyPathing>();
             if (enemyPathing is { })
             {
                 enemyPathing.SetWave(currentWave);
@@ -166,33 +172,50 @@ public class SpawnManager : MonoBehaviour
                 var spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
 
                 var randomPowerup = GetRandomPowerupPrefab();
-                Instantiate(randomPowerup, spawnPosition, Quaternion.identity);
+                if (randomPowerup is { })
+                {
+                    Instantiate(randomPowerup, spawnPosition, Quaternion.identity);
+                }
             }
         }
     }
 
     private GameObject GetRandomPowerupPrefab()
     {
-        // TODO: replace rare chance roll with weighted random system in phase II part 6 requirement 
-        //max value is exclusive thus we need 101 not 100 to include 100 as a possibility 
-        var rollForRarePowerup = Random.Range(1, 101);
-        var rareChance = 75;
-        var powerupEnumValuesList = Enum.GetValues(typeof(PowerupTypeEnum)).Cast<PowerupTypeEnum>().ToList();
-        if (rollForRarePowerup > rareChance)
+        if (_powerupWeights is { } && _powerupWeights.Any())
         {
-            var rarePowerupsToRemove = new List<PowerupTypeEnum> {PowerupTypeEnum.SprayShot};
-            powerupEnumValuesList.RemoveAll(p => rarePowerupsToRemove.Contains(p));
+            var totalRatio = _powerupWeights.Sum(x => x.SpawnWeight);
+            var randomValue = Random.Range(0, totalRatio);
+            var weightedRandomPowerup =
+                _powerupWeights.FirstOrDefault(powerupWeight => (randomValue -= powerupWeight.SpawnWeight) < 0);
+            if (weightedRandomPowerup is { })
+            {
+                if (!_powerupPrefabs.TryGetValue(weightedRandomPowerup.PowerupType, out var randomPowerup))
+                {
+                    Debug.LogError(
+                        $"SpawnManager::GetRandomPowerupPrefab(182): {weightedRandomPowerup.PowerupType.ToString()} does not have a matching prefab in the dictionary", 
+                        gameObject);
+                    return null;
+                }
+
+                return randomPowerup;
+            }
+
+            Debug.LogError("SpawnManager::GetRandomPowerupPrefab(186): No matching weighted random powerup.");
         }
 
-        var minValue = powerupEnumValuesList.Min();
-        var maxValue = powerupEnumValuesList.Max();
-        var randomPowerupType = (PowerupTypeEnum) Random.Range((int) minValue, (int) maxValue + 1);
+        if (_powerupWeights == null)
+        {
+            Debug.LogError("SpawnManager::GetRandomPowerupPrefab(192): The Powerup Weights collection is NULL");
+        }
 
-        if (!_powerupPrefabs.TryGetValue(randomPowerupType, out var randomPowerup))
-            throw new ArgumentOutOfRangeException(nameof(randomPowerupType), randomPowerupType,
-                $"{randomPowerupType.ToString()} does not have a matching prefab in the dictionary");
+        if (!_powerupWeights.Any())
+        {
+            Debug.LogError(
+                "SpawnManager::GetRandomPowerupPrefab(199): There are no weights in the Powerup Weights collection");
+        }
 
-        return randomPowerup;
+        return null;
     }
 
     public void StopSpawningEnemies()
@@ -230,5 +253,24 @@ public class SpawnManager : MonoBehaviour
             _powerupPrefabs.Add(powerupType, powerupGameObject);
             Debug.Log("Powerup Found...  " + thisObject.name);
         }
+    }
+
+    private void InitializePowerupWeightsTable()
+    {
+        _powerupWeights = _powerupPrefabs.Select(powerup =>
+            {
+                var powerupComponent = powerup.Value.GetComponent<Powerup>();
+                if (powerupComponent is { })
+                {
+                    return new PowerupWeight
+                    {
+                        PowerupType = powerup.Key,
+                        SpawnWeight = powerupComponent.GetSpawnWeight()
+                    };
+                }
+
+                return null;
+            }).Where(weight => weight != null)
+            .ToList();
     }
 }

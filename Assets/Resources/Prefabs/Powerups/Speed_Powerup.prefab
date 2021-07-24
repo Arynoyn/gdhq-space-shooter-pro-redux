@@ -137,6 +137,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 3
   _type: 1
+  _effectDuration: 5
+  _spawnWeight: 20
 --- !u!95 &3729023019033860349
 Animator:
   serializedVersion: 3

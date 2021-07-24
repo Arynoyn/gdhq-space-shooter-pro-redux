@@ -8,6 +8,8 @@ public class Powerup : MonoBehaviour
     [SerializeField] private float _effectDuration = 5.0f;
     private GameManager _gameManager;
     private ViewportBounds _viewportBounds;
+
+    [SerializeField] private int _spawnWeight;
     // private float _screenLimitBottom = -6.0f;
 
     private void Start()
@@ -54,5 +56,10 @@ public class Powerup : MonoBehaviour
     public float GetEffectDuration() 
     { 
         return _effectDuration; 
+    }
+
+    public int GetSpawnWeight()
+    {
+        return _spawnWeight;
     }
 }
