@@ -14,11 +14,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _rightMovementLimit = 9.5f;
     private float _verticalStartPosition = -2.0f;
     private float _horizontalStartPosition = 0f;
+    private float _zPos = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, 0);
+        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
     }
 
     // Update is called once per frame
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         bool shouldTeleport = transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit;
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         float xPos = shouldTeleport ? -transform.position.x : transform.position.x;
-        transform.position = new Vector3(xPos, yPosClamped, 0);
+        transform.position = new Vector3(xPos, yPosClamped, _zPos);
     }
 
     public void OnMove(InputAction.CallbackContext context)
