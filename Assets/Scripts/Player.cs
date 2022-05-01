@@ -40,7 +40,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        _direction = context.ReadValue<Vector2>();
+        _direction = context.ReadValue<Vector2>().normalized;
     }
 
     public void OnFire(InputAction.CallbackContext context)
