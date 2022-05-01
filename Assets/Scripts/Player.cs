@@ -14,7 +14,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _rightMovementLimit = 9.5f;
     private float _verticalStartPosition = -2.0f;
     private float _horizontalStartPosition = 0f;
-    private float _zPos = 0;
+    private float _zPos = 0f;
 
     // Start is called before the first frame update
     void Start()
