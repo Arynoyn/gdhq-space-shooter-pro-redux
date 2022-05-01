@@ -10,8 +10,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private float _speed = 3.5f;
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
-    private float _leftMovementLimit = -8.5f;
-    private float _rightMovementLimit = 8.5f;
+    private float _leftMovementLimit = -9.5f;
+    private float _rightMovementLimit = 9.5f;
 
     // Start is called before the first frame update
     void Start()
