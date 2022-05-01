@@ -31,10 +31,18 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private void CalculateMovement()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
-        
-        bool shouldTeleport = transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit;
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
-        float xPos = shouldTeleport ? -transform.position.x : transform.position.x;
+        
+        float xPos = transform.position.x;
+        if (xPos < _leftMovementLimit)
+        {
+            xPos = _rightMovementLimit;
+        }
+        else if (xPos > _rightMovementLimit)
+        {
+            xPos = _leftMovementLimit;
+        }
+        
         transform.position = new Vector3(xPos, yPosClamped, _zPos);
     }
 
