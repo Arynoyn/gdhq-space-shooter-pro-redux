@@ -24,14 +24,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
         
-        float yClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
-        transform.position = new Vector3(transform.position.x, yClamped, 0);
-
-        
-        if (transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit)
-        {
-            transform.position = new Vector3(-transform.position.x, transform.position.y, 0);
-        }
+        bool shouldTeleport = transform.position.x <= _leftMovementLimit || transform.position.x >= _rightMovementLimit;
+        float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
+        float xPos = shouldTeleport ? -transform.position.x : transform.position.x;
+        transform.position = new Vector3(xPos, yPosClamped, 0);
     }
 
     public void OnMove(InputAction.CallbackContext context)
