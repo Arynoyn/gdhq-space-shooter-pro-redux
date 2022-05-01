@@ -8,6 +8,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector2 _direction;
 
     [SerializeField] private float _speed = 3.5f;
+    private float _topMovementLimit = 0f;
+    private float _bottomMovementLimit = -3.8f;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +21,14 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     void Update()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
+        
+        if (transform.position.y >= _topMovementLimit)
+        {
+            transform.position = new Vector3(transform.position.x, _topMovementLimit, 0);
+        } else if (transform.position.y <= _bottomMovementLimit)
+        {
+            transform.position = new Vector3(transform.position.x, _bottomMovementLimit, 0);
+        }
     }
 
     public void OnMove(InputAction.CallbackContext context)
