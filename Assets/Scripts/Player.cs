@@ -12,15 +12,22 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -9.5f;
     private float _rightMovementLimit = 9.5f;
+    private float _verticalStartPosition = -2.0f;
+    private float _horizontalStartPosition = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        transform.position = new Vector2(0f,-3.9f);
+        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, 0);
     }
 
     // Update is called once per frame
     void Update()
+    {       
+        CalculateMovement();
+    }
+
+    private void CalculateMovement()
     {
         transform.Translate(_direction * (_speed * Time.deltaTime));
         
