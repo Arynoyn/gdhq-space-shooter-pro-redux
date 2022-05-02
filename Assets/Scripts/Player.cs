@@ -8,6 +8,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector2 _direction;
 
     [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private GameObject _laserPrefab;
+    
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -9.5f;
@@ -53,6 +55,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        Instantiate(_laserPrefab, transform.position, Quaternion.identity);
     }
 }
