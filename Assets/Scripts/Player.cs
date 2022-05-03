@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     [SerializeField] private float _speed = 3.5f;
     [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private float _fireRate = 0.15f;
     
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _zPos = 0f;
     
     private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
+    private float _nextFire = -1f;
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +59,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        Vector3 laserSpawnOffset = transform.position + _laserOffset;
-        Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
+        if (context.started && Time.time > _nextFire)
+        {
+            _nextFire = Time.time + _fireRate;
+            Vector3 laserSpawnOffset = transform.position + _laserOffset;
+            Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
+        }
     }
 }
