@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +5,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 {
     private Vector2 _direction;
 
-    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private float _movementSpeed = 3.5f;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     
@@ -36,7 +34,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
-        transform.Translate(_direction * (_speed * Time.deltaTime));
+        transform.Translate(_direction * (_movementSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
         float xPos = transform.position.x;
