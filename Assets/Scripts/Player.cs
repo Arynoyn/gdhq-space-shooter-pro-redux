@@ -17,6 +17,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _verticalStartPosition = -2.0f;
     private float _horizontalStartPosition = 0f;
     private float _zPos = 0f;
+    
+    private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +57,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnFire(InputAction.CallbackContext context)
     {
-        Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+        Vector3 laserSpawnOffset = transform.position + _laserOffset;
+        Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
     }
 }
