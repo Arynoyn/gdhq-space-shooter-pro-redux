@@ -21,13 +21,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _laserOffset = new Vector3(0f, 0.8f, 0f);
     private float _nextFire = -1f;
 
-    // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
     }
 
-    // Update is called once per frame
     void Update()
     {       
         CalculateMovement();
