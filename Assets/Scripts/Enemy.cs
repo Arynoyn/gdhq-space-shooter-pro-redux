@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Enemy : MonoBehaviour
 {
@@ -26,6 +28,21 @@ public class Enemy : MonoBehaviour
         {
             float randomXPos = Random.Range(_leftScreenLimit, _rightScreenLimit);
             transform.position = new Vector3(randomXPos, _topScreenLimit, _zPos);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            //damage player
+            Destroy(gameObject);
+        }
+
+        if (other.CompareTag("Laser"))
+        {
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 }
