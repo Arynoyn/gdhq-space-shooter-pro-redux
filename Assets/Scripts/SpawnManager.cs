@@ -9,6 +9,8 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private float _spawnRate = 5.0f;
     [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private GameObject _enemyContainer;
+    
     private float _screenLimitLeft = -8f;
     private float _screenLimitRight = 8f;
     private float _screenLimitTop = 8.0f;
@@ -25,7 +27,7 @@ public class SpawnManager : MonoBehaviour
         {
             float xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
             Vector3 spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
-            Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
+            Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
             yield return new WaitForSeconds(_spawnRate);
         }
     }
