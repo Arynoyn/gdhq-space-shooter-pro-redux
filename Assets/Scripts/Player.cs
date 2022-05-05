@@ -8,6 +8,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private float _movementSpeed = 3.5f;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
+    [SerializeField] private int _lives = 3;
     
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
@@ -62,6 +63,15 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _nextFire = Time.time + _fireRate;
             Vector3 laserSpawnOffset = transform.position + _laserOffset;
             Instantiate(_laserPrefab, laserSpawnOffset, Quaternion.identity);
+        }
+    }
+    
+    public void Damage()
+    {
+        _lives--;
+        if (_lives < 1)
+        {
+            Destroy(gameObject);
         }
     }
 }
