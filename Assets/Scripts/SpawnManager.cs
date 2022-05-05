@@ -15,6 +15,9 @@ public class SpawnManager : MonoBehaviour
     private float _screenLimitRight = 8f;
     private float _screenLimitTop = 8.0f;
     private float _zPos = 0f;
+    
+    private bool _spawnEnemies = true;
+
 
     private void Start()
     {
@@ -23,12 +26,17 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SpawnEnemyRoutine()
     {
-        while (true)
+        while (_spawnEnemies)
         {
             float xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
             Vector3 spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
             Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
             yield return new WaitForSeconds(_spawnRate);
         }
+    }
+    
+    public void StopSpawningEnemies()
+    {
+        _spawnEnemies = false;
     }
 }
