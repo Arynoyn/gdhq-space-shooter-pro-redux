@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 29454547}
   - component: {fileID: 29454548}
   - component: {fileID: 29454549}
+  - component: {fileID: 29454550}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -224,6 +225,7 @@ MonoBehaviour:
   _laserPrefab: {fileID: 7979875971813368654, guid: d37d25b200e82b645881adf17100297b, type: 3}
   _fireRate: 0.15
   _lives: 3
+  _animator: {fileID: 29454550}
 --- !u!114 &29454548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,6 +314,25 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &29454550
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 29454544}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3a9baac27bcb34a0fb302cc38a23a6bb, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &317955648
 GameObject:
   m_ObjectHideFlags: 0
