@@ -9,6 +9,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
+    [SerializeField] private Animator _animator;
     
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector3 _laserOffset = new Vector3(0f, 1.05f, 0f);
     private float _nextFire = -1f;
     private SpawnManager _spawnManager;
+    private bool _isMovingRight;
+    private bool _isMovingLeft;
 
     void Start()
     {
@@ -29,6 +32,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager in Player class is NULL");
+        }
+        
+        if (_animator == null)
+        {
+            Debug.LogError("Player Animator in Player class is NULL");
         }
     }
 
@@ -39,6 +47,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
+        _animator.SetBool("isTurningLeft", _direction.x < 0);
+        _animator.SetBool("isTurningRight", _direction.x > 0);
         transform.Translate(_direction * (_movementSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
