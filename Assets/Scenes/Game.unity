@@ -721,6 +721,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3818539339777481588, guid: 11330faa29026c54b8669a1465d9b96f, type: 3}
+      propertyPath: _movementSpeed
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3818539339777481591, guid: 11330faa29026c54b8669a1465d9b96f, type: 3}
       propertyPath: m_Name
       value: Triple_Shot_Powerup
