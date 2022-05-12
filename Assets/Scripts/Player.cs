@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -103,6 +104,25 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _spawnManager.StopSpawningEnemies();
             Destroy(gameObject);
+        }
+    }
+    public void ActivatePowerup(PowerupType type)
+    {
+        switch (type)
+        {
+            case PowerupType.TripleShot:
+                _tripleShotActive = true;
+                StartCoroutine(TripleShotCooldownRoutine());
+                break;
+        }
+    }
+
+    IEnumerator TripleShotCooldownRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(5.0f);
+            _tripleShotActive = false;
         }
     }
 }
