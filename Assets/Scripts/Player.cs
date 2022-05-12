@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _horizontalStartPosition = 0f;
     private float _zPos = 0f;
     
-    private Vector3 _laserOffset = new Vector3(0f, 1.05f, 0f);
+    private Vector3 _laserOffset = new Vector3(0f, 1.25f, 0f);
     private float _nextFire = -1f;
     private SpawnManager _spawnManager;
     private bool _isMovingRight;
