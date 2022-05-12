@@ -103,6 +103,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_lives < 1)
         {
             _spawnManager.StopSpawningEnemies();
+            _spawnManager.StopSpawningPowerups();
             Destroy(gameObject);
         }
     }
