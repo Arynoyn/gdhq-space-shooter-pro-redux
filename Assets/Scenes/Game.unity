@@ -203,7 +203,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29454544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.78, z: 0}
+  m_LocalPosition: {x: 0, y: -3.35, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -223,9 +223,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 3.5
   _laserPrefab: {fileID: 7979875971813368654, guid: d37d25b200e82b645881adf17100297b, type: 3}
+  _tripleShotPrefab: {fileID: 3258743436277645370, guid: 82943fbe5037ecc4c9c341d7b696ce14, type: 3}
   _fireRate: 0.15
   _lives: 3
   _animator: {fileID: 29454550}
+  _tripleShotActive: 0
 --- !u!114 &29454548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +314,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 3.5, y: 4.3}
   m_EdgeRadius: 0
 --- !u!95 &29454550
 Animator:
@@ -474,9 +476,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 247c0ca9cb9b87846a480f72a3caf94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawnRate: 5
-  _enemyPrefab: {fileID: 7068938383248881691, guid: 5f81ba801d70cee4980d66ba6b907e87, type: 3}
+  _enemySpawnRate: 5
+  _enemyPrefab: {fileID: 7068938383248881691, guid: d62cc80b155cd734996c406af1834146, type: 3}
   _enemyContainer: {fileID: 317955648}
+  _powerups:
+  - {fileID: 3818539339777481591, guid: d9513deafa8e5c845ac46f94ea98ef1b, type: 3}
+  _powerupMinSpawnRate: 3
+  _powerupMaxSpawnRate: 7
 --- !u!4 &1164523101
 Transform:
   m_ObjectHideFlags: 0
