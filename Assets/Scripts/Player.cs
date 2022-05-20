@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
     [SerializeField] private Animator _animator;
+    [SerializeField] private int _maxShieldStrength = 3;
     
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
@@ -23,13 +24,14 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _horizontalStartPosition = 0f;
     private float _zPos = 0f;
     
+    private SpawnManager _spawnManager;
     private Vector3 _laserOffset = new Vector3(0f, 1.25f, 0f);
     private float _nextFire = -1f;
     
-    [SerializeField] private bool _tripleShotActive;
-    [SerializeField] private bool _speedBoostActive;
-    
-    private SpawnManager _spawnManager;
+    private bool _tripleShotActive;
+    private bool _speedBoostActive;
+    private bool _shieldsActive;
+    [SerializeField] private int _shieldStrength;
     
     private bool _isMovingRight;
     private bool _isMovingLeft;
@@ -104,12 +106,20 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     
     public void Damage()
     {
-        _lives--;
-        if (_lives < 1)
+        if (_shieldsActive)
         {
-            _spawnManager.StopSpawningEnemies();
-            _spawnManager.StopSpawningPowerups();
-            Destroy(gameObject);
+            _shieldStrength--;
+            _shieldsActive = _shieldStrength > 0;
+        }
+        else
+        {
+            _lives--;
+            if (_lives < 1)
+            {
+                _spawnManager.StopSpawningEnemies();
+                _spawnManager.StopSpawningPowerups();
+                Destroy(gameObject);
+            }
         }
     }
     public void ActivatePowerup(PowerupType type)
@@ -125,6 +135,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
                 _speedBoostActive = true;
                 StartCoroutine(nameof(SpeedBoostCooldownRoutine));
+                break;
+            case PowerupType.Shields:
+                _shieldStrength = _maxShieldStrength;
+                _shieldsActive = _shieldStrength > 0;
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
