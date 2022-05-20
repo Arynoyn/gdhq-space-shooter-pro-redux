@@ -9,7 +9,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private float _movementSpeed = 3.5f;
+    [SerializeField] private float _movementSpeed = 5f;
     [SerializeField] private float _speedBoostModifier = 2.0f;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
@@ -31,7 +31,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private bool _tripleShotActive;
     private bool _speedBoostActive;
     private bool _shieldsActive;
-    [SerializeField] private int _shieldStrength;
+    private int _shieldStrength;
+    private GameObject _shieldVisualizer;
     
     private bool _isMovingRight;
     private bool _isMovingLeft;
@@ -39,15 +40,21 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     void Start()
     {
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
-        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+        
+        _spawnManager = FindObjectOfType<SpawnManager>();
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager in Player class is NULL");
         }
         
-        if (_animator == null)
+        _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
+        if (_shieldVisualizer == null)
         {
-            Debug.LogError("Player Animator in Player class is NULL");
+            Debug.LogError("Shield Visualizer in Player class is NULL");
+        }
+        else
+        {
+            _shieldVisualizer.SetActive(false);
         }
         
         if (_laserPrefab == null)
@@ -110,6 +117,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _shieldStrength--;
             _shieldsActive = _shieldStrength > 0;
+            if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
         }
         else
         {
@@ -139,6 +147,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             case PowerupType.Shields:
                 _shieldStrength = _maxShieldStrength;
                 _shieldsActive = _shieldStrength > 0;
+                if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
