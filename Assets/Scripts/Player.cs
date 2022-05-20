@@ -9,11 +9,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private float _movementSpeed = 3.5f;
+    [SerializeField] private float _movementSpeed = 5f;
     [SerializeField] private float _speedBoostModifier = 2.0f;
     [SerializeField] private float _fireRate = 0.15f;
     [SerializeField] private int _lives = 3;
     [SerializeField] private Animator _animator;
+    [SerializeField] private int _maxShieldStrength = 3;
     
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
@@ -23,13 +24,15 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _horizontalStartPosition = 0f;
     private float _zPos = 0f;
     
+    private SpawnManager _spawnManager;
     private Vector3 _laserOffset = new Vector3(0f, 1.25f, 0f);
     private float _nextFire = -1f;
     
-    [SerializeField] private bool _tripleShotActive;
-    [SerializeField] private bool _speedBoostActive;
-    
-    private SpawnManager _spawnManager;
+    private bool _tripleShotActive;
+    private bool _speedBoostActive;
+    private bool _shieldsActive;
+    private int _shieldStrength;
+    private GameObject _shieldVisualizer;
     
     private bool _isMovingRight;
     private bool _isMovingLeft;
@@ -37,15 +40,21 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     void Start()
     {
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
-        _spawnManager = GameObject.FindObjectOfType<SpawnManager>();
+        
+        _spawnManager = FindObjectOfType<SpawnManager>();
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager in Player class is NULL");
         }
         
-        if (_animator == null)
+        _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
+        if (_shieldVisualizer == null)
         {
-            Debug.LogError("Player Animator in Player class is NULL");
+            Debug.LogError("Shield Visualizer in Player class is NULL");
+        }
+        else
+        {
+            _shieldVisualizer.SetActive(false);
         }
         
         if (_laserPrefab == null)
@@ -104,12 +113,21 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     
     public void Damage()
     {
-        _lives--;
-        if (_lives < 1)
+        if (_shieldsActive)
         {
-            _spawnManager.StopSpawningEnemies();
-            _spawnManager.StopSpawningPowerups();
-            Destroy(gameObject);
+            _shieldStrength--;
+            _shieldsActive = _shieldStrength > 0;
+            if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
+        }
+        else
+        {
+            _lives--;
+            if (_lives < 1)
+            {
+                _spawnManager.StopSpawningEnemies();
+                _spawnManager.StopSpawningPowerups();
+                Destroy(gameObject);
+            }
         }
     }
     public void ActivatePowerup(PowerupType type)
@@ -125,6 +143,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
                 _speedBoostActive = true;
                 StartCoroutine(nameof(SpeedBoostCooldownRoutine));
+                break;
+            case PowerupType.Shields:
+                _shieldStrength = _maxShieldStrength;
+                _shieldsActive = _shieldStrength > 0;
+                if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
