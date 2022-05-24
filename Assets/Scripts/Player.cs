@@ -5,46 +5,66 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, Controls.IPlayerActions
 {
-    private Vector2 _direction;
-
-    [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private float _movementSpeed = 5f;
-    [SerializeField] private float _speedBoostModifier = 2.0f;
-    [SerializeField] private float _fireRate = 0.15f;
+    //Player Properties
     [SerializeField] private int _lives = 3;
-    [SerializeField] private Animator _animator;
-    [SerializeField] private int _maxShieldStrength = 3;
+    [SerializeField] private int _score;
     
+    // Game State Managers
+    private SpawnManager _spawnManager;
+    private UIManager _uiManager;
+    
+    // Movement Properties
+    [SerializeField] private float _movementSpeed = 5f;
+    private Vector2 _direction;
+    private float _verticalStartPosition = -2.0f;
+    private float _horizontalStartPosition = 0f;
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -9.5f;
     private float _rightMovementLimit = 9.5f;
-    private float _verticalStartPosition = -2.0f;
-    private float _horizontalStartPosition = 0f;
     private float _zPos = 0f;
-    
-    private SpawnManager _spawnManager;
+
+    //Projectile Properties
+    [SerializeField] private float _fireRate = 0.15f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _tripleShotPrefab;
+    private bool _tripleShotActive;
     private Vector3 _laserOffset = new Vector3(0f, 1.25f, 0f);
     private float _nextFire = -1f;
     
-    private bool _tripleShotActive;
+    //Speed Boost Properties
+    [SerializeField] private float _speedBoostModifier = 2.0f;
     private bool _speedBoostActive;
+    
+    //Shield Properties
+    [SerializeField] private int _maxShieldStrength = 3;
     private bool _shieldsActive;
     private int _shieldStrength;
-    private GameObject _shieldVisualizer;
     
+    // Animations / Visualizers
+    [SerializeField] private Animator _playerAnimator;
+    private GameObject _shieldVisualizer;
     private bool _isMovingRight;
     private bool _isMovingLeft;
 
     void Start()
     {
-        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
+        _playerAnimator = GetComponent<Animator>();
+        if (_playerAnimator == null)
+        {
+            Debug.LogError("Animator in Player class is NULL");
+        }
         
         _spawnManager = FindObjectOfType<SpawnManager>();
         if (_spawnManager == null)
         {
             Debug.LogError("Spawn Manager in Player class is NULL");
+        }
+        
+        _uiManager = FindObjectOfType<UIManager>();
+        if (_uiManager == null)
+        {
+            Debug.LogError("UI Manager in Player class is NULL");
         }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
@@ -66,6 +86,10 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             Debug.LogError("Triple Shot Prefab in Player class is NULL");
         }
+        
+        transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
+        _score = 0;
+        _uiManager.SetScoreText(_score);
     }
 
     void Update()
@@ -76,8 +100,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private void CalculateMovement()
     {
         float modifiedSpeed = _speedBoostActive ? _movementSpeed * _speedBoostModifier : _movementSpeed;
-        _animator.SetBool("isTurningLeft", _direction.x < 0);
-        _animator.SetBool("isTurningRight", _direction.x > 0);
+        _playerAnimator.SetBool("isTurningLeft", _direction.x < 0);
+        _playerAnimator.SetBool("isTurningRight", _direction.x > 0);
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
@@ -154,6 +178,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
     }
 
+    public void IncreaseScore(int value)
+    {
+        _score += value;
+        _uiManager.SetScoreText(_score);
+    }
+    
     IEnumerator TripleShotCooldownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
