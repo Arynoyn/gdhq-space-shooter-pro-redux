@@ -152,6 +152,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             {
                 _spawnManager.StopSpawningEnemies();
                 _spawnManager.StopSpawningPowerups();
+                _uiManager.DisplayGameOver();
                 Destroy(gameObject);
             }
         }
