@@ -10,8 +10,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private int _score;
     
     // Game State Managers
-    private SpawnManager _spawnManager;
-    private UIManager _uiManager;
     private GameManager _gameManager;
     
     // Movement Properties
@@ -56,18 +54,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             Debug.LogError("Animator in Player class is NULL");
         }
         
-        _spawnManager = FindObjectOfType<SpawnManager>();
-        if (_spawnManager == null)
-        {
-            Debug.LogError("Spawn Manager in Player class is NULL");
-        }
-        
-        _uiManager = FindObjectOfType<UIManager>();
-        if (_uiManager == null)
-        {
-            Debug.LogError("UI Manager in Player class is NULL");
-        }
-        
         _gameManager = FindObjectOfType<GameManager>();
         if (_gameManager == null)
         {
@@ -96,8 +82,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        _uiManager.SetScore(_score);
-        _uiManager.SetLives(_lives);
+        _gameManager.SetScore(_score);
+        _gameManager.SetLives(_lives);
     }
 
     void Update()
@@ -154,23 +140,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _lives--;
-            _uiManager.SetLives(_lives);
+            _gameManager.SetLives(_lives);
             if (_lives < 1)
             {
-                GameOver();
                 Destroy(gameObject);
             }
         }
-    }
-    
-    private void GameOver()
-    {
-        _gameManager.GameOver();
-        _uiManager.DisplayGameOver();
-        _spawnManager.StopSpawningEnemies();
-        _spawnManager.StopSpawningPowerups();
-        
-        
     }
     
     public void ActivatePowerup(PowerupType type)
@@ -200,7 +175,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     public void IncreaseScore(int value)
     {
         _score += value;
-        _uiManager.SetScore(_score);
+        _gameManager.SetScore(_score);
     }
     
     IEnumerator TripleShotCooldownRoutine()
