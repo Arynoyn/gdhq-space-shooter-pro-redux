@@ -5,6 +5,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private Text _scoreText;
     [SerializeField] private Text _gameOverText;
+    [SerializeField] private Text _restartText;
     [SerializeField] private Sprite[] _livesImages;
     [SerializeField] private Image _livesDisplay;
 
@@ -21,5 +22,6 @@ public class UIManager : MonoBehaviour
     public void DisplayGameOver()
     {
         _gameOverText.gameObject.SetActive(true);
+        _restartText.gameObject.SetActive(true);
     }
 }
