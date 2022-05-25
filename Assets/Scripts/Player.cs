@@ -43,8 +43,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Animations / Visualizers
     [SerializeField] private Animator _playerAnimator;
     private GameObject _shieldVisualizer;
-    private bool _isMovingRight;
-    private bool _isMovingLeft;
+    private static readonly int IsTurningLeft = Animator.StringToHash("isTurningLeft");
+    private static readonly int IsTurningRight = Animator.StringToHash("isTurningRight");
 
     void Start()
     {
@@ -94,8 +94,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private void CalculateMovement()
     {
         float modifiedSpeed = _speedBoostActive ? _movementSpeed * _speedBoostModifier : _movementSpeed;
-        _playerAnimator.SetBool("isTurningLeft", _direction.x < 0);
-        _playerAnimator.SetBool("isTurningRight", _direction.x > 0);
+        _playerAnimator.SetBool(IsTurningLeft, _direction.x < 0);
+        _playerAnimator.SetBool(IsTurningRight, _direction.x > 0);
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
