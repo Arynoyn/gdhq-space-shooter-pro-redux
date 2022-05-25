@@ -12,6 +12,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Game State Managers
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
+    private GameManager _gameManager;
     
     // Movement Properties
     [SerializeField] private float _movementSpeed = 5f;
@@ -65,6 +66,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_uiManager == null)
         {
             Debug.LogError("UI Manager in Player class is NULL");
+        }
+        
+        _gameManager = FindObjectOfType<GameManager>();
+        if (_gameManager == null)
+        {
+            Debug.LogError("Game Manager in Player class is NULL");
         }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer").gameObject;
@@ -150,13 +157,22 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _uiManager.SetLives(_lives);
             if (_lives < 1)
             {
-                _spawnManager.StopSpawningEnemies();
-                _spawnManager.StopSpawningPowerups();
-                _uiManager.DisplayGameOver();
+                GameOver();
                 Destroy(gameObject);
             }
         }
     }
+    
+    private void GameOver()
+    {
+        _gameManager.GameOver();
+        _uiManager.DisplayGameOver();
+        _spawnManager.StopSpawningEnemies();
+        _spawnManager.StopSpawningPowerups();
+        
+        
+    }
+    
     public void ActivatePowerup(PowerupType type)
     {
         switch (type)
