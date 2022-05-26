@@ -221,6 +221,77 @@
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
+			]
+		},
+        {
+            "name": "UI",
+            "id": "cebeb21a-4151-4874-b1af-5ac3e72f9b3f",
+            "actions": [
+                {
+                    "name": "Restart Level",
+                    "type": "Button",
+                    "id": "e0e46fa0-2e12-468a-ba70-b6001ba5cc78",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ef3abe8a-6655-46b4-8c7c-68a0358d30f7",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "846c6455-5462-4126-9902-ddb8cba4774f",
+                    "path": "<Touchscreen>/primaryTouch/tap",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Touch",
+                    "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c4e1404-27f6-4f8e-8c4e-aa28c5e50b70",
+                    "path": "<Joystick>/trigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Joystick",
+                    "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f165266-1160-44c1-bda6-be1b7493f184",
+                    "path": "<XRController>/{PrimaryAction}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "XR",
+                    "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "301cc381-b2e1-48e1-90c1-dbc4ab7f55f7",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
             ]
         }
     ],
