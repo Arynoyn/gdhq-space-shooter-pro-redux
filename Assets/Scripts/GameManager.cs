@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         if (_isGameOver)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("Main_Menu");
         }
     }
 
