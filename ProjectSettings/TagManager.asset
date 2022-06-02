@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Laser
   - Enemy
+  - BG_Camera
   layers:
   - Default
   - TransparentFX
