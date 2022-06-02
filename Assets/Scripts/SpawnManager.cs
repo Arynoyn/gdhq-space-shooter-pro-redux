@@ -20,9 +20,11 @@ public class SpawnManager : MonoBehaviour
     private float _screenLimitTop = 8.0f;
     private float _zPos = 0f;
     
-    private bool _spawnEnemies = true;
-    private bool _spawnPowerups = true;
+    private bool _spawnEnemies;
+    private bool _spawnPowerups;
 
+    [SerializeField] private float _spawnStartDelayTime = 2.0f;
+    private WaitForSeconds _spawnStartDelay;
 
     private void Start()
     {
@@ -34,8 +36,8 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.LogWarning("No powerups in array on SpawnManager");
         }
-        StartCoroutine(SpawnEnemyRoutine());
-        StartCoroutine(SpawnPowerupRoutine());
+        
+        _spawnStartDelay = new WaitForSeconds(_spawnStartDelayTime);
     }
 
     private IEnumerator SpawnEnemyRoutine()
@@ -51,7 +53,8 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator SpawnPowerupRoutine()
     {
-
+        yield return _spawnStartDelay;
+        
         while (_spawnPowerups)
         {
             int randomSpawnTime = Random.Range(_powerupMinSpawnRate, _powerupMaxSpawnRate + 1);
@@ -66,9 +69,21 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
+    public void StartSpawningEnemies()
+    {
+        _spawnEnemies = true;
+        StartCoroutine(SpawnEnemyRoutine());
+    }
+    
     public void StopSpawningEnemies()
     {
         _spawnEnemies = false;
+    }
+    
+    public void StartSpawningPowerups()
+    {
+        _spawnPowerups = true;
+        StartCoroutine(SpawnPowerupRoutine());
     }
     
     public void StopSpawningPowerups()

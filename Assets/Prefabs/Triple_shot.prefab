@@ -88,6 +88,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8457336085426529706, guid: d37d25b200e82b645881adf17100297b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4187057815155954561, guid: 5b452b44fb21c487ab9ccbcf9e8b00f5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d37d25b200e82b645881adf17100297b, type: 3}
 --- !u!4 &8408843555853730253 stripped
@@ -150,6 +154,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8457336085426529706, guid: d37d25b200e82b645881adf17100297b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4187057815155954561, guid: 5b452b44fb21c487ab9ccbcf9e8b00f5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d37d25b200e82b645881adf17100297b, type: 3}
 --- !u!4 &7144889611619876389 stripped
@@ -212,6 +220,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Laser
       objectReference: {fileID: 0}
+    - target: {fileID: 8457336085426529706, guid: d37d25b200e82b645881adf17100297b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -4187057815155954561, guid: 5b452b44fb21c487ab9ccbcf9e8b00f5, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d37d25b200e82b645881adf17100297b, type: 3}
 --- !u!4 &7420483334166168662 stripped

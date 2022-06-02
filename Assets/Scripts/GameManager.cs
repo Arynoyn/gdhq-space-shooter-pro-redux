@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
         _spawnManager.StopSpawningPowerups();
     }
     
+    public void StartGame()
+    {
+        _spawnManager.StartSpawningEnemies();
+        _spawnManager.StartSpawningPowerups();
+    }
+    
     public void SetScore(int score)
     {
         if (_uiManager != null)
