@@ -235,6 +235,7 @@ MonoBehaviour:
   _speedBoostModifier: 2
   _maxShieldStrength: 1
   _playerAnimator: {fileID: 29454550}
+  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
 --- !u!114 &29454548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +293,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: cf00e3ec-6f2e-45c0-b516-31df81d984c7
     m_ActionName: Player/Fire[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e0e46fa0-2e12-468a-ba70-b6001ba5cc78
+    m_ActionName: UI/Restart Level[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

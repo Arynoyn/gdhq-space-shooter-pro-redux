@@ -6,6 +6,7 @@ using UnityEngine;
 public class Explosion : MonoBehaviour
 {
     private Animator _animator;
+    private AudioSource _audioSource;
 
     // Start is called before the first frame update
     void Start()
@@ -15,8 +16,15 @@ public class Explosion : MonoBehaviour
         {
             Debug.LogError("Animator is NULL on Explosion");
         }
+        
+        _audioSource = GetComponent<AudioSource>();
+        if (_animator == null)
+        {
+            Debug.LogError("AudioSource is NULL on Explosion");
+        }
 
         var animationTime = GetAnimationTime(_animator);
+        _audioSource.Play();
         Destroy(gameObject, animationTime);
     }
 
