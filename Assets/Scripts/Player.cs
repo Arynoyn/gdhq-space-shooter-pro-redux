@@ -50,6 +50,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     
     // Audio
     [SerializeField] private AudioClip _laserSound;
+    [SerializeField] private AudioClip _powerupSound;
     private AudioSource _audioSource;
 
     void Start()
@@ -192,17 +193,20 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             case PowerupType.TripleShot:
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = true;
+                _audioSource.PlayOneShot(_powerupSound);
                 StartCoroutine(nameof(TripleShotCooldownRoutine));
                 break;
             case PowerupType.SpeedBoost:
                 if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
                 _speedBoostActive = true;
+                _audioSource.PlayOneShot(_powerupSound);
                 StartCoroutine(nameof(SpeedBoostCooldownRoutine));
                 break;
             case PowerupType.Shields:
                 _shieldStrength = _maxShieldStrength;
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
+                _audioSource.PlayOneShot(_powerupSound);
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);

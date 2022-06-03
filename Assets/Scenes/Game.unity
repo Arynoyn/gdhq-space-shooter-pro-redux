@@ -236,6 +236,7 @@ MonoBehaviour:
   _maxShieldStrength: 1
   _playerAnimator: {fileID: 29454550}
   _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _powerupSound: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
 --- !u!114 &29454548
 MonoBehaviour:
   m_ObjectHideFlags: 0
