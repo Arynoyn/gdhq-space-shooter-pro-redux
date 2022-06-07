@@ -28,4 +28,9 @@ public class Powerup : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    public PowerupType GetPowerupType()
+    {
+        return _type;
+    }
 }
