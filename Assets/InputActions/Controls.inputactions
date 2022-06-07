@@ -221,8 +221,8 @@
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
-			]
-		},
+            ]
+        },
         {
             "name": "UI",
             "id": "cebeb21a-4151-4874-b1af-5ac3e72f9b3f",
@@ -231,6 +231,14 @@
                     "name": "Restart Level",
                     "type": "Button",
                     "id": "e0e46fa0-2e12-468a-ba70-b6001ba5cc78",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Exit Game",
+                    "type": "Button",
+                    "id": "7f341722-6d29-471c-8ed0-110a943e0fb9",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -289,6 +297,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Restart Level",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b7a61a82-9772-42bf-ac96-08231eb37dcb",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Gamepad;Touch;Joystick;XR",
+                    "action": "Exit Game",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
