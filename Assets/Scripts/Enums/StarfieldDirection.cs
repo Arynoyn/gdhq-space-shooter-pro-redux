@@ -1,4 +1,4 @@
-public enum StarfieldDirectionEnum
+public enum StarfieldDirection
 {
     Down,
     Left,

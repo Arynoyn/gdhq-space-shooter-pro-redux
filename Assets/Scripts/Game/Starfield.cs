@@ -6,14 +6,14 @@ using Random = UnityEngine.Random;
 public class Starfield : MonoBehaviour
 {
     [SerializeField] private float _speed = 0.5f;
-    [SerializeField] private StarfieldDirectionEnum _direction = StarfieldDirectionEnum.Down;
+    [SerializeField] private StarfieldDirection _direction = StarfieldDirection.Down;
     [SerializeField] private int _maxStars = 100;
     [SerializeField] private float _starSize = 0.1f;
     [SerializeField] private float _starSizeRange = 0.5f;
     [SerializeField] private float _fieldWidth = 20f;
     [SerializeField] private float _fieldHeight = 25f;
     [SerializeField] private bool _colorize = false;
-    [SerializeField] private StarfieldColorizationEnum _colorization = StarfieldColorizationEnum.Green; 
+    [SerializeField] private StarfieldColorization _colorization = StarfieldColorization.Green; 
     
     private float _starFieldCenterXPos;
     private float _starFieldCenterYPos;
@@ -67,9 +67,9 @@ public class Starfield : MonoBehaviour
             star.startSize = _starSize * randomSize;
             star.startColor = _colorization switch
             {
-                StarfieldColorizationEnum.Red => new Color(1.0f, scaledColor, scaledColor, 1.0f),
-                StarfieldColorizationEnum.Green => new Color(scaledColor, 1.0f, scaledColor, 1.0f),
-                StarfieldColorizationEnum.Blue => new Color(scaledColor, scaledColor, 1.0f, 1.0f),
+                StarfieldColorization.Red => new Color(1.0f, scaledColor, scaledColor, 1.0f),
+                StarfieldColorization.Green => new Color(scaledColor, 1.0f, scaledColor, 1.0f),
+                StarfieldColorization.Blue => new Color(scaledColor, scaledColor, 1.0f, 1.0f),
                 _ => throw new ArgumentOutOfRangeException()
             };
 
@@ -89,10 +89,10 @@ public class Starfield : MonoBehaviour
     {
         Vector3 movementDirection = _direction switch
         {
-            StarfieldDirectionEnum.Down => Vector3.down,
-            StarfieldDirectionEnum.Left => Vector3.left,
-            StarfieldDirectionEnum.Up => Vector3.up,
-            StarfieldDirectionEnum.Right => Vector3.right,
+            StarfieldDirection.Down => Vector3.down,
+            StarfieldDirection.Left => Vector3.left,
+            StarfieldDirection.Up => Vector3.up,
+            StarfieldDirection.Right => Vector3.right,
             _ => throw new ArgumentOutOfRangeException()
         };
         transform.Translate(movementDirection * (_speed * Time.deltaTime));
@@ -111,25 +111,25 @@ public class Starfield : MonoBehaviour
     {
         switch (_direction)
         {
-            case StarfieldDirectionEnum.Down:
+            case StarfieldDirection.Down:
                 if (newStarPosition.y < _bgCamera.transform.position.y - _starFieldCenterYPos)
                 {
                     newStarPosition.y += _fieldHeight;
                 }
                 break;
-            case StarfieldDirectionEnum.Left:
+            case StarfieldDirection.Left:
                 if (newStarPosition.x < _bgCamera.transform.position.x - _starFieldCenterXPos)
                 {
                     newStarPosition.x += _fieldWidth;
                 }
                 break;
-            case StarfieldDirectionEnum.Up:
+            case StarfieldDirection.Up:
                 if (newStarPosition.y > _bgCamera.transform.position.y + _starFieldCenterYPos)
                 {
                     newStarPosition.y -= _fieldHeight;
                 }
                 break;
-            case StarfieldDirectionEnum.Right:
+            case StarfieldDirection.Right:
                 if (newStarPosition.x > _bgCamera.transform.position.x + _starFieldCenterXPos)
                 {
                     newStarPosition.x -= _fieldWidth;
