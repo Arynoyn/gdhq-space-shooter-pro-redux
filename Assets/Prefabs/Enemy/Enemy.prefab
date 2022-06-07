@@ -101,6 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pointValue: 10
   _movementSpeed: 4
+  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _laserPrefab: {fileID: 7979875971813368654, guid: d37d25b200e82b645881adf17100297b, type: 3}
+  _fireRate: 0.5
   _enemyDestroyedAnimationName: Enemy_Destroyed_anim
   _enemyDeathTriggerName: OnEnemyDeath
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}

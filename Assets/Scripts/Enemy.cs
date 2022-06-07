@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -21,6 +22,17 @@ public class Enemy : MonoBehaviour
     private float _screenLimitRight = 8f;
     private float _zPos = 0f;
     
+    // Attack Properties
+    [Header("Attacks")]
+    [Space]
+    [SerializeField] private AudioClip _laserSound;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private float _fireRate = 0.50f;
+    private readonly Vector3 _laserOffset = new Vector3(0, -1.05f, 0);
+    private float _nextFireDelay;
+    private bool _fireActive = true;
+    private IEnumerator _fireLaserRoutine;
+    
     // Animation Properties
     [Header("Animation")]
     [Space]
@@ -39,6 +51,10 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
+        if (_player == null) { Debug.LogError("Player is NULL on Enemy!"); }
+
+        if (_laserPrefab == null) { Debug.LogError("LaserPrefab is NULL on Enemy!"); }
+        
         _animator = GetComponent<Animator>();
         if (_animator == null)
         {
@@ -50,14 +66,17 @@ public class Enemy : MonoBehaviour
         }
         
         _collider = GetComponent<Collider2D>();
-        if (_collider == null)
-        {
-            Debug.LogError("Collider is NULL in Enemy");
-        }
+        if (_collider == null) { Debug.LogError("Collider is NULL in Enemy"); }
         
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null) { Debug.LogError("Audio Source is missing on Enemy!"); }
         if (_explosionSound == null) { Debug.LogError("Explosion Sound missing from Enemy!"); }
+        if (_laserSound == null) { Debug.LogError("Laser Sound missing from Enemy!"); }
+        
+        _nextFireDelay = Random.Range(_fireRate, _fireRate * 2);
+        
+        _fireLaserRoutine = FireLaserRoutine();
+        StartCoroutine(_fireLaserRoutine);
     }
     
     private void Update()
@@ -69,6 +88,29 @@ public class Enemy : MonoBehaviour
             float randomXPos = Random.Range(_screenLimitLeft, _screenLimitRight);
             transform.position = new Vector3(randomXPos, _screenLimitTop, _zPos);
         }
+    }
+    
+     
+    IEnumerator FireLaserRoutine()
+    {
+        while (_fireActive)
+        {
+            yield return new WaitForSeconds(_nextFireDelay);
+            FireLaser();
+        }
+    }
+    
+    private void FireLaser()
+    {
+        GameObject enemyLaser = Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
+        foreach (var laser in enemyLaser.GetComponentsInChildren<Laser>()) { laser.SetType(LaserType.Enemy); }
+        _audioSource.PlayOneShot(_laserSound);
+        CalculateNextFireTime();
+    }
+
+    private void CalculateNextFireTime()
+    {
+        _nextFireDelay = Random.Range(3.0f, 7.0f);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -85,13 +127,17 @@ public class Enemy : MonoBehaviour
 
         if (other.CompareTag("Laser"))
         {
-            if (_player != null) { _player.IncreaseScore(_pointValue); }
-            Destroy(other.gameObject);
-            _isDestroyed = true;
-            if (_collider != null) { _collider.enabled = false; }
-            if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
-            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
-            Destroy(gameObject, _deathAnimationLength);
+            Laser laser = other.GetComponent<Laser>();
+            if (laser != null && laser.GetOwnerType() == LaserType.Player)
+            {
+                if (_player != null) { _player.IncreaseScore(_pointValue); }
+                Destroy(other.gameObject);
+                _isDestroyed = true;
+                if (_collider != null) { _collider.enabled = false; }
+                if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
+                if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
+                Destroy(gameObject, _deathAnimationLength);
+            }
         }
     }
     
