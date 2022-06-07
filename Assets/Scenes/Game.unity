@@ -223,7 +223,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 29454544}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a04bedf5254eb72459da428abc3f0f50, type: 3}
+  m_Script: {fileID: 11500000, guid: 11ec3a9ed4e34114884488578a926de6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _lives: 3
@@ -299,6 +299,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: e0e46fa0-2e12-468a-ba70-b6001ba5cc78
     m_ActionName: UI/Restart Level[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7f341722-6d29-471c-8ed0-110a943e0fb9
+    m_ActionName: UI/Exit Game[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1673,7 +1677,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1164523099}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 247c0ca9cb9b87846a480f72a3caf94e, type: 3}
+  m_Script: {fileID: 11500000, guid: dc8f8ccc39bcfd64c966425360393e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _enemySpawnRate: 5
@@ -1830,7 +1834,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1510814440}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119e231311a245ed9b05c863146f8e29, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e01a45c2343df44f818cd0aab462d29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1510814442
@@ -16929,7 +16933,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1932479278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2570b5a249cf4e449bf1b03ca3212769, type: 3}
+  m_Script: {fileID: 11500000, guid: eb824f44219367a4db59af032c74f68a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _scoreText: {fileID: 575084653}
