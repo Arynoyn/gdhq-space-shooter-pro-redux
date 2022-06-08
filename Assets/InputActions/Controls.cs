@@ -241,17 +241,17 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""cebeb21a-4151-4874-b1af-5ac3e72f9b3f"",
             ""actions"": [
                 {
-                    ""name"": ""Restart Level"",
+                    ""name"": ""Exit Game"",
                     ""type"": ""Button"",
-                    ""id"": ""e0e46fa0-2e12-468a-ba70-b6001ba5cc78"",
+                    ""id"": ""7f341722-6d29-471c-8ed0-110a943e0fb9"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Exit Game"",
+                    ""name"": ""Restart Level"",
                     ""type"": ""Button"",
-                    ""id"": ""7f341722-6d29-471c-8ed0-110a943e0fb9"",
+                    ""id"": ""e0e46fa0-2e12-468a-ba70-b6001ba5cc78"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -396,8 +396,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
-        m_UI_RestartLevel = m_UI.FindAction("Restart Level", throwIfNotFound: true);
         m_UI_ExitGame = m_UI.FindAction("Exit Game", throwIfNotFound: true);
+        m_UI_RestartLevel = m_UI.FindAction("Restart Level", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -488,14 +488,14 @@ public class @Controls : IInputActionCollection, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
-    private readonly InputAction m_UI_RestartLevel;
     private readonly InputAction m_UI_ExitGame;
+    private readonly InputAction m_UI_RestartLevel;
     public struct UIActions
     {
         private @Controls m_Wrapper;
         public UIActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @RestartLevel => m_Wrapper.m_UI_RestartLevel;
         public InputAction @ExitGame => m_Wrapper.m_UI_ExitGame;
+        public InputAction @RestartLevel => m_Wrapper.m_UI_RestartLevel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -505,22 +505,22 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
-                @RestartLevel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
-                @RestartLevel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
-                @RestartLevel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
                 @ExitGame.started -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
                 @ExitGame.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
                 @ExitGame.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnExitGame;
+                @RestartLevel.started -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
+                @RestartLevel.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
+                @RestartLevel.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnRestartLevel;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @RestartLevel.started += instance.OnRestartLevel;
-                @RestartLevel.performed += instance.OnRestartLevel;
-                @RestartLevel.canceled += instance.OnRestartLevel;
                 @ExitGame.started += instance.OnExitGame;
                 @ExitGame.performed += instance.OnExitGame;
                 @ExitGame.canceled += instance.OnExitGame;
+                @RestartLevel.started += instance.OnRestartLevel;
+                @RestartLevel.performed += instance.OnRestartLevel;
+                @RestartLevel.canceled += instance.OnRestartLevel;
             }
         }
     }
@@ -577,7 +577,7 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface IUIActions
     {
-        void OnRestartLevel(InputAction.CallbackContext context);
         void OnExitGame(InputAction.CallbackContext context);
+        void OnRestartLevel(InputAction.CallbackContext context);
     }
 }

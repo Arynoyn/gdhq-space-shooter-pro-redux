@@ -45,17 +45,34 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private GameObject _shieldVisualizer;
     private GameObject _rightEngineDamageVisualizer;
     private GameObject _leftEngineDamageVisualizer;
+    private GameObject _thrusterVisualizer;
     private static readonly int IsTurningLeft = Animator.StringToHash("isTurningLeft");
     private static readonly int IsTurningRight = Animator.StringToHash("isTurningRight");
+    private Renderer _renderer;
+    private BoxCollider2D _collider;
     
     // Audio
     [SerializeField] private AudioClip _laserSound;
     [SerializeField] private AudioClip _powerupSound;
     [SerializeField] private AudioClip _explosionSound;
     private AudioSource _audioSource;
+    
+    // Player Input
+    [SerializeField] private PlayerInput _playerInput;
 
     void Start()
     {
+        _renderer = GetComponent<Renderer>();
+        if (_renderer == null)
+        {
+            Debug.LogError("Renderer in Player class is NULL");
+        }
+        _collider = GetComponent<BoxCollider2D>();
+        if (_renderer == null)
+        {
+            Debug.LogError("Collider in Player class is NULL");
+        }
+
         _playerAnimator = GetComponent<Animator>();
         if (_playerAnimator == null)
         {
@@ -96,6 +113,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _leftEngineDamageVisualizer.SetActive(false);
+        }
+        
+        _thrusterVisualizer = transform.Find("Thruster")?.gameObject;
+        if (_thrusterVisualizer == null)
+        {
+            Debug.LogError("Shield Visualizer in Player class is NULL");
         }
         
         if (_laserPrefab == null)
@@ -180,7 +203,12 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _audioSource.PlayOneShot(_explosionSound);
             if (_lives < 1)
             {
-                Destroy(gameObject);
+                _collider.enabled = false;
+                _renderer.enabled = false;
+                _leftEngineDamageVisualizer.SetActive(false);
+                _rightEngineDamageVisualizer.SetActive(false);
+                _thrusterVisualizer.SetActive(false);
+                _playerInput.SwitchCurrentActionMap("UI");
             }
             else
             {
