@@ -1,9 +1,9 @@
 name: CI - Build All Platforms
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   release:
     types: [ published ]
 
@@ -25,7 +25,7 @@ jobs:
   #     fail-fast: false
   #     matrix:
   #       unityVersion: 
-  #         - 2020.3.5f1
+  #         - 2020.3.15f2
   #   steps:
   #     - name: Checkout Repository
   #       uses: actions/checkout@v2
@@ -71,12 +71,12 @@ jobs:
   buildWithLinux:
     name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
     runs-on: ubuntu-latest
-    needs: unitTests
+    # needs: unitTests
     strategy: 
       fail-fast: false
       matrix:
         unityVersion: 
-          - 2020.3.5f1
+          - 2020.3.15f2
         targetPlatform: 
           # TODO: Learn how to include JUST the platform from the dispatch
           # - Android # Build an Android apk standalone app
@@ -214,75 +214,75 @@ jobs:
   # Deploy to GitHub Pages
   #-----------------------------------------------------------------------
 
-  # releaseToGitHubPages:
-  #   name: Release to GitHub Pages
-  #   runs-on: ubuntu-latest
-  #   needs: buildWithLinux
-  #   if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Web')) 
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
-  #     - name: Download WebGL Artifact
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         name: build-WebGL
-  #         path: build/WebGL
-  #     - name: Deploy to GitHub Pages 🚀
-  #       uses: JamesIves/github-pages-deploy-action@4.1.3
-  #       with:
-  #         branch: gh-pages # The branch the action should deploy to.
-  #         folder: build/WebGL # The folder the action should deploy.
-  #         target-folder: build # The folder the action should be deployed to within the deployment branch
+  releaseToGitHubPages:
+    name: Release to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Web')) 
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download WebGL Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: build-WebGL
+          path: build/WebGL
+      - name: Deploy to GitHub Pages 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: build/WebGL # The folder the action should deploy.
+          target-folder: build # The folder the action should be deployed to within the deployment branch
 
   #-----------------------------------------------------------------------
   # Deploy to itch.io
   #-----------------------------------------------------------------------
 
-  # release_webgl_to_itch:
-  #   name: Release WebGL to itch.io
-  #   runs-on: ubuntu-latest
-  #   needs: buildWithLinux
-  #   if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Web'))
-  #   steps:
-  #     - name: download WEBGL
-  #       id: download-webgl
-  #       uses: dsaltares/fetch-gh-release-asset@master
-  #       with:
-  #         version: "latest"
-  #         file: build-WebGL.zip
-  #         token: "${{ secrets.GH_CREDENTIALS }}"
-  #     - name: deploy to itch.io (WEBGL)
-  #       uses: josephbmanley/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-  #         CHANNEL: html
-  #         ITCH_GAME: unity-ci-cd-tester
-  #         ITCH_USER: Arynoyn
-  #         PACKAGE: build-WebGL.zip
-  #         VERSION: ${{ steps.download-webgl.outputs.version }}          
+  release_webgl_to_itch:
+    name: Release WebGL to itch.io
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Web'))
+    steps:
+      - name: download WEBGL
+        id: download-webgl
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "latest"
+          file: build-WebGL.zip
+          token: "${{ secrets.GH_CREDENTIALS }}"
+      - name: deploy to itch.io (WEBGL)
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html
+          ITCH_GAME: space-shooter-pro-redux
+          ITCH_USER: Arynoyn
+          PACKAGE: build-WebGL.zip
+          VERSION: ${{ steps.download-webgl.outputs.version }}          
 
-  # release_windows_to_itch:
-  #   name: Release Windows (32-Bit) to itch.io
-  #   runs-on: ubuntu-latest
-  #   needs: buildWithLinux
-  #   if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Windows'))
-  #   steps:
-  #     - name: download Windows
-  #       id: download-windows
-  #       uses: dsaltares/fetch-gh-release-asset@master
-  #       with:
-  #         version: "latest"
-  #         file: build-StandaloneWindows.zip
-  #         token: "${{ secrets.GH_CREDENTIALS }}"
-  #     - name: deploy to itch.io (Windows)
-  #       uses: josephbmanley/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-  #         CHANNEL: windows
-  #         ITCH_GAME: unity-ci-cd-tester
-  #         ITCH_USER: Arynoyn
-  #         PACKAGE: build-StandaloneWindows.zip
-  #         VERSION: ${{ steps.download-windows.outputs.version }}
+  release_windows_to_itch:
+    name: Release Windows (32-Bit) to itch.io
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Windows'))
+    steps:
+      - name: download Windows
+        id: download-windows
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "latest"
+          file: build-StandaloneWindows.zip
+          token: "${{ secrets.GH_CREDENTIALS }}"
+      - name: deploy to itch.io (Windows)
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: windows
+          ITCH_GAME: space-shooter-pro-redux
+          ITCH_USER: Arynoyn
+          PACKAGE: build-StandaloneWindows.zip
+          VERSION: ${{ steps.download-windows.outputs.version }}
 
   # release_windows_64_to_itch:
   #   name: Release Windows (64-Bit) to itch.io
@@ -302,56 +302,56 @@ jobs:
   #       env:
   #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
   #         CHANNEL: windows
-  #         ITCH_GAME: unity-ci-cd-tester
+  #         ITCH_GAME: space-shooter-pro-redux
   #         ITCH_USER: Arynoyn
   #         PACKAGE: build-StandaloneWindows64.zip
   #         VERSION: ${{ steps.download-windows-64.outputs.version }}
 
-  # release_macos_to_itch:
-  #   name: Release Mac OSX to itch.io
-  #   runs-on: ubuntu-latest
-  #   needs: buildWithLinux
-  #   if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Mac'))
-  #   steps:
-  #     - name: download MacOS
-  #       id: download-macos
-  #       uses: dsaltares/fetch-gh-release-asset@master
-  #       with:
-  #         version: "latest"
-  #         file: build-StandaloneOSX.zip
-  #         token: "${{ secrets.GH_CREDENTIALS }}"
-  #     - name: deploy to itch.io (MacOS)
-  #       uses: josephbmanley/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-  #         CHANNEL: mac
-  #         ITCH_GAME: unity-ci-cd-tester
-  #         ITCH_USER: Arynoyn
-  #         PACKAGE: build-StandaloneOSX.zip
-  #         VERSION: ${{ steps.download-macos.outputs.version }}
+  release_macos_to_itch:
+    name: Release Mac OSX to itch.io
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Mac'))
+    steps:
+      - name: download MacOS
+        id: download-macos
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "latest"
+          file: build-StandaloneOSX.zip
+          token: "${{ secrets.GH_CREDENTIALS }}"
+      - name: deploy to itch.io (MacOS)
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: mac
+          ITCH_GAME: space-shooter-pro-redux
+          ITCH_USER: Arynoyn
+          PACKAGE: build-StandaloneOSX.zip
+          VERSION: ${{ steps.download-macos.outputs.version }}
   
-  # release_linux_to_itch:
-  #   name: Release Linux (64-bit) to itch.io
-  #   runs-on: ubuntu-latest
-  #   needs: buildWithLinux
-  #   if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Linux'))
-  #   steps:
-  #     - name: download Linux
-  #       id: download-linux
-  #       uses: dsaltares/fetch-gh-release-asset@master
-  #       with:
-  #         version: "latest"
-  #         file: build-StandaloneLinux64.zip
-  #         token: "${{ secrets.GH_CREDENTIALS }}"
-  #     - name: deploy to itch.io (Linux)
-  #       uses: josephbmanley/butler-publish-itchio-action@master
-  #       env:
-  #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
-  #         CHANNEL: linux
-  #         ITCH_GAME: unity-ci-cd-tester
-  #         ITCH_USER: Arynoyn
-  #         PACKAGE: build-StandaloneLinux64.zip
-  #         VERSION: ${{ steps.download-linux.outputs.version }}
+  release_linux_to_itch:
+    name: Release Linux (64-bit) to itch.io
+    runs-on: ubuntu-latest
+    needs: buildWithLinux
+    if: github.event.action == 'published' || (contains(github.event.inputs.mode, 'release') && contains(github.event.inputs.mode, 'Linux'))
+    steps:
+      - name: download Linux
+        id: download-linux
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          version: "latest"
+          file: build-StandaloneLinux64.zip
+          token: "${{ secrets.GH_CREDENTIALS }}"
+      - name: deploy to itch.io (Linux)
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: linux
+          ITCH_GAME: space-shooter-pro-redux
+          ITCH_USER: Arynoyn
+          PACKAGE: build-StandaloneLinux64.zip
+          VERSION: ${{ steps.download-linux.outputs.version }}
 
   # release_Android_to_itch:
   #   name: Release Android to itch.io
@@ -371,7 +371,7 @@ jobs:
   #       env:
   #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
   #         CHANNEL: html
-  #         ITCH_GAME: unity-ci-cd-tester
+  #         ITCH_GAME: space-shooter-pro-redux
   #         ITCH_USER: Arynoyn
   #         PACKAGE: build-Android.zip
   #         VERSION: ${{ steps.download-android.outputs.version }}
@@ -394,7 +394,7 @@ jobs:
   #       env:
   #         BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
   #         CHANNEL: html
-  #         ITCH_GAME: unity-ci-cd-tester
+  #         ITCH_GAME: space-shooter-pro-redux
   #         ITCH_USER: Arynoyn
   #         PACKAGE: build-html.zip
   #         VERSION: ${{ steps.download-html.outputs.version }}
