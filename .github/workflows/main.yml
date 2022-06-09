@@ -30,7 +30,7 @@ jobs:
   #         - 2020.3.15f2
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #       with:
   #         lfs: true
   #     - name : Cache Library
@@ -101,7 +101,7 @@ jobs:
           sudo rm -rf "$AGENT_TOOLSDIRECTORY"
           df -h
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           lfs: true
@@ -159,7 +159,7 @@ jobs:
   #         - WSAPlayer
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #       with:
   #         fetch-depth: 0
   #         lfs: true
@@ -417,7 +417,7 @@ jobs:
   #     ANDROID_PACKAGE_NAME: com.finoldigital.cardgamesim
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #     - name: Download Android Artifact
   #       uses: actions/download-artifact@v2
   #       with:
@@ -466,7 +466,7 @@ jobs:
   #     PROJECT_NAME: Card Game Simulator
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #     - name: Download iOS Artifact
   #       uses: actions/download-artifact@v2
   #       with:
@@ -526,7 +526,7 @@ jobs:
   #     PROJECT_NAME: Card Game Simulator
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #     - name: Download StandaloneOSX Artifact
   #       uses: actions/download-artifact@v2
   #       with:
@@ -577,7 +577,7 @@ jobs:
   #     SigningCertificate: Card Game Simulator_StoreKey.pfx
   #   steps:
   #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  #       uses: actions/checkout@v3
   #     - name: Download WSAPlayer Artifact
   #       uses: actions/download-artifact@v2
   #       with:
