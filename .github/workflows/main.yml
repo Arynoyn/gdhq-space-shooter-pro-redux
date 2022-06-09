@@ -49,7 +49,7 @@ jobs:
   #         githubToken: ${{ secrets.GITHUB_TOKEN }}
   #         checkName: ${{ matrix.unityVersion }} Test Results
   #     - name: Upload Test Results
-  #       uses: actions/upload-artifact@v2
+  #       uses: actions/upload-artifact@v3
   #       if: always()
   #       with:
   #         name: Test results for ${{ matrix.unityVersion }}
@@ -121,7 +121,7 @@ jobs:
           buildName: ${{ matrix.targetPlatform }}
           versioning: Semantic
       - name: Upload Build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
         with:
           name: build-${{ matrix.targetPlatform }}
@@ -190,7 +190,7 @@ jobs:
   #         # build-method: Cgs.Editor.BuildCgs.BuildOptions
   #         build-version: ${{ steps.versioning.outputs.version }}
   #     - name: Upload Build
-  #       uses: actions/upload-artifact@v2
+  #       uses: actions/upload-artifact@v3
   #       if: github.event.action == 'published' || contains(github.event.inputs.mode, 'release')
   #       with:
   #         name: build-${{ matrix.targetPlatform }}
@@ -617,7 +617,7 @@ jobs:
   #     - name: Remove the .pfx
   #       run: Remove-Item -path $env:Wap_Project_Directory\$env:SigningCertificate
   #     - name: Upload the .appxupload
-  #       uses: actions/upload-artifact@v2
+  #       uses: actions/upload-artifact@v3
   #       with:
   #         name: cgs.appxupload
   #         path: build/WSAPlayer/AppPackages/Card Game Simulator/*.appxupload
