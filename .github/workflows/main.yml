@@ -225,7 +225,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
       - name: Download WebGL Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: build-WebGL
           path: build/WebGL
@@ -419,7 +419,7 @@ jobs:
   #     - name: Checkout Repository
   #       uses: actions/checkout@v3
   #     - name: Download Android Artifact
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v3
   #       with:
   #         name: cgs-Android
   #         path: build/Android
@@ -468,7 +468,7 @@ jobs:
   #     - name: Checkout Repository
   #       uses: actions/checkout@v3
   #     - name: Download iOS Artifact
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v3
   #       with:
   #         name: cgs-iOS
   #         path: build/iOS
@@ -528,7 +528,7 @@ jobs:
   #     - name: Checkout Repository
   #       uses: actions/checkout@v3
   #     - name: Download StandaloneOSX Artifact
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v3
   #       with:
   #         name: cgs-StandaloneOSX
   #         path: build/StandaloneOSX
@@ -579,7 +579,7 @@ jobs:
   #     - name: Checkout Repository
   #       uses: actions/checkout@v3
   #     - name: Download WSAPlayer Artifact
-  #       uses: actions/download-artifact@v2
+  #       uses: actions/download-artifact@v3
   #       with:
   #         name: cgs-WSAPlayer
   #         path: build/WSAPlayer
