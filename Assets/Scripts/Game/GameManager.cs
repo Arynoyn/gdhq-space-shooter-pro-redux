@@ -75,4 +75,9 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         _uiManager.UpdateShieldStrength(shieldStrength);
     }
+
+    public void UpdateAmmoCount(int ammo)
+    {
+        _uiManager.UpdateAmmoCount(ammo);
+    }
 }
