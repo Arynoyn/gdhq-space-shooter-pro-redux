@@ -15,6 +15,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _shieldStrengthImage;
     [SerializeField] private Sprite[] _shieldStrengthImages = new Sprite[4];
     
+    [Header("Player Ammo")]
+    [SerializeField] private Text _ammoText;
+    
     [Header("Game Over Text")] 
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
@@ -124,6 +127,11 @@ public class UIManager : MonoBehaviour
         _shieldStrengthImage.sprite = _shieldStrengthImages[shieldStrength];
         imageGameObject.SetActive(shieldStrength > 0);
         parentGameObject.SetActive(shieldStrength > 0);
+    }
+    
+    public void UpdateAmmoCount(int ammo)
+    {
+        _ammoText.text = $"{ammo}";
     }
 
     public void DisplayGameOver()
