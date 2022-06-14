@@ -4,5 +4,6 @@
     SpeedBoost,
     Shields,
     Ammo,
-    Health
+    Health,
+    SprayShot
 }
