@@ -36,9 +36,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Speed Boost"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""ee9e9df5-b743-4a8a-95a4-ee1355fd13de"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
                 }
