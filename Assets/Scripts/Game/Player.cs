@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     
     // Movement Properties
     [SerializeField] private float _movementSpeed = 5f;
+    private bool _thrusterActive = false;
     private Vector2 _direction;
     private float _verticalStartPosition = -2.0f;
     private float _horizontalStartPosition = 0f;
@@ -150,7 +151,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
-        float modifiedSpeed = _speedBoostActive ? _movementSpeed * _speedBoostModifier : _movementSpeed;
+        float modifiedSpeed = _speedBoostActive || _thrusterActive 
+            ? _movementSpeed * _speedBoostModifier 
+            : _movementSpeed;
         _playerAnimator.SetBool(IsTurningLeft, _direction.x < 0);
         _playerAnimator.SetBool(IsTurningRight, _direction.x > 0);
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
@@ -186,7 +189,20 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
         }
     }
-    
+
+    public void OnSpeedBoost(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _thrusterActive = !_thrusterActive;
+        }
+
+        if (context.canceled)
+        {
+            _thrusterActive = false;
+        }
+    }
+
     public void Damage()
     {
         if (_shieldsActive)
