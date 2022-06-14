@@ -80,4 +80,14 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     {
         _uiManager.UpdateAmmoCount(ammo);
     }
+    
+    public void UpdateMaxThrusterCharge(int maxThrusterCharge)
+    {
+        _uiManager.UpdateMaxThrusterCharge(maxThrusterCharge);
+    }
+
+    public void UpdateThrusterCharge(int thrusterCharge)
+    {
+        _uiManager.UpdateThrusterCharge(thrusterCharge);
+    }
 }

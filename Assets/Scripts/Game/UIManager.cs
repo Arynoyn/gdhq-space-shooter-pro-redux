@@ -18,6 +18,9 @@ public class UIManager : MonoBehaviour
     [Header("Player Ammo")]
     [SerializeField] private Text _ammoText;
     
+    [Header("Player Thruster Charge")]
+    [SerializeField] private ThrusterDisplay _thrusterDisplay;
+    
     [Header("Game Over Text")] 
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
@@ -132,6 +135,16 @@ public class UIManager : MonoBehaviour
     public void UpdateAmmoCount(int ammo)
     {
         _ammoText.text = $"{ammo}";
+    }
+    
+    public void UpdateThrusterCharge(int thrusterCharge)
+    {
+        _thrusterDisplay.SetCharge(thrusterCharge);
+    }
+    
+    public void UpdateMaxThrusterCharge(int thrusterCharge)
+    {
+        _thrusterDisplay.SetMaxCharge(thrusterCharge);
     }
 
     public void DisplayGameOver()

@@ -16,12 +16,13 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private GameManager _gameManager;
     
     // Movement Properties
-    [Header("Movement")]
+    [Header("Base Movement")]
     [SerializeField] private float _movementSpeed = 5f;
-    private bool _thrusterActive = false;
+    [SerializeField]private float _verticalStartPosition = -2.0f;
+    [SerializeField]private float _horizontalStartPosition = 0f;
     private Vector2 _direction;
-    private float _verticalStartPosition = -2.0f;
-    private float _horizontalStartPosition = 0f;
+    
+    // Play Space Boundaries Properties
     private float _topMovementLimit = 0f;
     private float _bottomMovementLimit = -3.8f;
     private float _leftMovementLimit = -9.5f;
@@ -41,8 +42,19 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private float _nextFire = -1f;
     private int _ammoCount;
     
+    // Thrusters Properties
+    [Header("Thrusters")]
+    [SerializeField] private int _maxThrusterCharge = 100;
+    [SerializeField] private int _thrusterUseRate = 1;
+    [SerializeField] private int _thrusterRechargeRate = 1;
+    [SerializeField] private float _thrusterCooldownTime = 2.0f;
+    private int _thrusterCharge;
+    private bool _thrusterActived;
+    private bool _thrusterActive;
+    private bool _thrusterRecharging;
+    
     // Speed Boost Properties
-    [Header("Speed")]
+    [Header("Speed Boost")]
     [SerializeField] private float _speedBoostModifier = 2.0f;
     private bool _speedBoostActive;
     
@@ -53,7 +65,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private int _shieldStrength;
     
     // Animations / Visualizers
-    [SerializeField] private Animator _playerAnimator;
+    private Animator _playerAnimator;
     private GameObject _shieldVisualizer;
     private GameObject _rightEngineDamageVisualizer;
     private GameObject _leftEngineDamageVisualizer;
@@ -77,8 +89,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     void Start()
     {
-        _ammoCount = _maxAmmoCount;
         _lives = _maxLives;
+        _ammoCount = _maxAmmoCount;
+        _thrusterCharge = _maxThrusterCharge;
 
         _renderer = GetComponent<Renderer>();
         if (_renderer == null) { Debug.LogError("Renderer in Player class is NULL"); }
@@ -121,9 +134,14 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        _gameManager.SetScore(_score);
-        _gameManager.SetLives(_lives);
-        _gameManager.UpdateAmmoCount(_ammoCount);
+        if (_gameManager != null)
+        {
+            _gameManager.SetScore(_score);
+            _gameManager.SetLives(_lives);
+            _gameManager.UpdateAmmoCount(_ammoCount);
+            _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
+            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+        }
     }
 
     void Update()
@@ -133,11 +151,38 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     private void CalculateMovement()
     {
+        _thrusterActive = _thrusterActived && _thrusterCharge > 0;
+        _playerAnimator.SetBool(IsTurningLeft, _direction.x < 0);
+        _playerAnimator.SetBool(IsTurningRight, _direction.x > 0);
+
+        if (_thrusterActive)
+        {
+            if (_thrusterRecharging)
+            {
+                StopCoroutine(nameof(ThrusterRechargeRoutine));
+                _thrusterRecharging = false;
+            }
+
+            
+            _thrusterCharge -= _thrusterCharge > 0 ? _thrusterUseRate : 0;
+            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            //TODO: Refactor Hacky Magic Numbers in local transforms below
+            _thrusterVisualizer.transform.localPosition = new Vector3(0, -3.1f, 0);
+            _thrusterVisualizer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        } else
+        {
+            //TODO: Refactor Hacky Magic Numbers in local transforms below
+            _thrusterVisualizer.transform.localPosition = new Vector3(0, -2f, 0);
+            _thrusterVisualizer.transform.localScale = new Vector3(0.25f, 0.25f, 1.0f);
+            if (!_thrusterRecharging && _thrusterCharge < _maxThrusterCharge)
+            {
+                StartCoroutine(nameof(ThrusterRechargeRoutine));
+            }
+        }
+
         float modifiedSpeed = _speedBoostActive || _thrusterActive 
             ? _movementSpeed * _speedBoostModifier 
             : _movementSpeed;
-        _playerAnimator.SetBool(IsTurningLeft, _direction.x < 0);
-        _playerAnimator.SetBool(IsTurningRight, _direction.x > 0);
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
         float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
         
@@ -199,15 +244,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
     public void OnSpeedBoost(InputAction.CallbackContext context)
     {
-        if (context.performed)
-        {
-            _thrusterActive = !_thrusterActive;
-        }
-
-        if (context.canceled)
-        {
-            _thrusterActive = false;
-        }
+        if (context.performed) { _thrusterActived = true; }
+        if (context.canceled) { _thrusterActived = false; }
     }
 
     public void Damage()
@@ -336,6 +374,20 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 break;
         }
     }
+
+    private void RechargeThrusters()
+    {
+        if (_thrusterCharge < _maxThrusterCharge)
+        {
+            _thrusterCharge += _thrusterRechargeRate;
+        }
+        else
+        {
+            _thrusterCharge = _maxThrusterCharge;
+        }
+
+        _gameManager.UpdateThrusterCharge(_thrusterCharge);
+    }
     
     IEnumerator TripleShotCooldownRoutine(float duration)
     {
@@ -353,5 +405,19 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         yield return new WaitForSeconds(duration);
         _sprayShotActive = false;
+    }
+    
+    
+    IEnumerator ThrusterRechargeRoutine()
+    {
+        _thrusterRecharging = true;
+        yield return new WaitForSecondsRealtime(_thrusterCooldownTime);
+        while (_thrusterCharge < _maxThrusterCharge)
+        {
+            yield return new WaitForFixedUpdate();
+            RechargeThrusters();
+        }
+
+        _thrusterRecharging = false;
     }
 }
