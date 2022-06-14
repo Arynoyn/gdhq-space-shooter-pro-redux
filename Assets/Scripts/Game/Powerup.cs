@@ -4,7 +4,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField] private float _movementSpeed = 3.0f;
     [SerializeField] private PowerupType _type = PowerupType.TripleShot;
-    [SerializeField] private float _effectDuration = 5.0f; 
+    [SerializeField] private float _effectDuration; 
     
     private float _screenLimitBottom = -6.0f;
     void Update()
