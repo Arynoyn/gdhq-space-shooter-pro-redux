@@ -247,21 +247,22 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
     }
     
-    public void ActivatePowerup(PowerupType type)
+    public void ActivatePowerup(Powerup powerup)
     {
+        var type = powerup.GetPowerupType();
         switch (type)
         {
             case PowerupType.TripleShot:
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
-                StartCoroutine(nameof(TripleShotCooldownRoutine));
+                StartCoroutine(nameof(TripleShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
             case PowerupType.SpeedBoost:
                 if (_speedBoostActive) { StopCoroutine(nameof(SpeedBoostCooldownRoutine)); }
                 _speedBoostActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
-                StartCoroutine(nameof(SpeedBoostCooldownRoutine));
+                StartCoroutine(nameof(SpeedBoostCooldownRoutine), powerup.GetEffectDuration());
                 break;
             case PowerupType.Shields:
                 _shieldStrength = _maxShieldStrength;
@@ -269,6 +270,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _gameManager.UpdateShieldStrength(_shieldStrength);
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
+                _audioSource.PlayOneShot(_powerupSound);
+                break;
+            case PowerupType.Ammo:
+                _ammoCount = _maxAmmoCount;
+                _gameManager.UpdateAmmoCount(_ammoCount);
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             default:
@@ -303,15 +309,15 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         }
     }
     
-    IEnumerator TripleShotCooldownRoutine()
+    IEnumerator TripleShotCooldownRoutine(float duration)
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(duration);
         _tripleShotActive = false;
     }
     
-    IEnumerator SpeedBoostCooldownRoutine()
+    IEnumerator SpeedBoostCooldownRoutine(float duration)
     {
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(duration);
         _speedBoostActive = false;
     }
 }
