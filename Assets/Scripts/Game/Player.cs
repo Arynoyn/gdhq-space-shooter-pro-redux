@@ -263,6 +263,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _lives--;
             _gameManager.SetLives(_lives);
+            _gameManager.ShakeCamera();
             _audioSource.PlayOneShot(_explosionSound);
             UpdateEngineDamageVisualizers(_lives);
             if (_lives <= 0)
