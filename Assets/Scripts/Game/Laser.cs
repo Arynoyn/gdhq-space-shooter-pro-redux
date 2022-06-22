@@ -5,6 +5,7 @@ public class Laser : MonoBehaviour
 {
     [SerializeField] private float _speed = 8.0f;
     [SerializeField] private LaserType _type = LaserType.Player;
+    [SerializeField] private float _trajectoryAngle = 0.0f;
     private bool _hasParent;
     private float _screenLimitTop = 8.0f;
     private float _screenLimitBottom = -5.0f;
@@ -32,14 +33,8 @@ public class Laser : MonoBehaviour
 
     private void CalculateMovement()
     {
-        Vector3 movementDirection = _type switch
-        {
-            LaserType.Player => Vector3.up,
-            LaserType.Enemy => Vector3.down,
-            _ => throw new ArgumentOutOfRangeException(nameof(_type), $"Not expected Laser Type value: {_type}")
-        };
-        
-        transform.Translate(movementDirection * (_speed * Time.deltaTime));
+        Vector3 movementVector = (Quaternion.Euler(0, 0 , _trajectoryAngle) * Vector3.up).normalized;
+        transform.Translate(movementVector * (_speed * Time.deltaTime));
         if (transform.position.y > _screenLimitTop || transform.position.y < _screenLimitBottom)
         {
             DestroyLaser();
@@ -64,5 +59,16 @@ public class Laser : MonoBehaviour
     public void SetType(LaserType type)
     {
         _type = type;
+    }
+
+    public float GetAngle()
+    {
+        return _trajectoryAngle;
+    }
+    
+    public void SetAngle(float angle)
+    {
+        _trajectoryAngle = angle;
+        transform.rotation = Quaternion.Euler(0,0, _trajectoryAngle);
     }
 }

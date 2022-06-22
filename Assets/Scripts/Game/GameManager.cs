@@ -70,4 +70,29 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
             }
         }
     }
+    
+    public void UpdateShieldStrength(int shieldStrength)
+    {
+        _uiManager.UpdateShieldStrength(shieldStrength);
+    }
+
+    public void UpdateAmmoCount(int ammo)
+    {
+        _uiManager.UpdateAmmoCount(ammo);
+    }
+    
+    public void UpdateMaxThrusterCharge(int maxThrusterCharge)
+    {
+        _uiManager.UpdateMaxThrusterCharge(maxThrusterCharge);
+    }
+
+    public void UpdateThrusterCharge(int thrusterCharge)
+    {
+        _uiManager.UpdateThrusterCharge(thrusterCharge);
+    }
+    
+    public void ShakeCamera()
+    {
+        _uiManager.ShakeCamera();
+    }
 }

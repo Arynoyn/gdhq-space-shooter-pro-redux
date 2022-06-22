@@ -166,3 +166,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _movementSpeed: 3
   _type: 2
+  _effectDuration: 0

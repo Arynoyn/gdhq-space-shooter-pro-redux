@@ -1,6 +1,9 @@
 ﻿public enum PowerupType
 {
-    TripleShot, // = 0
-    SpeedBoost, // = 1
-    Shields // = 2
+    TripleShot,
+    SpeedBoost,
+    Shields,
+    Ammo,
+    Health,
+    SprayShot
 }
