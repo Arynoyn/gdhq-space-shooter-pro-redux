@@ -31,38 +31,39 @@ public class UIManager : MonoBehaviour
     private bool _isLivesDisplayNull;
     private bool _isLivesImagesNull;
     private bool _isRestartTextNull;
+    
+    private Camera _camera;
+    private CameraShake _cameraShaker;
 
     private void Start()
     {
+        _camera = Camera.main;
+        if (_camera == null)
+        {
+            Debug.LogError("Main Camera is Null on UI Manager!");
+        }
+        else
+        {
+            _cameraShaker = _camera.GetComponent<CameraShake>();
+            if (_cameraShaker == null)
+            {
+                Debug.LogError("Camera Shaker is Null on UI Manager!");
+            }
+        }
         _isScoreTextNull = _scoreText == null;
+        if (_isScoreTextNull) { Debug.Log("Score Text object on UI Manager is NULL"); }
+        
         _isLivesDisplayNull = _livesDisplay == null;
+        if (_isLivesDisplayNull) { Debug.Log("Lives Display Image on UI Manager is NULL"); }
+        
         _isLivesImagesNull = _livesImages == null;
+        if (_isLivesImagesNull) { Debug.Log("Lives Images Array on UI Manager is NULL"); }
+        
         _isGameOverTextNull = _gameOverText == null;
+        if (_isGameOverTextNull) { Debug.Log("Game Over Text object on UI Manager is NULL"); }
+        
         _isRestartTextNull = _restartText == null;
-        if (_isScoreTextNull)
-        {
-            Debug.LogError("Score Text object on UI Manager is NULL");
-        }
-
-        if (_isLivesDisplayNull)
-        {
-            Debug.LogError("Lives Display Image on UI Manager is NULL");
-        }
-
-        if (_isLivesImagesNull)
-        {
-            Debug.LogError("Lives Images Array on UI Manager is NULL");
-        }
-
-        if (_isGameOverTextNull)
-        {
-            Debug.LogError("Game Over Text object on UI Manager is NULL");
-        }
-
-        if (_isRestartTextNull)
-        {
-            Debug.LogError("Restart Text object on UI Manager is NULL");
-        }
+        if (_isRestartTextNull) { Debug.Log("Restart Text object on UI Manager is NULL"); }
     }
 
     public void SetScore(int score)
@@ -145,6 +146,18 @@ public class UIManager : MonoBehaviour
     public void UpdateMaxThrusterCharge(int thrusterCharge)
     {
         _thrusterDisplay.SetMaxCharge(thrusterCharge);
+    }
+    
+    public void ShakeCamera()
+    {
+        if (_cameraShaker == null)
+        {
+            Debug.LogError("Camera Shaker is missing from UI Manager!");
+        }
+        else
+        {
+            StartCoroutine(_cameraShaker.ShakeCamera(0.2f, 0.3f));
+        }
     }
 
     public void DisplayGameOver()
