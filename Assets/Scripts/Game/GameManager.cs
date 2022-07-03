@@ -76,9 +76,9 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
         _uiManager.UpdateShieldStrength(shieldStrength);
     }
 
-    public void UpdateAmmoCount(int ammo)
+    public void UpdateAmmoCount(int ammo, int maxAmmo)
     {
-        _uiManager.UpdateAmmoCount(ammo);
+        _uiManager.UpdateAmmoCount(ammo, maxAmmo);
     }
     
     public void UpdateMaxThrusterCharge(int maxThrusterCharge)
