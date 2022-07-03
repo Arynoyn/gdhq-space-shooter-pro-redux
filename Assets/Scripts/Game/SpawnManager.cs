@@ -12,26 +12,36 @@ using Random = UnityEngine.Random;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private float _enemySpawnRate = 5.0f;
-    [SerializeField] private GameObject _enemyPrefab;
+    [SerializeField] private List<GameObject> _enemyPrefabs;
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private int _powerupMinSpawnRate = 3;
     [SerializeField] private int _powerupMaxSpawnRate = 7;
+    
+    [SerializeField] private float _spawnStartDelayTime = 2.0f;
     
     private Dictionary<PowerupType, GameObject> _powerupPrefabs;
     
     private float _screenLimitLeft = -8f;
     private float _screenLimitRight = 8f;
     private float _screenLimitTop = 8.0f;
-    private float _zPos = 0f;
     
     private bool _spawnEnemies;
     private bool _spawnPowerups;
 
-    [SerializeField] private float _spawnStartDelayTime = 2.0f;
     private WaitForSeconds _spawnStartDelay;
+    private float _zPos = 0f;
 
     private void Start()
     {
+        if (_enemyPrefabs == null)
+        {
+            Debug.LogError("Enemy array on SpawnManager is NULL");
+        }
+        else
+        {
+            if (!_enemyPrefabs.Any()) Debug.LogWarning("No enemies in array on SpawnManager");
+        }
+        
         _powerupPrefabs = new Dictionary<PowerupType, GameObject>();
         InitializePowerupPrefabsDictionary();
         if (_powerupPrefabs == null)
@@ -50,10 +60,15 @@ public class SpawnManager : MonoBehaviour
     {
         while (_spawnEnemies)
         {
-            float xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
-            Vector3 spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
-            Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
-            yield return new WaitForSeconds(_enemySpawnRate);
+            var randomEnemyIndex = Random.Range(0, _enemyPrefabs.Count);
+            var enemyPrefab = _enemyPrefabs[randomEnemyIndex];
+            if (enemyPrefab != null)
+            {
+                float xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
+                Vector3 spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
+                Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
+                yield return new WaitForSeconds(_enemySpawnRate);
+            }
         }
     }
 

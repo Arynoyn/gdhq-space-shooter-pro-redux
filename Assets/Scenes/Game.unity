@@ -2060,8 +2060,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8f8ccc39bcfd64c966425360393e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemySpawnRate: 5
-  _enemyPrefab: {fileID: 7068938383248881691, guid: d62cc80b155cd734996c406af1834146, type: 3}
+  _enemySpawnRate: 3
+  _enemyPrefabs:
+  - {fileID: 7068938383248881691, guid: d62cc80b155cd734996c406af1834146, type: 3}
+  - {fileID: 8585542470169761076, guid: 62b76473537b245a592bab2d9844c59e, type: 3}
   _enemyContainer: {fileID: 317955648}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
