@@ -10,10 +10,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private int _maxLives = 3;
     private int _score;
     private int _lives;
-    
-    // Game State Managers
-    [Header("Managers")]
-    private GameManager _gameManager;
+    private float _height;
+    private float _width;
     
     // Movement Properties
     [Header("Base Movement")]
@@ -23,10 +21,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector2 _direction;
     
     // Play Space Boundaries Properties
-    private float _topMovementLimit = 0f;
-    private float _bottomMovementLimit = -3.8f;
-    private float _leftMovementLimit = -9.5f;
-    private float _rightMovementLimit = 9.5f;
+    private ViewportBounds _viewportBounds;
+    [SerializeField] private float _playerMovementLimitFromTop = 0;
+    [SerializeField] private float _playerMovementLimitFromBottom = 0;
+    private float _movementLimitTop;
+    private float _movementLimitBottom;
     private float _zPos = 0f;
 
     // Projectile Properties
@@ -102,8 +101,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         _playerAnimator = GetComponent<Animator>();
         if (_playerAnimator == null) { Debug.LogError("Animator in Player class is NULL"); }
         
-        _gameManager = FindObjectOfType<GameManager>();
-        if (_gameManager == null) { Debug.LogError("Game Manager in Player class is NULL"); }
+        if (GameManager.Instance == null) { Debug.LogError("Game Manager in Player class is NULL"); }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
         if (_shieldVisualizer == null) { Debug.LogError("Shield Visualizer in Player class is NULL"); }
@@ -134,13 +132,30 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        if (_gameManager != null)
+        if (GameManager.Instance == null)
         {
-            _gameManager.SetScore(_score);
-            _gameManager.SetLives(_lives);
-            _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
-            _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
-            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            Debug.LogError("Game Manager is NULL");
+        }
+        else
+        {
+            _viewportBounds = GameManager.Instance.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Player!");
+            }
+            
+            GameManager.Instance.SetScore(_score);
+            GameManager.Instance.SetLives(_lives);
+            GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
+            GameManager.Instance.UpdateMaxThrusterCharge(_maxThrusterCharge);
+            GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
+            
+            var playerDimensions = transform.localScale;
+            _width = playerDimensions.x;
+            _height = playerDimensions.y;
+
+            _movementLimitBottom = _viewportBounds.Bottom + _playerMovementLimitFromBottom + _height / 2;
+            _movementLimitTop = _viewportBounds.Top - _playerMovementLimitFromTop - _height / 2;
         }
     }
 
@@ -165,7 +180,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
             
             _thrusterCharge -= _thrusterCharge > 0 ? _thrusterUseRate : 0;
-            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
             //TODO: Refactor Hacky Magic Numbers in local transforms below
             _thrusterVisualizer.transform.localPosition = new Vector3(0, -3.1f, 0);
             _thrusterVisualizer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -184,16 +199,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             ? _movementSpeed * _speedBoostModifier 
             : _movementSpeed;
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
-        float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
+        float yPosClamped = Mathf.Clamp(transform.position.y, _movementLimitBottom, _movementLimitTop);
         
         float xPos = transform.position.x;
-        if (xPos < _leftMovementLimit)
+        if (xPos < _viewportBounds.Left)
         {
-            xPos = _rightMovementLimit;
+            xPos = _viewportBounds.Right;
         }
-        else if (xPos > _rightMovementLimit)
+        else if (xPos > _viewportBounds.Right)
         {
-            xPos = _leftMovementLimit;
+            xPos = _viewportBounds.Left;
         }
         
         transform.position = new Vector3(xPos, yPosClamped, _zPos);
@@ -211,7 +226,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (_ammoCount > 0)
             {
                 _ammoCount--;
-                _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
+                GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _nextFire = Time.time + _fireRate;
                 Vector3 playerPosition = transform.position;
                 Vector3 laserSpawnOffset = _tripleShotActive
@@ -254,7 +269,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         {
             _shieldStrength--;
             SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
-            _gameManager.UpdateShieldStrength(_shieldStrength);
+            GameManager.Instance.UpdateShieldStrength(_shieldStrength);
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
             _audioSource.PlayOneShot(_explosionSound);
@@ -262,8 +277,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _lives--;
-            _gameManager.SetLives(_lives);
-            _gameManager.ShakeCamera();
+            GameManager.Instance.SetLives(_lives);
+            GameManager.Instance.ShakeCamera();
             _audioSource.PlayOneShot(_explosionSound);
             UpdateEngineDamageVisualizers(_lives);
             if (_lives <= 0)
@@ -320,19 +335,19 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             case PowerupType.Shields:
                 _shieldStrength = _maxShieldStrength;
                 SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
-                _gameManager.UpdateShieldStrength(_shieldStrength);
+                GameManager.Instance.UpdateShieldStrength(_shieldStrength);
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             case PowerupType.Ammo:
                 _ammoCount = _maxAmmoCount;
-                _gameManager.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
+                GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             case PowerupType.Health:
                 if (_lives > 0 && _lives < _maxLives) { _lives++;  }
-                _gameManager.SetLives(_lives);
+                GameManager.Instance.SetLives(_lives);
                 UpdateEngineDamageVisualizers(_lives);
                 _audioSource.PlayOneShot(_powerupSound);
                 Debug.Log("Health Powerup Collected");
@@ -353,7 +368,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     public void IncreaseScore(int value)
     {
         _score += value;
-        _gameManager.SetScore(_score);
+        GameManager.Instance.SetScore(_score);
     }
     
     private void UpdateEngineDamageVisualizers(int lives)
@@ -387,7 +402,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _thrusterCharge = _maxThrusterCharge;
         }
 
-        _gameManager.UpdateThrusterCharge(_thrusterCharge);
+        GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
     }
     
     IEnumerator TripleShotCooldownRoutine(float duration)

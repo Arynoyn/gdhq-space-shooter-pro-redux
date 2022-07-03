@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour, Controls.IUIActions
 {
+    public static GameManager Instance { get; private set; }
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
     
@@ -11,6 +12,15 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     
     private void Awake()
     {
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+        
         _spawnManager = FindObjectOfType<SpawnManager>();
         if (_spawnManager == null)
         {
@@ -94,5 +104,10 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     public void ShakeCamera()
     {
         _uiManager.ShakeCamera();
+    }
+    
+    public ViewportBounds GetViewportBounds()
+    {
+        return _uiManager.GetViewportBounds();
     }
 }

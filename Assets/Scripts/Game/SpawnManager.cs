@@ -21,9 +21,7 @@ public class SpawnManager : MonoBehaviour
     
     private Dictionary<PowerupType, GameObject> _powerupPrefabs;
     
-    private float _screenLimitLeft = -8f;
-    private float _screenLimitRight = 8f;
-    private float _screenLimitTop = 8.0f;
+    private ViewportBounds _viewportBounds;
     
     private bool _spawnEnemies;
     private bool _spawnPowerups;
@@ -33,6 +31,15 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.Instance == null) { Debug.LogError("Game Manager is NULL on SpawnManager!"); }
+        else
+        {
+            _viewportBounds = GameManager.Instance.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on SpawnManager!");
+            }
+        }
         if (_enemyPrefabs == null)
         {
             Debug.LogError("Enemy array on SpawnManager is NULL");
@@ -64,8 +71,8 @@ public class SpawnManager : MonoBehaviour
             var enemyPrefab = _enemyPrefabs[randomEnemyIndex];
             if (enemyPrefab != null)
             {
-                float xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
-                Vector3 spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
+                float xPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+                Vector3 spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
                 Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
                 yield return new WaitForSeconds(_enemySpawnRate);
             }
@@ -82,8 +89,8 @@ public class SpawnManager : MonoBehaviour
             yield return new WaitForSeconds(randomSpawnTime);
             if (_powerupPrefabs.Any())
             {
-                var xPos = Random.Range(_screenLimitLeft, _screenLimitRight);
-                var spawnPosition = new Vector3(xPos, _screenLimitTop, _zPos);
+                var xPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+                var spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
                 
                 GameObject randomPowerup = GetRandomPowerupPrefab();
                 Instantiate(randomPowerup, spawnPosition, Quaternion.identity);
