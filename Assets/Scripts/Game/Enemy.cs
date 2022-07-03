@@ -16,10 +16,8 @@ public class Enemy : MonoBehaviour
     [Header("Movement")]
     [Space]
     [SerializeField] private float _movementSpeed = 4.0f;
-    private float _screenLimitTop = 8.0f;
-    private float _screenLimitBottom = -5.0f;
-    private float _screenLimitLeft = -8f;
-    private float _screenLimitRight = 8f;
+
+    private ViewportBounds _viewportBounds;
     private float _zPos = 0f;
     
     // Attack Properties
@@ -47,9 +45,23 @@ public class Enemy : MonoBehaviour
     [Space]
     [SerializeField] private AudioClip _explosionSound;
     private AudioSource _audioSource;
+    private ViewportBounds _viewportBounds1;
 
     private void Start()
     {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("Game Manager is NULL");
+        }
+        else
+        {
+            _viewportBounds = GameManager.Instance.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Enemy!");
+            }
+        }
+        
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
         if (_player == null) { Debug.LogError("Player is NULL on Enemy!"); }
 
@@ -83,10 +95,10 @@ public class Enemy : MonoBehaviour
     {
         transform.Translate(Vector3.down * (_movementSpeed * Time.deltaTime));
 
-        if (transform.position.y < _screenLimitBottom && !_isDestroyed)
+        if (transform.position.y < _viewportBounds.Bottom && !_isDestroyed)
         {
-            float randomXPos = Random.Range(_screenLimitLeft, _screenLimitRight);
-            transform.position = new Vector3(randomXPos, _screenLimitTop, _zPos);
+            float randomXPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+            transform.position = new Vector3(randomXPos, _viewportBounds.Top, _zPos);
         }
     }
     
@@ -114,6 +126,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        //TODO: remove private player instance and notify the game manager instead
         if (other.CompareTag("Player"))
         {
             if (_player != null) { _player.Damage(); }
