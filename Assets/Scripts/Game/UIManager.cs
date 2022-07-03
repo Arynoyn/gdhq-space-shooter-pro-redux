@@ -133,9 +133,9 @@ public class UIManager : MonoBehaviour
         parentGameObject.SetActive(shieldStrength > 0);
     }
     
-    public void UpdateAmmoCount(int ammo)
+    public void UpdateAmmoCount(int ammo, int maxAmmo)
     {
-        _ammoText.text = $"{ammo}";
+        _ammoText.text = $"{ammo}/{maxAmmo}";
     }
     
     public void UpdateThrusterCharge(int thrusterCharge)
