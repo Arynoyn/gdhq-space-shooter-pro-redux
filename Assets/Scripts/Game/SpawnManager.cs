@@ -11,8 +11,7 @@ using Random = UnityEngine.Random;
 
 public class SpawnManager : MonoBehaviour
 {
-    [SerializeField] private float _enemySpawnRate = 5.0f;
-    [SerializeField] private List<GameObject> _enemyPrefabs;
+    [SerializeField] private WavesConfig _wavesConfig;
     [SerializeField] private GameObject _enemyContainer;
     [SerializeField] private int _powerupMinSpawnRate = 3;
     [SerializeField] private int _powerupMaxSpawnRate = 7;
@@ -28,9 +27,16 @@ public class SpawnManager : MonoBehaviour
 
     private WaitForSeconds _spawnStartDelay;
     private float _zPos = 0f;
+    private bool _wavesConfigIsNotNull;
 
     private void Start()
     {
+        _wavesConfigIsNotNull = _wavesConfig != null;
+        if (!_wavesConfigIsNotNull)
+        {
+            Debug.LogError("WaveConfig is NULL on SpawnManager!");
+        }
+        
         if (GameManager.Instance == null) { Debug.LogError("Game Manager is NULL on SpawnManager!"); }
         else
         {
@@ -39,14 +45,6 @@ public class SpawnManager : MonoBehaviour
             {
                 Debug.LogError("Viewport Bounds is NULL on SpawnManager!");
             }
-        }
-        if (_enemyPrefabs == null)
-        {
-            Debug.LogError("Enemy array on SpawnManager is NULL");
-        }
-        else
-        {
-            if (!_enemyPrefabs.Any()) Debug.LogWarning("No enemies in array on SpawnManager");
         }
         
         _powerupPrefabs = new Dictionary<PowerupType, GameObject>();
@@ -63,19 +61,79 @@ public class SpawnManager : MonoBehaviour
         _spawnStartDelay = new WaitForSeconds(_spawnStartDelayTime);
     }
 
-    private IEnumerator SpawnEnemyRoutine()
+    private IEnumerator SpawnEnemyWavesRoutine()
     {
+        yield return _spawnStartDelay;
+
         while (_spawnEnemies)
         {
-            var randomEnemyIndex = Random.Range(0, _enemyPrefabs.Count);
-            var enemyPrefab = _enemyPrefabs[randomEnemyIndex];
-            if (enemyPrefab != null)
+            if (!_wavesConfigIsNotNull) { continue; }
+            List<Wave> waves = _wavesConfig.GetWaves().ToList();
+            if (waves.Any())
             {
-                float xPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
-                Vector3 spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
-                Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
-                yield return new WaitForSeconds(_enemySpawnRate);
+                for (int currentWaveIndex = _wavesConfig.GetStartingWaveIndex(); currentWaveIndex < waves.Count; currentWaveIndex++)
+                {
+                    Wave currentWave = waves[currentWaveIndex];
+                    yield return StartCoroutine(SpawnAllEnemiesInWave(currentWave));
+                    yield return new WaitForSeconds(_wavesConfig.GetTimeBetweenWaves());
+                }
             }
+        }
+    }
+
+    private IEnumerator SpawnAllEnemiesInWave(Wave currentWave)
+    {
+        if (currentWave is { })
+            for (int enemyCount = 0; enemyCount < currentWave.GetNumberOfEnemies(); enemyCount++)
+            {
+                if (currentWave.HasPath)
+                {
+                    SpawnPathedEnemies(currentWave);
+                }
+                else
+                {
+                    SpawnNonPathedEnemies(currentWave);
+                }
+                
+
+                yield return new WaitForSeconds(currentWave.GetTimeBetweenSpawns());
+            }
+    }
+
+    private void SpawnPathedEnemies(Wave currentWave)
+    {
+        var enemyPrefab = currentWave.GetEnemyPrefab();
+        var waypoints = currentWave.GetWaypoints();
+        var startingWaypoint = waypoints?.FirstOrDefault();
+        if (enemyPrefab != null && startingWaypoint != null)
+        {
+            var instantiatedEnemy = Instantiate(
+                enemyPrefab,
+                startingWaypoint.transform.position,
+                Quaternion.identity,
+                _enemyContainer.transform);
+
+            EnemyPathing enemyPathing = instantiatedEnemy.GetComponent<EnemyPathing>();
+            if (enemyPathing is { })
+            {
+                enemyPathing.SetWave(currentWave);
+            }
+            else
+            {
+                Debug.LogError(
+                    "SpawnManager::SpawnAllEnemiesInWave(119) - Enemy Pathing script is missing from Instantiated Enemy");
+            }
+        }
+    }
+
+    private void SpawnNonPathedEnemies(Wave currentWave)
+    {
+        var enemyPrefab = currentWave.GetEnemyPrefab();
+        if (enemyPrefab != null)
+        {
+            var xPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+            var spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
+            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
         }
     }
 
@@ -126,7 +184,7 @@ public class SpawnManager : MonoBehaviour
     public void StartSpawningEnemies()
     {
         _spawnEnemies = true;
-        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnEnemyWavesRoutine());
     }
     
     public void StopSpawningEnemies()
