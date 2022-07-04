@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,30 +42,31 @@ public class UIManager : MonoBehaviour
         _camera = Camera.main;
         if (_camera == null)
         {
-            Debug.LogError("Main Camera is Null on UI Manager!");
+            LogError("Main Camera is Null on UI Manager!");
+            LogError("UIManager::Start(43): Main Camera is Null on UI Manager!");
         }
         else
         {
             _cameraShaker = _camera.GetComponent<CameraShake>();
             if (_cameraShaker == null)
             {
-                Debug.LogError("Camera Shaker is Null on UI Manager!");
+                LogError("Camera Shaker is Null on UI Manager!");
             }
         }
         _isScoreTextNull = _scoreText == null;
-        if (_isScoreTextNull) { Debug.Log("Score Text object on UI Manager is NULL"); }
+        if (_isScoreTextNull) { LogMessage("Score Text object on UI Manager is NULL"); }
         
         _isLivesDisplayNull = _livesDisplay == null;
-        if (_isLivesDisplayNull) { Debug.Log("Lives Display Image on UI Manager is NULL"); }
+        if (_isLivesDisplayNull) { LogMessage("Lives Display Image on UI Manager is NULL"); }
         
         _isLivesImagesNull = _livesImages == null;
-        if (_isLivesImagesNull) { Debug.Log("Lives Images Array on UI Manager is NULL"); }
+        if (_isLivesImagesNull) { LogMessage("Lives Images Array on UI Manager is NULL"); }
         
         _isGameOverTextNull = _gameOverText == null;
-        if (_isGameOverTextNull) { Debug.Log("Game Over Text object on UI Manager is NULL"); }
+        if (_isGameOverTextNull) { LogMessage("Game Over Text object on UI Manager is NULL"); }
         
         _isRestartTextNull = _restartText == null;
-        if (_isRestartTextNull) { Debug.Log("Restart Text object on UI Manager is NULL"); }
+        if (_isRestartTextNull) { LogMessage("Restart Text object on UI Manager is NULL"); }
     }
 
     public void SetScore(int score)
@@ -74,7 +77,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Score Text object on UI Manager is NULL");
+            LogError("Score Text object on UI Manager is NULL");
         }
 
         if (!_isGameOverTextNull)
@@ -83,7 +86,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Game Over Text object on UI Manager is NULL");
+            LogError("Game Over Text object on UI Manager is NULL");
         }
 
         if (!_isRestartTextNull)
@@ -92,7 +95,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Restart Text object on UI Manager is NULL");
+            LogError("Restart Text object on UI Manager is NULL");
         }
     }
 
@@ -102,12 +105,12 @@ public class UIManager : MonoBehaviour
         {
             if (_isLivesDisplayNull)
             {
-                Debug.LogError("Lives Display Image on UI Manager is NULL");
+                LogError("Lives Display Image on UI Manager is NULL");
             }
 
             if (_isLivesImagesNull)
             {
-                Debug.LogError("Lives Images Array on UI Manager is NULL");
+                LogError("Lives Images Array on UI Manager is NULL");
             }
 
             return;
@@ -119,7 +122,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError($"Index {lives} is out of bounds of the array of lives images");
+            LogError($"Index {lives} is out of bounds of the array of lives images");
         }
     }
 
@@ -152,7 +155,7 @@ public class UIManager : MonoBehaviour
     {
         if (_cameraShaker == null)
         {
-            Debug.LogError("Camera Shaker is missing from UI Manager!");
+            LogError("Camera Shaker is missing from UI Manager!");
         }
         else
         {
@@ -168,7 +171,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Game Over Text object on UI Manager is NULL");
+            LogError("Game Over Text object on UI Manager is NULL");
         }
 
         if (!_isRestartTextNull)
@@ -177,7 +180,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Restart Text object on UI Manager is NULL");
+            LogError("Restart Text object on UI Manager is NULL");
         }
 
         StartCoroutine(GameOverFlashRoutine());
@@ -194,7 +197,7 @@ public class UIManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Game Over Text object on UI Manager is NULL");
+                LogError("Game Over Text object on UI Manager is NULL");
             }
         }
     }
@@ -214,7 +217,25 @@ public class UIManager : MonoBehaviour
             return viewportBounds;
         }
 
-        Debug.LogError("Main Camera is NULL on UI Manager");
+        LogError("Main Camera is NULL on UI Manager");
         return new ViewportBounds();
+    }
+    
+    public void LogError(string message,
+        [CallerMemberName] string callingMethod = "",
+        [CallerFilePath] string callingFilePath = "",
+        [CallerLineNumber] int callingFileLineNumber = 0)
+    {
+        var className = Path.GetFileNameWithoutExtension(callingFilePath);
+        Debug.LogError($"{className}::{callingMethod}({callingFileLineNumber}): {message}!");
+    }
+    
+    public void LogMessage(string message,
+        [CallerMemberName] string callingMethod = "",
+        [CallerFilePath] string callingFilePath = "",
+        [CallerLineNumber] int callingFileLineNumber = 0)
+    {
+        var className = Path.GetFileNameWithoutExtension(callingFilePath);
+        Debug.Log($"{className}::{callingMethod}({callingFileLineNumber}): {message}!");
     }
 }

@@ -5,5 +5,6 @@
     Shields,
     Ammo,
     Health,
-    SprayShot
+    SprayShot,
+    Hazard
 }
