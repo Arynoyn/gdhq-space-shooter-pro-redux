@@ -12,6 +12,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4215238809051854431, guid: d37d25b200e82b645881adf17100297b, type: 3}
+      propertyPath: _verticalOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4215238809051854431, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: _trajectoryAngle
       value: 180
       objectReference: {fileID: 0}
