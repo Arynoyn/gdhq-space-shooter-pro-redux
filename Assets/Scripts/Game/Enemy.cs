@@ -1,15 +1,17 @@
 using System.Collections;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
     // Player Reference
     private Player _player;
 
     // Enemy Properties
-    [SerializeField] private int _pointValue = 10;
+    [SerializeField] private protected int _pointValue = 10;
     private bool _isDestroyed;
     
     // Movement Properties
@@ -32,58 +34,46 @@ public class Enemy : MonoBehaviour
     private IEnumerator _fireLaserRoutine;
     
     // Animation Properties
-    [Header("Animation")]
-    [Space]
-    [SerializeField] private string _enemyDestroyedAnimationName = "Enemy_Destroyed_anim";
-    [SerializeField] private string _enemyDeathTriggerName = "OnEnemyDeath";
-    private Animator _animator;
+    private protected delegate void PlayExplosionDelegate();
+    private protected PlayExplosionDelegate PlayExplosion = PlayExplosionMethod;
+    private protected delegate void DestroySelfDelegate();
+    private protected DestroySelfDelegate DestroySelf = DestroySelfMethod;
     private Collider2D _collider;
-    private float _deathAnimationLength;
     
     // Audio Properties
     [Header("Audio")]
     [Space]
-    [SerializeField] private AudioClip _explosionSound;
+    [SerializeField] private protected AudioClip _explosionSound;
     private AudioSource _audioSource;
     private ViewportBounds _viewportBounds1;
 
-    private void Start()
+    protected virtual void Start()
     {
         if (GameManager.Instance == null)
         {
-            Debug.LogError("Game Manager is NULL");
+            LogError("Game Manager is NULL");
         }
         else
         {
             _viewportBounds = GameManager.Instance.GetViewportBounds();
             if (_viewportBounds == null)
             {
-                Debug.LogError("Viewport Bounds is NULL on Enemy!");
+                LogError("Viewport Bounds is NULL on Enemy!");
             }
         }
         
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
-        if (_player == null) { Debug.LogError("Player is NULL on Enemy!"); }
+        if (_player == null) { LogError("Player is NULL on Enemy!"); }
 
-        if (_laserPrefab == null) { Debug.LogError("LaserPrefab is NULL on Enemy!"); }
-        
-        _animator = GetComponent<Animator>();
-        if (_animator == null)
-        {
-            Debug.LogError("Animator is NULL on Enemy");
-        }
-        else
-        {
-            _deathAnimationLength = GetAnimationLength(_enemyDestroyedAnimationName);
-        }
+        if (_laserPrefab == null) { LogError("LaserPrefab is NULL on Enemy!"); }
         
         _collider = GetComponent<Collider2D>();
-        if (_collider == null) { Debug.LogError("Collider is NULL in Enemy"); }
+        if (_collider == null) { LogError("Collider is NULL in Enemy"); }
         
         _audioSource = GetComponent<AudioSource>();
-        if (_audioSource == null) { Debug.LogError("Audio Source is missing on Enemy!"); }
-        if (_explosionSound == null) { Debug.LogError("Explosion Sound missing from Enemy!"); }
-        if (_laserSound == null) { Debug.LogError("Laser Sound missing from Enemy!"); }
+        if (_audioSource == null) { LogError("Audio Source is missing on Enemy!"); }
+        if (_explosionSound == null) { LogError("Explosion Sound missing from Enemy!"); }
+        if (_laserSound == null) { LogError("Laser Sound missing from Enemy!"); }
         
         _nextFireDelay = Random.Range(_fireRate, _fireRate * 2);
         
@@ -103,6 +93,36 @@ public class Enemy : MonoBehaviour
     }
     
      
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        //TODO: remove private player instance and notify the game manager instead
+        if (other.CompareTag("Player"))
+        {
+            if (_player != null) { _player.Damage(); }
+            _isDestroyed = true;
+            _fireActive = false;
+            if (_collider != null) { _collider.enabled = false; }
+            PlayExplosion();
+            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
+            DestroySelf();
+        }
+
+        if (other.CompareTag("Laser"))
+        {
+            Laser laser = other.GetComponent<Laser>();
+            if (laser == null || laser.GetOwnerType() != LaserType.Player) { return; }
+            
+            if (_player != null) { _player.IncreaseScore(_pointValue); }
+            Destroy(other.gameObject);
+            _isDestroyed = true;
+            if (_collider != null) { _collider.enabled = false; }
+            PlayExplosion();
+            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
+            DestroySelf();
+            
+        }
+    }
+    
     IEnumerator FireLaserRoutine()
     {
         while (_fireActive)
@@ -118,54 +138,28 @@ public class Enemy : MonoBehaviour
         _audioSource.PlayOneShot(_laserSound);
         CalculateNextFireTime();
     }
-
+    
     private void CalculateNextFireTime()
     {
         _nextFireDelay = Random.Range(3.0f, 7.0f);
     }
-
-    private void OnTriggerEnter2D(Collider2D other)
+    
+    private static void DestroySelfMethod()
     {
-        //TODO: remove private player instance and notify the game manager instead
-        if (other.CompareTag("Player"))
-        {
-            if (_player != null) { _player.Damage(); }
-            _isDestroyed = true;
-            if (_collider != null) { _collider.enabled = false; }
-            if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
-            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
-            Destroy(gameObject, _deathAnimationLength);
-        }
+        LogError("Destroy Self Delegate not defined!");
+    }
 
-        if (other.CompareTag("Laser"))
-        {
-            Laser laser = other.GetComponent<Laser>();
-            if (laser != null && laser.GetOwnerType() == LaserType.Player)
-            {
-                if (_player != null) { _player.IncreaseScore(_pointValue); }
-                Destroy(other.gameObject);
-                _isDestroyed = true;
-                if (_collider != null) { _collider.enabled = false; }
-                if (_animator != null) { _animator.SetTrigger(_enemyDeathTriggerName); }
-                if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
-                Destroy(gameObject, _deathAnimationLength);
-            }
-        }
+    private static void PlayExplosionMethod()
+    {
+        LogError("Play Explosion Delegate not defined!");
     }
     
-    private float GetAnimationLength(string animationName)
+   private static void LogError(string message,
+        [CallerMemberName] string callingMethod = "",
+        [CallerFilePath] string callingFilePath = "",
+        [CallerLineNumber] int callingFileLineNumber = 0)
     {
-        AnimationClip[] clips = _animator.runtimeAnimatorController.animationClips;
-        var deathAnimationClip = clips.FirstOrDefault(clip => clip.name == animationName);
-        if (deathAnimationClip == null)
-        {
-            Debug.LogError("Death Animation clip is NULL in animator on Enemy");
-        }
-        else
-        {
-            return deathAnimationClip.length;
-        }
-
-        return 0f;
+        var className = Path.GetFileNameWithoutExtension(callingFilePath);
+        Debug.LogError($"{className}::{callingMethod}({callingFileLineNumber}): {message}!");
     }
 }

@@ -100,6 +100,8 @@ MonoBehaviour:
   _speed: 16
   _type: 0
   _trajectoryAngle: 0
+  _verticalOffset: 1
+  _horizontalOffset: 0
 --- !u!50 &731801822392727028
 Rigidbody2D:
   serializedVersion: 4
