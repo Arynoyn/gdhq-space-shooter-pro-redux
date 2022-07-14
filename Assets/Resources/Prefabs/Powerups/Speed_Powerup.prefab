@@ -167,3 +167,4 @@ MonoBehaviour:
   _movementSpeed: 3
   _type: 1
   _effectDuration: 5
+  _spawnWeight: 20

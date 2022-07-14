@@ -1,4 +1,7 @@
-﻿public enum PowerupType
+﻿using System;
+
+[Serializable]
+public enum PowerupType
 {
     TripleShot,
     SpeedBoost,

@@ -6,8 +6,10 @@ public class Powerup : MonoBehaviour
     [SerializeField] private float _movementSpeed = 3.0f;
     [SerializeField] private PowerupType _type = PowerupType.TripleShot;
     [SerializeField] private float _effectDuration; 
-    private ViewportBounds _viewportBounds;
+    [SerializeField] private int _spawnWeight;
     
+    private ViewportBounds _viewportBounds;
+
     private void Start()
     {
         if (GameManager.Instance == null)
@@ -55,5 +57,10 @@ public class Powerup : MonoBehaviour
     public float GetEffectDuration() 
     { 
         return _effectDuration; 
+    }
+    
+    public int GetSpawnWeight()
+    {
+        return _spawnWeight;
     }
 }
