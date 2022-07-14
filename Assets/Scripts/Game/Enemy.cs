@@ -22,6 +22,13 @@ public abstract class Enemy : MonoBehaviour
     private ViewportBounds _viewportBounds;
     private float _zPos = 0f;
     
+    // Shield Properties
+    [Header("Shields")]
+    [SerializeField] private int _maxShieldStrength = 1;
+    [SerializeField,Range(0, 100)] private int _shieldChancePercentage = 20;
+    private bool _shieldsActive;
+    private int _shieldStrength;
+    
     // Attack Properties
     [Header("Attacks")]
     [Space]
@@ -40,13 +47,15 @@ public abstract class Enemy : MonoBehaviour
     private protected DestroySelfDelegate DestroySelf = DestroySelfMethod;
     private Collider2D _collider;
     
+    //Visualizers
+    private GameObject _shieldVisualizer;
+    
     // Audio Properties
     [Header("Audio")]
     [Space]
     [SerializeField] private protected AudioClip _explosionSound;
     private AudioSource _audioSource;
-    private ViewportBounds _viewportBounds1;
-
+    
     protected virtual void Start()
     {
         if (GameManager.Instance == null)
@@ -69,6 +78,18 @@ public abstract class Enemy : MonoBehaviour
         
         _collider = GetComponent<Collider2D>();
         if (_collider == null) { LogError("Collider is NULL in Enemy"); }
+        
+        _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
+        if (_shieldVisualizer == null)
+        {
+            LogError("Shield Visualizer in Player class is NULL");
+        }
+        else
+        {
+            _shieldStrength = Random.Range(0, 100) < _shieldChancePercentage ? _maxShieldStrength : 0; //20% chance
+            _shieldsActive = _shieldStrength > 0;
+            if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
+        }
         
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null) { LogError("Audio Source is missing on Enemy!"); }
@@ -95,32 +116,50 @@ public abstract class Enemy : MonoBehaviour
      
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //TODO: remove private player instance and notify the game manager instead
-        if (other.CompareTag("Player"))
+        if (_shieldsActive)
         {
-            if (_player != null) { _player.Damage(); }
-            _isDestroyed = true;
-            _fireActive = false;
-            if (_collider != null) { _collider.enabled = false; }
-            PlayExplosion();
+            if (other.CompareTag("Laser"))
+            {
+                Laser laser = other.GetComponent<Laser>();
+                if (laser == null || laser.GetOwnerType() != LaserType.Player)
+                {
+                    return;
+                }
+            }
+            _shieldStrength--;
+            _shieldsActive = _shieldStrength > 0;
+            if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
             if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
-            DestroySelf();
         }
+        else
+        {
+            //TODO: remove private player instance and notify the game manager instead
+            if (other.CompareTag("Player"))
+            {
+                if (_player != null) { _player.Damage(); }
+                _isDestroyed = true;
+                _fireActive = false;
+                if (_collider != null) { _collider.enabled = false; }
+                PlayExplosion();
+                if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
+                DestroySelf();
+            }
 
-        if (other.CompareTag("Laser"))
-        {
-            Laser laser = other.GetComponent<Laser>();
-            if (laser == null || laser.GetOwnerType() != LaserType.Player) { return; }
+            if (other.CompareTag("Laser"))
+            {
+                Laser laser = other.GetComponent<Laser>();
+                if (laser == null || laser.GetOwnerType() != LaserType.Player) { return; }
             
-            if (_player != null) { _player.IncreaseScore(_pointValue); }
-            Destroy(other.gameObject);
-            _isDestroyed = true;
-            if (_collider != null) { _collider.enabled = false; }
-            PlayExplosion();
-            if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
-            DestroySelf();
-            
+                if (_player != null) { _player.IncreaseScore(_pointValue); }
+                Destroy(other.gameObject);
+                _isDestroyed = true;
+                if (_collider != null) { _collider.enabled = false; }
+                PlayExplosion();
+                if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
+                DestroySelf();
+            }
         }
+        
     }
     
     IEnumerator FireLaserRoutine()
