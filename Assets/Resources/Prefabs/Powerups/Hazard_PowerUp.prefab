@@ -101,6 +101,7 @@ MonoBehaviour:
   _movementSpeed: 3
   _type: 6
   _effectDuration: 0
+  _spawnWeight: 10
 --- !u!58 &2908601835851149246
 CircleCollider2D:
   m_ObjectHideFlags: 0
