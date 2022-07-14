@@ -118,6 +118,11 @@ public abstract class Enemy : MonoBehaviour
     {
         if (_shieldsActive)
         {
+            if (!other.CompareTag("Player") && !other.CompareTag("Laser"))
+            {
+                return;
+            }
+            
             if (other.CompareTag("Laser"))
             {
                 Laser laser = other.GetComponent<Laser>();
@@ -126,6 +131,12 @@ public abstract class Enemy : MonoBehaviour
                     return;
                 }
             }
+
+            if (other.CompareTag("Player"))
+            {
+                if (_player != null) { _player.Damage(); }
+            }
+
             _shieldStrength--;
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
