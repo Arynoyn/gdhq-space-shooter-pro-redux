@@ -18,6 +18,7 @@ public abstract class Enemy : MonoBehaviour
     [Header("Movement")]
     [Space]
     [SerializeField] private float _movementSpeed = 4.0f;
+    private Vector3 _movementDirection = Vector3.down;
 
     private ViewportBounds _viewportBounds;
     private float _zPos = 0f;
@@ -104,13 +105,28 @@ public abstract class Enemy : MonoBehaviour
     
     private void Update()
     {
-        transform.Translate(Vector3.down * (_movementSpeed * Time.deltaTime));
+        transform.Translate(_movementDirection * (_movementSpeed * Time.deltaTime));
 
         if (transform.position.y < _viewportBounds.Bottom && !_isDestroyed)
         {
             float randomXPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
             transform.position = new Vector3(randomXPos, _viewportBounds.Top, _zPos);
         }
+    }
+
+    public float GetMovementSpeed()
+    {
+        return _movementSpeed;
+    }
+    
+    public void SetMovementSpeed(float newMovementSpeed)
+    {
+        _movementSpeed = newMovementSpeed;
+    }
+
+    public void SetZAxisRotation(float angle)
+    {
+        transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
     }
     
      
