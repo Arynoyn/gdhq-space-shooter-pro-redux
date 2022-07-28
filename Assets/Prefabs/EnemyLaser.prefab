@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4215238809051854431, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: _trajectoryAngle
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_RootOrder

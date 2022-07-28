@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -522710797946426114}
   - component: {fileID: 5134479245956869729}
   - component: {fileID: 4103142505818134103}
+  - component: {fileID: 7771524302710868699}
   m_Layer: 0
   m_Name: Ranger Enemy
   m_TagString: Enemy
@@ -152,9 +153,6 @@ MonoBehaviour:
   _movementSpeed: 0
   _maxShieldStrength: 1
   _shieldChancePercentage: 20
-  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
-  _laserPrefab: {fileID: 4129785537009830642, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
-  _fireRate: 0.5
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _explosionPrefab: {fileID: 8573362189701785958, guid: 8da3509484a4148de901f1b8fed24018, type: 3}
 --- !u!114 &-522710797946426114
@@ -284,6 +282,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7771524302710868699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8585542470169761076}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8971f9ea858d5d84a91cfb40b8ea2753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _laserPrefab: {fileID: 4129785537009830642, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+  _fireRate: 0.5
 --- !u!1001 &5573847425419930407
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -30,16 +30,8 @@ public abstract class Enemy : MonoBehaviour
     private bool _shieldsActive;
     private int _shieldStrength;
     
-    // Attack Properties
-    [Header("Attacks")]
-    [Space]
-    [SerializeField] private AudioClip _laserSound;
-    [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private float _fireRate = 0.50f;
-    private readonly Vector3 _laserOffset = new Vector3(0, -1.05f, 0);
-    private float _nextFireDelay;
-    private bool _fireActive = true;
-    private IEnumerator _fireLaserRoutine;
+    //FireBehavior
+    private IFireLaserBehavior _fireLaserBehavior;
     
     // Animation Properties
     private protected delegate void PlayExplosionDelegate();
@@ -75,15 +67,13 @@ public abstract class Enemy : MonoBehaviour
         _player = GameObject.Find(nameof(Player))?.GetComponent<Player>();
         if (_player == null) { LogError("Player is NULL on Enemy!"); }
 
-        if (_laserPrefab == null) { LogError("LaserPrefab is NULL on Enemy!"); }
-        
         _collider = GetComponent<Collider2D>();
         if (_collider == null) { LogError("Collider is NULL in Enemy"); }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
         if (_shieldVisualizer == null)
         {
-            LogError("Shield Visualizer in Player class is NULL");
+            LogError("Shield Visualizer in Enemy class is NULL");
         }
         else
         {
@@ -91,16 +81,17 @@ public abstract class Enemy : MonoBehaviour
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
         }
+
+        _fireLaserBehavior = GetComponent<IFireLaserBehavior>();
+        if (_fireLaserBehavior == null)
+        {
+            LogWarning("FireBehavior is NULL in Enemy");
+        }
         
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null) { LogError("Audio Source is missing on Enemy!"); }
         if (_explosionSound == null) { LogError("Explosion Sound missing from Enemy!"); }
-        if (_laserSound == null) { LogError("Laser Sound missing from Enemy!"); }
         
-        _nextFireDelay = Random.Range(_fireRate, _fireRate * 2);
-        
-        _fireLaserRoutine = FireLaserRoutine();
-        StartCoroutine(_fireLaserRoutine);
     }
     
     private void Update()
@@ -146,6 +137,7 @@ public abstract class Enemy : MonoBehaviour
                 {
                     return;
                 }
+                Destroy(other.gameObject);
             }
 
             if (other.CompareTag("Player"))
@@ -165,7 +157,7 @@ public abstract class Enemy : MonoBehaviour
             {
                 if (_player != null) { _player.Damage(); }
                 _isDestroyed = true;
-                _fireActive = false;
+                _fireLaserBehavior?.DisableFiring();
                 if (_collider != null) { _collider.enabled = false; }
                 PlayExplosion();
                 if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
@@ -180,6 +172,7 @@ public abstract class Enemy : MonoBehaviour
                 if (_player != null) { _player.IncreaseScore(_pointValue); }
                 Destroy(other.gameObject);
                 _isDestroyed = true;
+                _fireLaserBehavior?.DisableFiring();
                 if (_collider != null) { _collider.enabled = false; }
                 PlayExplosion();
                 if (_audioSource != null) { _audioSource.PlayOneShot(_explosionSound); }
@@ -187,27 +180,6 @@ public abstract class Enemy : MonoBehaviour
             }
         }
         
-    }
-    
-    IEnumerator FireLaserRoutine()
-    {
-        while (_fireActive)
-        {
-            yield return new WaitForSeconds(_nextFireDelay);
-            FireLaser();
-        }
-    }
-    
-    private void FireLaser()
-    {
-        Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
-        _audioSource.PlayOneShot(_laserSound);
-        CalculateNextFireTime();
-    }
-    
-    private void CalculateNextFireTime()
-    {
-        _nextFireDelay = Random.Range(3.0f, 7.0f);
     }
     
     private static void DestroySelfMethod()
@@ -228,4 +200,13 @@ public abstract class Enemy : MonoBehaviour
         var className = Path.GetFileNameWithoutExtension(callingFilePath);
         Debug.LogError($"{className}::{callingMethod}({callingFileLineNumber}): {message}!");
     }
+   
+   private static void LogWarning(string message,
+       [CallerMemberName] string callingMethod = "",
+       [CallerFilePath] string callingFilePath = "",
+       [CallerLineNumber] int callingFileLineNumber = 0)
+   {
+       var className = Path.GetFileNameWithoutExtension(callingFilePath);
+       Debug.LogWarning($"{className}::{callingMethod}({callingFileLineNumber}): {message}!");
+   }
 }

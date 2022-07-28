@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 198000842379138514}
   - component: {fileID: 2431147457561181898}
   - component: {fileID: 6777130525338388220}
+  - component: {fileID: -8563925961989159697}
   m_Layer: 0
   m_Name: Drone Enemy
   m_TagString: Enemy
@@ -151,9 +152,6 @@ MonoBehaviour:
   _movementSpeed: 6
   _maxShieldStrength: 1
   _shieldChancePercentage: 20
-  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
-  _laserPrefab: {fileID: 7546091956984452689, guid: bbfe789b4db7c495fa295d328a5cb2c8, type: 3}
-  _fireRate: 0.5
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _enemyDestroyedAnimationName: Enemy_Destroyed_anim
   _enemyDeathTriggerName: OnEnemyDeath
@@ -272,6 +270,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-8563925961989159697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286208098849473951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8971f9ea858d5d84a91cfb40b8ea2753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _laserPrefab: {fileID: 7546091956984452689, guid: bbfe789b4db7c495fa295d328a5cb2c8, type: 3}
+  _fireRate: 0.5
 --- !u!1001 &2302419084688873117
 PrefabInstance:
   m_ObjectHideFlags: 0
