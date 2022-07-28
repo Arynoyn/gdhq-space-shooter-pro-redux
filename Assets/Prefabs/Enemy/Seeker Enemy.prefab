@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7790416449822872380}
   - component: {fileID: 622239902549969016}
   - component: {fileID: 3177354485211482058}
+  - component: {fileID: 5063813245580126494}
   m_Layer: 0
   m_Name: Seeker Enemy
   m_TagString: Untagged
@@ -152,9 +153,6 @@ MonoBehaviour:
   _movementSpeed: 4
   _maxShieldStrength: 1
   _shieldChancePercentage: 0
-  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
-  _laserPrefab: {fileID: 4129785537009830642, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
-  _fireRate: 0.5
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
   _explosionPrefab: {fileID: 8573362189701785958, guid: 8da3509484a4148de901f1b8fed24018, type: 3}
 --- !u!114 &7790416449822872380
@@ -287,6 +285,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5063813245580126494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378059531493750290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8971f9ea858d5d84a91cfb40b8ea2753, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _laserSound: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _laserPrefab: {fileID: 4129785537009830642, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+  _fireRate: 0.5
 --- !u!1001 &49131262665722534
 PrefabInstance:
   m_ObjectHideFlags: 0
