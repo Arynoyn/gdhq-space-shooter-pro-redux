@@ -18,6 +18,7 @@ public class EnemyFireLaser : MonoBehaviour, IFireLaserBehavior
     private float _nextFireDelay;
     private bool _fireActive = true;
     private IEnumerator _fireLaserRoutine;
+    private float downAngle = 180f;
     
     private AudioSource _audioSource;
     
@@ -39,21 +40,25 @@ public class EnemyFireLaser : MonoBehaviour, IFireLaserBehavior
     {
         _fireActive = false;
     }
-    
+
+    public void Fire(Transform target) { FireLaser(downAngle); }
+
     IEnumerator FireLaserRoutine()
     {
         while (_fireActive)
         {
             yield return new WaitForSeconds(_nextFireDelay);
-            FireLaser();
+            FireLaser(downAngle);
+            CalculateNextFireTime();
         }
     }
     
-    private void FireLaser()
+    private void FireLaser(float angleToTarget)
     {
+        Laser laser = _laserPrefab.GetComponent<Laser>();
+        laser.SetAngle(angleToTarget);
         Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
         _audioSource.PlayOneShot(_laserSound);
-        CalculateNextFireTime();
     }
     
     private void CalculateNextFireTime()

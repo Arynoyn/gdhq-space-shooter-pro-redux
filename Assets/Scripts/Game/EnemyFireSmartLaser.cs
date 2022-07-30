@@ -37,69 +37,85 @@ public class EnemyFireSmartLaser : MonoBehaviour, IFireLaserBehavior
     {
         _fireActive = false;
     }
-    
+
+    public void Fire(Transform target)
+    {
+        float angleToTarget = CalculateFiringAngle(target);
+        FireLaser(angleToTarget);
+    }
+
     IEnumerator FireLaserRoutine()
     {
         while (_fireActive)
         {
             yield return new WaitForSeconds(_nextFireDelay);
-            FireLaser();
+            Transform closestTarget = FindClosestTarget();
+            Fire(closestTarget);
         }
     }
     
-    private void FireLaser()
+    private void FireLaser(float angleToTarget)
     {
-        float targetVerticalPosition = FindTargetVerticalPosition();
-        Vector3 position = transform.position;
-        bool targetBehindEnemy = targetVerticalPosition - position.y > 0;
-        
         Laser laser = _laserPrefab.GetComponent<Laser>();
-        
-        float laserOrientationAngle;
-        if (targetBehindEnemy)
-        {
-            laserOrientationAngle = 0f;
-            _laserOffset = -_laserOffset;
-        }
-        else
-        {
-            laserOrientationAngle = 180f;
-        }
-        
-        laser.SetAngle(laserOrientationAngle);
-        Instantiate(_laserPrefab,  position + _laserOffset, Quaternion.identity);
+        laser.SetAngle(angleToTarget);
+        _laserOffset = SetLaserOffsetAccordingToFiringAngle(angleToTarget);
+        Instantiate(_laserPrefab,  transform.position + _laserOffset, Quaternion.identity);
         
         _audioSource.PlayOneShot(_laserSound);
         CalculateNextFireTime();
     }
 
-    private float FindTargetVerticalPosition()
+    private Vector3 SetLaserOffsetAccordingToFiringAngle(float angleToTarget)
     {
-        Player[] players = FindObjectsOfType<Player>();
-        if (players.Length > 0)
-        {
-            Player closestPlayer = players[0];
-            float? nearestDistance = null;
-            foreach (Player player in players)
-            {
-                float distance = Vector3.Distance(transform.position, player.transform.position);
-                if (nearestDistance == null || distance < nearestDistance)
-                {
-                    nearestDistance = distance;
-                    closestPlayer = player;
-                }
-            }
-
-            return closestPlayer.transform.position.y - transform.position.y;
-        }
-        else
-        {
-            LogError("No Players found!");
-            return transform.position.y;
-        }
+        return angleToTarget < 180f
+            ? -_laserOffset
+            : _laserOffset;
     }
 
-    private void CalculateNextFireTime()
+    private float CalculateFiringAngle(Transform closestTarget)
+    {
+        float targetVerticalPosition = FindTargetVerticalPosition(closestTarget.position);
+        bool targetBehindEnemy = targetVerticalPosition - transform.position.y > 0;
+
+        float laserOrientationAngle = targetBehindEnemy
+            ? 0f
+            : 180f;
+
+        return laserOrientationAngle;
+    }
+
+    private float FindTargetVerticalPosition(Vector3 targetPosition)
+    {
+        return targetPosition.y - transform.position.y;
+    }
+
+private Transform FindClosestTarget()
+{
+    Player[] players = FindObjectsOfType<Player>();
+    if (players.Length > 0)
+    {
+        Player closestPlayer = players[0];
+        float? nearestDistance = null;
+        foreach (Player player in players)
+        {
+            float distance = Vector3.Distance(transform.position, player.transform.position);
+            if (nearestDistance == null || distance < nearestDistance)
+            {
+                nearestDistance = distance;
+                closestPlayer = player;
+            }
+        }
+
+        return closestPlayer.transform;
+    }
+    else
+    {
+        LogError("No Players found!");
+        return transform;
+    }
+}
+
+private void CalculateNextFireTime()
     {
         _nextFireDelay = Random.Range(3.0f, 7.0f);
     }

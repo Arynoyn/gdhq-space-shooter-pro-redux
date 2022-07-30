@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 2908601835851149235}
   - component: {fileID: 2908601835851149244}
-  - component: {fileID: 2908601835851149245}
-  - component: {fileID: 2908601835851149246}
+  - component: {fileID: 2631310656966823824}
   - component: {fileID: 2908601835851149247}
+  - component: {fileID: 2908601835851149245}
   - component: {fileID: 3749632177121463977}
   m_Layer: 0
   m_Name: Hazard_PowerUp
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,24 +86,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2908601835851149245
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2908601835851149240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df72262d97e5a7c47983ac14fe0351cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _movementSpeed: 3
-  _type: 6
-  _effectDuration: 0
-  _spawnWeight: 10
---- !u!58 &2908601835851149246
-CircleCollider2D:
+--- !u!61 &2631310656966823824
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -116,8 +100,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 2.56
+  m_Size: {x: 4.2, y: 4.2}
+  m_EdgeRadius: 0
 --- !u!50 &2908601835851149247
 Rigidbody2D:
   serializedVersion: 4
@@ -139,6 +133,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2908601835851149245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908601835851149240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df72262d97e5a7c47983ac14fe0351cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movementSpeed: 3
+  _type: 6
+  _effectDuration: 0
+  _spawnWeight: 10
 --- !u!95 &3749632177121463977
 Animator:
   serializedVersion: 3

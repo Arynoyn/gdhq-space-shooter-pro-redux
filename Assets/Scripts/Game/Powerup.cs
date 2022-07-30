@@ -40,10 +40,19 @@ public class Powerup : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            var player = other.gameObject.GetComponent<Player>();
+            Player player = other.gameObject.GetComponent<Player>();
             if (player != null)
             {
                 player.ActivatePowerup(this);
+            }
+            Destroy(gameObject);
+        }
+        else if (other.gameObject.CompareTag("Laser"))
+        {
+            Laser laser = other.GetComponent<Laser>();
+            if (laser == null || laser.GetOwnerType() != LaserType.Enemy)
+            {
+                return;
             }
             Destroy(gameObject);
         }
