@@ -96,13 +96,37 @@ public abstract class Enemy : MonoBehaviour
     
     private void Update()
     {
-        transform.Translate(_movementDirection * (_movementSpeed * Time.deltaTime));
+        CalculateMovement();
+        Transform powerupTransform = DetectPowerup();
+        if (powerupTransform is { })
+        {
+            _fireLaserBehavior?.Fire(powerupTransform);
+        }
+    }
 
+    private Transform DetectPowerup()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position,Vector2.down);
+        return hit
+            ? hit.collider.CompareTag("Powerup")
+                ? hit.transform
+                : null
+            : null;
+    }
+
+    private void CalculateMovement()
+    {
+        transform.Translate(_movementDirection * (_movementSpeed * Time.deltaTime)); 
         if (transform.position.y < _viewportBounds.Bottom && !_isDestroyed)
         {
-            float randomXPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
-            transform.position = new Vector3(randomXPos, _viewportBounds.Top, _zPos);
+            RelocateToTopOfScreenWithRandomHorizontalPosition();
         }
+    }
+
+    private void RelocateToTopOfScreenWithRandomHorizontalPosition()
+    {
+        float randomXPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+        transform.position = new Vector3(randomXPos, _viewportBounds.Top, _zPos);
     }
 
     public float GetMovementSpeed()

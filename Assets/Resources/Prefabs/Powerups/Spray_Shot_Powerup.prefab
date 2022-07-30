@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 60339789850727075}
   - component: {fileID: 51288558336822860}
-  - component: {fileID: 4477971095194658129}
+  - component: {fileID: 6025382350637956175}
   - component: {fileID: 7654214850462666751}
   - component: {fileID: 6157097555278901640}
   - component: {fileID: 8509312916870801673}
   m_Layer: 0
   m_Name: Spray_Shot_Powerup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,8 +86,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &4477971095194658129
-CircleCollider2D:
+--- !u!61 &6025382350637956175
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -100,8 +100,18 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 2.56
+  m_Size: {x: 4.2, y: 4.2}
+  m_EdgeRadius: 0
 --- !u!50 &7654214850462666751
 Rigidbody2D:
   serializedVersion: 4
