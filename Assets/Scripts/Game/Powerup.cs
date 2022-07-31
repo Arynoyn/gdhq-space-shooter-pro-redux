@@ -7,8 +7,11 @@ public class Powerup : MonoBehaviour
     [SerializeField] private PowerupType _type = PowerupType.TripleShot;
     [SerializeField] private float _effectDuration; 
     [SerializeField] private int _spawnWeight;
+    private Vector3 _movementDirection = Vector3.down;
     
     private ViewportBounds _viewportBounds;
+    private Vector3 _defaultMovementDirection;
+    private float _defaultMovementSpeed;
 
     private void Start()
     {
@@ -24,11 +27,14 @@ public class Powerup : MonoBehaviour
                 Debug.LogError("Viewport Bounds is NULL on Powerup!");
             }
         }
+
+        _defaultMovementDirection = _movementDirection;
+        _defaultMovementSpeed = _movementSpeed;
     }
 
     private void Update()
     {
-        transform.Translate(Vector3.down * (_movementSpeed * Time.deltaTime));
+        transform.Translate(_movementDirection * (_movementSpeed * Time.deltaTime));
 
         if (transform.position.y < _viewportBounds.Bottom)
         {
@@ -71,5 +77,17 @@ public class Powerup : MonoBehaviour
     public int GetSpawnWeight()
     {
         return _spawnWeight;
+    }
+
+    public void MoveTowardsPosition(Vector3 targetPosition)
+    {
+        _movementDirection = (targetPosition - transform.position).normalized;
+        _movementSpeed += 0.5f;
+    }
+
+    public void ResumeDefaultMovement()
+    {
+        _movementDirection = _defaultMovementDirection;
+        _movementSpeed = _defaultMovementSpeed;
     }
 }

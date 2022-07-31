@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -39,6 +40,9 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private bool _sprayShotActive;
     private float _nextFire = -1f;
     private int _ammoCount;
+    
+    // Powerup Collection
+    private bool _powerupCollectionActive;
     
     // Thrusters Properties
     [Header("Thrusters")]
@@ -84,6 +88,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     // Player Input
     [Header("Input")]
     [SerializeField] private PlayerInput _playerInput;
+
+    private Powerup[] _powerupsOnScreen = { };
 
     void Start()
     {
@@ -159,8 +165,23 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     }
 
     void Update()
-    {       
+    {
         CalculateMovement();
+        CollectPowerupsOnScreen();
+    }
+
+    private void CollectPowerupsOnScreen()
+    {
+        if (_powerupCollectionActive && _powerupsOnScreen.Any())
+        {
+            _powerupsOnScreen.ToList().ForEach(p =>
+            {
+                if (p != null)
+                {
+                    p.MoveTowardsPosition(transform.position);
+                }
+            });
+        }
     }
 
     private void CalculateMovement()
@@ -256,6 +277,21 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     {
         if (context.performed) { _thrusterActived = true; }
         if (context.canceled) { _thrusterActived = false; }
+    }
+
+    public void OnPowerupCollect(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _powerupsOnScreen = FindObjectsOfType<Powerup>();
+            _powerupCollectionActive = true;
+        }
+
+        if (context.canceled)
+        {
+            _powerupCollectionActive = false;
+            _powerupsOnScreen.ToList().ForEach(p => p.ResumeDefaultMovement());
+        }
     }
 
     public void Damage()
