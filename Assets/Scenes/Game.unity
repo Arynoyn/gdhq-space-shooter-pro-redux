@@ -204,7 +204,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29454544}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.11, z: 0}
+  m_LocalPosition: {x: -0.05, y: -2.76, z: 0}
   m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
   m_Children:
   - {fileID: 1111914917}
@@ -212,7 +212,7 @@ Transform:
   - {fileID: 1954701522}
   - {fileID: 409618423}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &29454547
 MonoBehaviour:
@@ -237,6 +237,7 @@ MonoBehaviour:
   _laserPrefab: {fileID: 7979875971813368654, guid: d37d25b200e82b645881adf17100297b, type: 3}
   _tripleShotPrefab: {fileID: 3258743436277645370, guid: 82943fbe5037ecc4c9c341d7b696ce14, type: 3}
   _sprayShotPrefab: {fileID: 188501191748951299, guid: 19f40a289cd1147eb9bf8d90b6623a97, type: 3}
+  _homingMissilePrefab: {fileID: 4884922995301855138, guid: 0a8aabc1939a48a479b19cd4bb4e5682, type: 3}
   _maxThrusterCharge: 100
   _thrusterUseRate: 1
   _thrusterRechargeRate: 1
@@ -812,7 +813,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7419307106082538394, guid: 503e07ba976474e1fa8ffc8518a81c96, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7419307106082538394, guid: 503e07ba976474e1fa8ffc8518a81c96, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1023,7 +1024,7 @@ Transform:
   m_LocalScale: {x: 0.93, y: 0.93, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &477426939
 GameObject:
@@ -1370,7 +1371,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 86303790419096588, guid: e4a6d5f7234b64b0bbfd676740370477, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 86303790419096588, guid: e4a6d5f7234b64b0bbfd676740370477, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2062,7 +2063,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1049582730
 GameObject:
@@ -17800,7 +17801,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7419307106082538394, guid: 503e07ba976474e1fa8ffc8518a81c96, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7419307106082538394, guid: 503e07ba976474e1fa8ffc8518a81c96, type: 3}
       propertyPath: m_LocalPosition.x

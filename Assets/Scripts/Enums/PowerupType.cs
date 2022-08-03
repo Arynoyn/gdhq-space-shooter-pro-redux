@@ -9,5 +9,6 @@ public enum PowerupType
     Ammo,
     Health,
     SprayShot,
-    Hazard
+    Hazard,
+    HomingMissile
 }

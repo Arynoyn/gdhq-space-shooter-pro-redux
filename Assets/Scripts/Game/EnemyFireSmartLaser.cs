@@ -57,7 +57,7 @@ public class EnemyFireSmartLaser : MonoBehaviour, IFireLaserBehavior
     private void FireLaser(float angleToTarget)
     {
         Laser laser = _laserPrefab.GetComponent<Laser>();
-        laser.SetAngle(angleToTarget);
+        laser.SetTrajectoryAngle(angleToTarget);
         _laserOffset = SetLaserOffsetAccordingToFiringAngle(angleToTarget);
         Instantiate(_laserPrefab,  transform.position + _laserOffset, Quaternion.identity);
         

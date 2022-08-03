@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: -4126391695689216450}
   m_Layer: 0
   m_Name: Dodger Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pointValue: 10
-  _movementSpeed: 6
+  _movementSpeed: 5
   _maxShieldStrength: 1
   _shieldChancePercentage: 20
   _explosionSound: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f51e8489b22154b98c90f9661d21bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dodgeSpeed: 8
+  _dodgeSpeed: 7
   _range: 2.5
 --- !u!1001 &4705619411420227933
 PrefabInstance:

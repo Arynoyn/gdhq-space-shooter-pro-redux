@@ -139,7 +139,7 @@ public abstract class Enemy : MonoBehaviour
         _movementSpeed = newMovementSpeed;
     }
 
-    public void SetZAxisRotation(float angle)
+    public void SetTrajectoryAngle(float angle)
     {
         transform.rotation = Quaternion.Euler(new Vector3(0,0,angle));
     }
