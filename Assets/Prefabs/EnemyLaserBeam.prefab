@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d359831fcc0284e99b46f8a1eb8b337d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 6
+  _movementSpeed: 8
   _type: 1
   _trajectoryAngle: 180
   _verticalOffset: 0
@@ -143,7 +143,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.00000004371139
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_LocalRotation.x
@@ -151,11 +151,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5915126019505265817, guid: d37d25b200e82b645881adf17100297b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

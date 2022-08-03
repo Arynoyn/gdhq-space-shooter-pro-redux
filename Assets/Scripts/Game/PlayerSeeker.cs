@@ -89,7 +89,7 @@ public class PlayerSeeker : MonoBehaviour
     {
         float angle = 0;
         _enemy.SetMovementSpeed(_normalSpeed);
-        _enemy.SetZAxisRotation(angle);
+        _enemy.SetTrajectoryAngle(angle);
         
     }
 
@@ -100,7 +100,7 @@ public class PlayerSeeker : MonoBehaviour
         float angle = Mathf.Atan2(targetAngleDirectionY, targetAngleDirectionX) * Mathf.Rad2Deg;
         angle -= 90; // shift 
         _enemy.SetMovementSpeed(_seekingSpeed);
-        _enemy.SetZAxisRotation(angle);
+        _enemy.SetTrajectoryAngle(angle);
         
     }
 }

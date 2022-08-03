@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class UIManager : MonoBehaviour
     private Camera _camera;
     private CameraShake _cameraShaker;
 
-    private void Start()
+    private void Awake()
     {
         _camera = Camera.main;
         if (_camera == null)
@@ -53,6 +54,10 @@ public class UIManager : MonoBehaviour
                 LogError("Camera Shaker is Null on UI Manager!");
             }
         }
+    }
+
+    private void Start()
+    {
         _isScoreTextNull = _scoreText == null;
         if (_isScoreTextNull) { LogMessage("Score Text object on UI Manager is NULL"); }
         

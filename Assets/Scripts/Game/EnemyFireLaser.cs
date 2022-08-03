@@ -56,7 +56,7 @@ public class EnemyFireLaser : MonoBehaviour, IFireLaserBehavior
     private void FireLaser(float angleToTarget)
     {
         Laser laser = _laserPrefab.GetComponent<Laser>();
-        laser.SetAngle(angleToTarget);
+        laser.SetTrajectoryAngle(angleToTarget);
         Instantiate(_laserPrefab, transform.position + _laserOffset, Quaternion.identity);
         _audioSource.PlayOneShot(_laserSound);
     }

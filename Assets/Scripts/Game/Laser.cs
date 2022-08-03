@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    [SerializeField] private protected float _speed = 8.0f;
+    [SerializeField] private protected float _movementSpeed = 8.0f;
     [SerializeField] private protected LaserType _type = LaserType.Player;
     [SerializeField] private protected float _trajectoryAngle = 0.0f;
     [SerializeField] protected float _verticalOffset;
@@ -56,7 +56,7 @@ public class Laser : MonoBehaviour
     private void CalculateMovement()
     {
         Vector3 movementVector = (Quaternion.Euler(0, 0 , _trajectoryAngle) * Vector3.up).normalized;
-        transform.Translate(movementVector * (_speed * Time.deltaTime));
+        transform.Translate(movementVector * (_movementSpeed * Time.deltaTime));
         if (transform.position.y > _viewportBounds.Top || transform.position.y < _viewportBounds.Bottom)
         {
             DestroyLaser();
@@ -89,12 +89,22 @@ public class Laser : MonoBehaviour
         return _trajectoryAngle;
     }
     
-    public void SetAngle(float angle)
+    public void SetTrajectoryAngle(float angle)
     {
         _trajectoryAngle = angle;
         transform.rotation = Quaternion.Euler(0,0, _trajectoryAngle);
     }
     
+    public float GetMovementSpeed()
+    {
+        return _movementSpeed;
+    }
+    
+    public void SetMovementSpeed(float newMovementSpeed)
+    {
+        _movementSpeed = newMovementSpeed;
+    }
+
     protected virtual void SetOffsetPosition()
     {
         Vector3 verticalOffsetFix = transform.up * _verticalOffset;
