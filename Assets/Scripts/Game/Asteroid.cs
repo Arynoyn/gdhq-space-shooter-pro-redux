@@ -7,8 +7,7 @@ public class Asteroid : MonoBehaviour
 {
     [SerializeField] private float _rotationSpeed = 10.0f;
     [SerializeField] private GameObject _explosionPrefab;
-    [SerializeField] private GameManager _gameManager;
-
+    
 
     void Start()
     {
@@ -17,7 +16,7 @@ public class Asteroid : MonoBehaviour
             Debug.LogError("Explosion Prefab is NULL in Asteroid");
         }
         
-        if (_gameManager == null)
+        if (GameManager.Instance == null)
         {
             Debug.LogError("Game Manager is NULL in Asteroid");
         }
@@ -44,7 +43,7 @@ public class Asteroid : MonoBehaviour
 
             Destroy(other.gameObject);
             if (_explosionPrefab != null) { Instantiate(_explosionPrefab, transform.position, Quaternion.identity); }
-            _gameManager.StartGame();
+            GameManager.Instance.StartGame();
             Destroy(gameObject);
         }
     }

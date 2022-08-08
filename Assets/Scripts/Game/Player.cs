@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,10 +11,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private int _maxLives = 3;
     private int _score;
     private int _lives;
-    
-    // Game State Managers
-    [Header("Managers")]
-    private GameManager _gameManager;
+    private float _height;
+    private float _width;
     
     // Movement Properties
     [Header("Base Movement")]
@@ -23,10 +22,11 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     private Vector2 _direction;
     
     // Play Space Boundaries Properties
-    private float _topMovementLimit = 0f;
-    private float _bottomMovementLimit = -3.8f;
-    private float _leftMovementLimit = -9.5f;
-    private float _rightMovementLimit = 9.5f;
+    private ViewportBounds _viewportBounds;
+    [SerializeField] private float _playerMovementLimitFromTop = 0;
+    [SerializeField] private float _playerMovementLimitFromBottom = 0;
+    private float _movementLimitTop;
+    private float _movementLimitBottom;
     private float _zPos = 0f;
 
     // Projectile Properties
@@ -36,11 +36,15 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private GameObject _sprayShotPrefab;
+    [SerializeField] private GameObject _homingMissilePrefab;
     private bool _tripleShotActive;
     private bool _sprayShotActive;
-    private Vector3 _laserOffset = new Vector3(0f, 1.25f, 0f);
+    private bool _homingMissileActive;
     private float _nextFire = -1f;
     private int _ammoCount;
+    
+    // Powerup Collection
+    private bool _powerupCollectionActive;
     
     // Thrusters Properties
     [Header("Thrusters")]
@@ -87,6 +91,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     [Header("Input")]
     [SerializeField] private PlayerInput _playerInput;
 
+    private Powerup[] _powerupsOnScreen = { };
+
     void Start()
     {
         _lives = _maxLives;
@@ -102,8 +108,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         _playerAnimator = GetComponent<Animator>();
         if (_playerAnimator == null) { Debug.LogError("Animator in Player class is NULL"); }
         
-        _gameManager = FindObjectOfType<GameManager>();
-        if (_gameManager == null) { Debug.LogError("Game Manager in Player class is NULL"); }
+        if (GameManager.Instance == null) { Debug.LogError("Game Manager in Player class is NULL"); }
         
         _shieldVisualizer = transform.Find("Shield_Visualizer")?.gameObject;
         if (_shieldVisualizer == null) { Debug.LogError("Shield Visualizer in Player class is NULL"); }
@@ -123,6 +128,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (_laserPrefab == null) { Debug.LogError("Laser Prefab in Player class is NULL"); }
         if (_tripleShotPrefab == null) { Debug.LogError("Triple Shot Prefab in Player class is NULL"); }
         if (_sprayShotPrefab == null) { Debug.LogError("Spray Shot Prefab in Player class is NULL"); }
+        if (_homingMissilePrefab == null) { Debug.LogError("Homing Missile Prefab in Player class is NULL"); }
         
         _audioSource = GetComponent<AudioSource>();
         if (_audioSource == null) { Debug.LogError("AudioSource in Player class is NULL"); }
@@ -134,19 +140,51 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         
         transform.position = new Vector3(_horizontalStartPosition, _verticalStartPosition, _zPos);
         _score = 0;
-        if (_gameManager != null)
+        if (GameManager.Instance == null)
         {
-            _gameManager.SetScore(_score);
-            _gameManager.SetLives(_lives);
-            _gameManager.UpdateAmmoCount(_ammoCount);
-            _gameManager.UpdateMaxThrusterCharge(_maxThrusterCharge);
-            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            Debug.LogError("Game Manager is NULL");
+        }
+        else
+        {
+            _viewportBounds = GameManager.Instance.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Player!");
+            }
+            
+            GameManager.Instance.SetScore(_score);
+            GameManager.Instance.SetLives(_lives);
+            GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
+            GameManager.Instance.UpdateMaxThrusterCharge(_maxThrusterCharge);
+            GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
+            
+            var playerDimensions = transform.localScale;
+            _width = playerDimensions.x;
+            _height = playerDimensions.y;
+
+            _movementLimitBottom = _viewportBounds.Bottom + _playerMovementLimitFromBottom + _height / 2;
+            _movementLimitTop = _viewportBounds.Top - _playerMovementLimitFromTop - _height / 2;
         }
     }
 
     void Update()
-    {       
+    {
         CalculateMovement();
+        CollectPowerupsOnScreen();
+    }
+
+    private void CollectPowerupsOnScreen()
+    {
+        if (_powerupCollectionActive && _powerupsOnScreen.Any())
+        {
+            _powerupsOnScreen.ToList().ForEach(p =>
+            {
+                if (p != null)
+                {
+                    p.MoveTowardsPosition(transform.position);
+                }
+            });
+        }
     }
 
     private void CalculateMovement()
@@ -165,7 +203,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
 
             
             _thrusterCharge -= _thrusterCharge > 0 ? _thrusterUseRate : 0;
-            _gameManager.UpdateThrusterCharge(_thrusterCharge);
+            GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
             //TODO: Refactor Hacky Magic Numbers in local transforms below
             _thrusterVisualizer.transform.localPosition = new Vector3(0, -3.1f, 0);
             _thrusterVisualizer.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
@@ -184,16 +222,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             ? _movementSpeed * _speedBoostModifier 
             : _movementSpeed;
         transform.Translate(_direction * (modifiedSpeed * Time.deltaTime));
-        float yPosClamped = Mathf.Clamp(transform.position.y, _bottomMovementLimit, _topMovementLimit);
+        float yPosClamped = Mathf.Clamp(transform.position.y, _movementLimitBottom, _movementLimitTop);
         
         float xPos = transform.position.x;
-        if (xPos < _leftMovementLimit)
+        if (xPos < _viewportBounds.Left)
         {
-            xPos = _rightMovementLimit;
+            xPos = _viewportBounds.Right;
         }
-        else if (xPos > _rightMovementLimit)
+        else if (xPos > _viewportBounds.Right)
         {
-            xPos = _leftMovementLimit;
+            xPos = _viewportBounds.Left;
         }
         
         transform.position = new Vector3(xPos, yPosClamped, _zPos);
@@ -211,12 +249,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             if (_ammoCount > 0)
             {
                 _ammoCount--;
-                _gameManager.UpdateAmmoCount(_ammoCount);
+                GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _nextFire = Time.time + _fireRate;
-                Vector3 playerPosition = transform.position;
-                Vector3 laserSpawnOffset = _tripleShotActive
-                    ? playerPosition
-                    : playerPosition + _laserOffset;
                 GameObject shotPrefab;
                 
                 if (_tripleShotActive)
@@ -226,13 +260,16 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 else if (_sprayShotActive)
                 {
                     shotPrefab = _sprayShotPrefab;
+                } else if (_homingMissileActive)
+                {
+                    shotPrefab = _homingMissilePrefab;
                 }
                 else
                 {
                     shotPrefab = _laserPrefab;
                 }
                 
-                Instantiate(shotPrefab, laserSpawnOffset, Quaternion.identity);
+                Instantiate(shotPrefab, transform.position, Quaternion.identity);
                 if (_audioSource != null) { _audioSource.PlayOneShot(_laserSound); }
             }
             else
@@ -248,13 +285,28 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         if (context.canceled) { _thrusterActived = false; }
     }
 
+    public void OnPowerupCollect(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            _powerupsOnScreen = FindObjectsOfType<Powerup>();
+            _powerupCollectionActive = true;
+        }
+
+        if (context.canceled)
+        {
+            _powerupCollectionActive = false;
+            _powerupsOnScreen.ToList().ForEach(p => p.ResumeDefaultMovement());
+        }
+    }
+
     public void Damage()
     {
         if (_shieldsActive)
         {
             _shieldStrength--;
             SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
-            _gameManager.UpdateShieldStrength(_shieldStrength);
+            GameManager.Instance.UpdateShieldStrength(_shieldStrength);
             _shieldsActive = _shieldStrength > 0;
             if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
             _audioSource.PlayOneShot(_explosionSound);
@@ -262,8 +314,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         else
         {
             _lives--;
-            _gameManager.SetLives(_lives);
-            _gameManager.ShakeCamera();
+            GameManager.Instance.SetLives(_lives);
+            GameManager.Instance.ShakeCamera();
             _audioSource.PlayOneShot(_explosionSound);
             UpdateEngineDamageVisualizers(_lives);
             if (_lives <= 0)
@@ -304,6 +356,8 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
         switch (type)
         {
             case PowerupType.TripleShot:
+                if (_homingMissileActive) { StopCoroutine(nameof(HomingMissileCooldownRoutine)); }
+                _homingMissileActive = false;
                 if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
                 _sprayShotActive = false;
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
@@ -320,28 +374,43 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             case PowerupType.Shields:
                 _shieldStrength = _maxShieldStrength;
                 SetShieldVisualizerColor(_shieldVisualizer, _shieldStrength);
-                _gameManager.UpdateShieldStrength(_shieldStrength);
+                GameManager.Instance.UpdateShieldStrength(_shieldStrength);
                 _shieldsActive = _shieldStrength > 0;
                 if (_shieldVisualizer != null) { _shieldVisualizer.SetActive(_shieldsActive); }
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             case PowerupType.Ammo:
                 _ammoCount = _maxAmmoCount;
-                _gameManager.UpdateAmmoCount(_ammoCount);
+                GameManager.Instance.UpdateAmmoCount(_ammoCount, _maxAmmoCount);
                 _audioSource.PlayOneShot(_powerupSound);
                 break;
             case PowerupType.Health:
                 if (_lives > 0 && _lives < _maxLives) { _lives++;  }
-                _gameManager.SetLives(_lives);
+                GameManager.Instance.SetLives(_lives);
                 UpdateEngineDamageVisualizers(_lives);
                 _audioSource.PlayOneShot(_powerupSound);
                 Debug.Log("Health Powerup Collected");
                 break;
             case PowerupType.SprayShot:
+                if (_homingMissileActive) { StopCoroutine(nameof(HomingMissileCooldownRoutine)); }
+                _homingMissileActive = false;
                 if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
                 _tripleShotActive = false;
                 if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
                 _sprayShotActive = true;
+                _audioSource.PlayOneShot(_powerupSound);
+                StartCoroutine(nameof(SprayShotCooldownRoutine), powerup.GetEffectDuration());
+                break;
+            case PowerupType.Hazard:
+                Damage();
+                break;
+            case PowerupType.HomingMissile:
+                if (_tripleShotActive) { StopCoroutine(nameof(TripleShotCooldownRoutine)); }
+                _tripleShotActive = false;
+                if (_sprayShotActive) { StopCoroutine(nameof(SprayShotCooldownRoutine)); }
+                _sprayShotActive = false;
+                if (_homingMissileActive) { StopCoroutine(nameof(HomingMissileCooldownRoutine)); }
+                _homingMissileActive = true;
                 _audioSource.PlayOneShot(_powerupSound);
                 StartCoroutine(nameof(SprayShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
@@ -353,7 +422,7 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
     public void IncreaseScore(int value)
     {
         _score += value;
-        _gameManager.SetScore(_score);
+        GameManager.Instance.SetScore(_score);
     }
     
     private void UpdateEngineDamageVisualizers(int lives)
@@ -387,13 +456,19 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
             _thrusterCharge = _maxThrusterCharge;
         }
 
-        _gameManager.UpdateThrusterCharge(_thrusterCharge);
+        GameManager.Instance.UpdateThrusterCharge(_thrusterCharge);
     }
     
     IEnumerator TripleShotCooldownRoutine(float duration)
     {
         yield return new WaitForSeconds(duration);
         _tripleShotActive = false;
+    }
+    
+    IEnumerator HomingMissileCooldownRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        _homingMissileActive = false;
     }
     
     IEnumerator SpeedBoostCooldownRoutine(float duration)

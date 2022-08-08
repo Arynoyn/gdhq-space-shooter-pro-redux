@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1167229198950918777
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.06797829
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.9976868
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 425444187938239781, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2499421541052763158, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 25e8d33cc61063f43bae1f3d9d8c3ceb, type: 3}
+    - target: {fileID: 4129785537009830642, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: m_Name
+      value: BossEnemyLaser
+      objectReference: {fileID: 0}
+    - target: {fileID: 7894332578216402915, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}
+      propertyPath: _trajectoryAngle
+      value: -187.79575
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6e4d14cdfa1f94da1a20736eb4745552, type: 3}

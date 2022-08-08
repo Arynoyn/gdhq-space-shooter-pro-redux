@@ -3,19 +3,36 @@ using UnityEngine;
 
 public class Laser : MonoBehaviour
 {
-    [SerializeField] private float _speed = 8.0f;
-    [SerializeField] private LaserType _type = LaserType.Player;
-    [SerializeField] private float _trajectoryAngle = 0.0f;
+    [SerializeField] private protected float _movementSpeed = 8.0f;
+    [SerializeField] private protected LaserType _type = LaserType.Player;
+    [SerializeField] private protected float _trajectoryAngle = 0.0f;
+    [SerializeField] protected float _verticalOffset;
+    [SerializeField] protected float _horizontalOffset;
     private bool _hasParent;
-    private float _screenLimitTop = 8.0f;
-    private float _screenLimitBottom = -5.0f;
+    
+    protected ViewportBounds _viewportBounds;
 
-    private void Start()
+    protected virtual void Start()
     {
+        SetOffsetPosition();
+        
         _hasParent = transform.parent != null;
+        
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("Game Manager is NULL");
+        }
+        else
+        {
+            _viewportBounds = GameManager.Instance.GetViewportBounds();
+            if (_viewportBounds == null)
+            {
+                Debug.LogError("Viewport Bounds is NULL on Laser!");
+            }
+        }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         CalculateMovement();
     }
@@ -24,18 +41,23 @@ public class Laser : MonoBehaviour
     {
         if (_type == LaserType.Enemy && other.CompareTag("Player"))
         {
-            Player player = other.GetComponent<Player>();
-            if (player == null) { Debug.LogError("Player is NULL during collision with Laser"); }
-            else { player.Damage(); }
+            DamagePlayer(other);
             DestroyLaser();
         }
+    }
+    
+    protected static void DamagePlayer(Collider2D other)
+    {
+        Player player = other.GetComponent<Player>();
+        if (player == null) { Debug.LogError("Player is NULL during collision with Laser"); }
+        else { player.Damage(); }
     }
 
     private void CalculateMovement()
     {
         Vector3 movementVector = (Quaternion.Euler(0, 0 , _trajectoryAngle) * Vector3.up).normalized;
-        transform.Translate(movementVector * (_speed * Time.deltaTime));
-        if (transform.position.y > _screenLimitTop || transform.position.y < _screenLimitBottom)
+        transform.Translate(movementVector * (_movementSpeed * Time.deltaTime));
+        if (transform.position.y > _viewportBounds.Top || transform.position.y < _viewportBounds.Bottom)
         {
             DestroyLaser();
         }
@@ -43,6 +65,7 @@ public class Laser : MonoBehaviour
 
     private void DestroyLaser()
     {
+        //TODO: Don't destroy parent if there are still active lasers on screen (SprayShot)
         if (_hasParent)
         {
             Destroy(transform.parent.gameObject);
@@ -66,9 +89,26 @@ public class Laser : MonoBehaviour
         return _trajectoryAngle;
     }
     
-    public void SetAngle(float angle)
+    public void SetTrajectoryAngle(float angle)
     {
         _trajectoryAngle = angle;
         transform.rotation = Quaternion.Euler(0,0, _trajectoryAngle);
+    }
+    
+    public float GetMovementSpeed()
+    {
+        return _movementSpeed;
+    }
+    
+    public void SetMovementSpeed(float newMovementSpeed)
+    {
+        _movementSpeed = newMovementSpeed;
+    }
+
+    protected virtual void SetOffsetPosition()
+    {
+        Vector3 verticalOffsetFix = transform.up * _verticalOffset;
+        Vector3 horizontalOffsetFix = transform.right * _horizontalOffset;
+        transform.position = transform.position + verticalOffsetFix + horizontalOffsetFix;
     }
 }

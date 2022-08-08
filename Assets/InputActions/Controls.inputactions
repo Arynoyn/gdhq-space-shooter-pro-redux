@@ -28,6 +28,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Powerup Collect",
+                    "type": "Button",
+                    "id": "ee5656e6-db5f-4327-9806-dd19f82b7dc6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -270,6 +278,28 @@
                     "processors": "",
                     "groups": "Touch",
                     "action": "Speed Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "46827177-b297-4aa5-a5e5-0d9a907a29a7",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Powerup Collect",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da0d4d4d-da7f-4a89-98d9-6059ff864ab6",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Powerup Collect",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

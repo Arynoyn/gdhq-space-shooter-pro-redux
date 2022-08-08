@@ -1,9 +1,14 @@
-﻿public enum PowerupType
+﻿using System;
+
+[Serializable]
+public enum PowerupType
 {
     TripleShot,
     SpeedBoost,
     Shields,
     Ammo,
     Health,
-    SprayShot
+    SprayShot,
+    Hazard,
+    HomingMissile
 }

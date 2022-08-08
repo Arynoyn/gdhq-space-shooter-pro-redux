@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03a461ef2a2e74986afff841a6cd74e5, type: 3}
+  m_Name: WavesConfig 1
+  m_EditorClassIdentifier: 
+  _waves:
+  - {fileID: 11400000, guid: fb887dc6e913a4cf581dc7645ebe44a1, type: 2}
+  - {fileID: 11400000, guid: e5fea7ecfc1fd40b29375ff8cde5d584, type: 2}
+  - {fileID: 11400000, guid: 9a95adf485d554db5a38c42050232723, type: 2}
+  - {fileID: 11400000, guid: 15f350383aab0c64097b680c5e3d9908, type: 2}
+  - {fileID: 11400000, guid: 1d7e07bb978b7064499d37839a8bc619, type: 2}
+  - {fileID: 11400000, guid: e66bb9ca36b0cfd41b03574d45d871d6, type: 2}
+  _timeBetweenWaves: 5
+  _startingWaveIndex: 0

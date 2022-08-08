@@ -41,6 +41,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Powerup Collect"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee5656e6-db5f-4327-9806-dd19f82b7dc6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -285,6 +293,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Speed Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46827177-b297-4aa5-a5e5-0d9a907a29a7"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Powerup Collect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da0d4d4d-da7f-4a89-98d9-6059ff864ab6"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Powerup Collect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -447,6 +477,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_SpeedBoost = m_Player.FindAction("Speed Boost", throwIfNotFound: true);
+        m_Player_PowerupCollect = m_Player.FindAction("Powerup Collect", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ExitGame = m_UI.FindAction("Exit Game", throwIfNotFound: true);
@@ -503,6 +534,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_SpeedBoost;
+    private readonly InputAction m_Player_PowerupCollect;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -510,6 +542,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @SpeedBoost => m_Wrapper.m_Player_SpeedBoost;
+        public InputAction @PowerupCollect => m_Wrapper.m_Player_PowerupCollect;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -528,6 +561,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SpeedBoost.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpeedBoost;
                 @SpeedBoost.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpeedBoost;
                 @SpeedBoost.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSpeedBoost;
+                @PowerupCollect.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPowerupCollect;
+                @PowerupCollect.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPowerupCollect;
+                @PowerupCollect.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPowerupCollect;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -541,6 +577,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @SpeedBoost.started += instance.OnSpeedBoost;
                 @SpeedBoost.performed += instance.OnSpeedBoost;
                 @SpeedBoost.canceled += instance.OnSpeedBoost;
+                @PowerupCollect.started += instance.OnPowerupCollect;
+                @PowerupCollect.performed += instance.OnPowerupCollect;
+                @PowerupCollect.canceled += instance.OnPowerupCollect;
             }
         }
     }
@@ -636,6 +675,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnSpeedBoost(InputAction.CallbackContext context);
+        void OnPowerupCollect(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
