@@ -17,6 +17,7 @@ public class SpawnManager : MonoBehaviour
     [Header("Enemy Wave Spawning")]
     [SerializeField] private WavesConfig _wavesConfig;
     [SerializeField] private GameObject _enemyContainer;
+    [SerializeField] private Wave _bossWave;
     
     [Header("Powerup Spawning")]
     [SerializeField] private int _powerupMinSpawnRate = 3;
@@ -35,6 +36,7 @@ public class SpawnManager : MonoBehaviour
     private bool _wavesConfigIsNotNull;
     
     private ViewportBounds _viewportBounds;
+    private List<GameObject> _allEnemies = new List<GameObject>();
 
     private void Start()
     {
@@ -91,11 +93,24 @@ public class SpawnManager : MonoBehaviour
                     yield return StartCoroutine(SpawnAllEnemiesInWave(currentWave));
                     yield return new WaitForSeconds(_wavesConfig.GetTimeBetweenWaves());
                 }
+
+                _spawnEnemies = false;
+                StartCoroutine(SpawnBossCoroutine());
             }
         }
     }
 
-    private IEnumerator SpawnAllEnemiesInWave(Wave currentWave)
+    private IEnumerator SpawnBossCoroutine()
+    {
+        while (_allEnemies.Any(e => e != null))
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        
+        yield return StartCoroutine(SpawnAllEnemiesInWave(_bossWave, false));
+    }
+
+    private IEnumerator SpawnAllEnemiesInWave(Wave currentWave, bool randomizeHorizontalPosition = true)
     {
         if (currentWave is { })
         {
@@ -107,7 +122,7 @@ public class SpawnManager : MonoBehaviour
                 }
                 else
                 {
-                    SpawnNonPathedEnemies(currentWave);
+                    SpawnNonPathedEnemies(currentWave, randomizeHorizontalPosition);
                 }
                 
 
@@ -129,6 +144,7 @@ public class SpawnManager : MonoBehaviour
                 Quaternion.identity,
                 _enemyContainer.transform);
 
+            _allEnemies.Add(instantiatedEnemy);
             EnemyPathing enemyPathing = instantiatedEnemy.GetComponent<EnemyPathing>();
             if (enemyPathing is { })
             {
@@ -142,14 +158,17 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private void SpawnNonPathedEnemies(Wave currentWave)
+    private void SpawnNonPathedEnemies(Wave currentWave, bool randomizeHorizontalPosition = true)
     {
         var enemyPrefab = currentWave.GetEnemyPrefab();
         if (enemyPrefab != null)
         {
-            var xPos = Random.Range(_viewportBounds.Left, _viewportBounds.Right);
+            var xPos = randomizeHorizontalPosition 
+                ? Random.Range(_viewportBounds.Left, _viewportBounds.Right) 
+                : (_viewportBounds.Left + _viewportBounds.Right) / 2;
             var spawnPosition = new Vector3(xPos, _viewportBounds.Top, _zPos);
-            Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
+            var instantiatedEnemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity, _enemyContainer.transform);
+            _allEnemies.Add(instantiatedEnemy);
         }
     }
 

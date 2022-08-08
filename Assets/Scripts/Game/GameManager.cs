@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
@@ -109,5 +110,17 @@ public class GameManager : MonoBehaviour, Controls.IUIActions
     public ViewportBounds GetViewportBounds()
     {
         return _uiManager.GetViewportBounds();
+    }
+
+    public void LoadCredits()
+    {
+        StartCoroutine(LoadCreditsCoroutine());
+    }
+    
+    private IEnumerator LoadCreditsCoroutine()
+    {
+        yield return new WaitForSeconds(3);
+        SceneManager.LoadScene("Win_Screen");
+        // Display Credits / Win Screen
     }
 }

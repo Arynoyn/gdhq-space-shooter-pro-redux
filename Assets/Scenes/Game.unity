@@ -2261,8 +2261,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc8f8ccc39bcfd64c966425360393e5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wavesConfig: {fileID: 11400000, guid: 8d7894fd716228c4bbcc4a3b9be4bd90, type: 2}
+  _wavesConfig: {fileID: 11400000, guid: f10b3d49e2d9146c09e28b73af75d884, type: 2}
   _enemyContainer: {fileID: 317955648}
+  _bossWave: {fileID: 11400000, guid: 173daeffd34b9f846bd2af5b66f6ebdb, type: 2}
   _powerupMinSpawnRate: 3
   _powerupMaxSpawnRate: 7
   _spawnStartDelayTime: 2
