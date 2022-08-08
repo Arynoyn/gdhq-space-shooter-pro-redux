@@ -42,6 +42,7 @@ public class EnemyFireLaser : MonoBehaviour, IFireLaserBehavior
     }
 
     public void Fire(Transform target) { FireLaser(downAngle); }
+    public void FireAtClosestTarget() { FireLaser(downAngle); }
 
     IEnumerator FireLaserRoutine()
     {

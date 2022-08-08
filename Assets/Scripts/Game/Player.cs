@@ -414,7 +414,6 @@ public class Player : MonoBehaviour, Controls.IPlayerActions
                 _audioSource.PlayOneShot(_powerupSound);
                 StartCoroutine(nameof(SprayShotCooldownRoutine), powerup.GetEffectDuration());
                 break;
-                break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(type), type, null);
         }

@@ -16,5 +16,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: fb887dc6e913a4cf581dc7645ebe44a1, type: 2}
   - {fileID: 11400000, guid: e5fea7ecfc1fd40b29375ff8cde5d584, type: 2}
   - {fileID: 11400000, guid: 9a95adf485d554db5a38c42050232723, type: 2}
+  - {fileID: 11400000, guid: 15f350383aab0c64097b680c5e3d9908, type: 2}
+  - {fileID: 11400000, guid: 1d7e07bb978b7064499d37839a8bc619, type: 2}
+  - {fileID: 11400000, guid: e66bb9ca36b0cfd41b03574d45d871d6, type: 2}
   _timeBetweenWaves: 5
   _startingWaveIndex: 0

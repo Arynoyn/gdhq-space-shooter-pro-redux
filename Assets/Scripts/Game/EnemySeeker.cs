@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -41,16 +42,16 @@ public class EnemySeeker : MonoBehaviour
     {
         Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, _range);
         
-        Enemy enemy = null;
-        bool _isInDistance = colliderArray.Any(c => c.TryGetComponent(out enemy));
+        GameObject enemy = null;
+        bool _isInDistance = colliderArray.Any(c => c.CompareTag("Enemy"));
         
         if (_isInDistance)
         {
-            Enemy[] enemies = colliderArray
+            GameObject[] enemies = colliderArray
                 .Where(c => c.CompareTag("Enemy"))
-                .Select(c => c.GetComponent<Enemy>())
+                .Select(c => c.gameObject)
                 .ToArray();
-            
+
             enemy = FindClosestTarget(enemies);
             switch (_seekingBehavior)
             {
@@ -102,13 +103,13 @@ public class EnemySeeker : MonoBehaviour
         _laser.SetTrajectoryAngle(_normalAngle);
     }
     
-    private Enemy FindClosestTarget(Enemy[] enemies)
+    private GameObject FindClosestTarget(ICollection<GameObject> enemies)
     {
-        if (enemies.Length > 0)
+        if (enemies.Count > 0)
         {
-            Enemy closestEnemy = enemies[0];
+            GameObject closestEnemy = enemies.First();
             float? nearestDistance = null;
-            foreach (Enemy enemy in enemies)
+            foreach (GameObject enemy in enemies)
             {
                 float distance = Vector3.Distance(transform.position, enemy.transform.position);
                 if (nearestDistance == null || distance < nearestDistance)
@@ -120,11 +121,9 @@ public class EnemySeeker : MonoBehaviour
 
             return closestEnemy;
         }
-        else
-        {
-            LogError("No Enemies found!");
-            return null;
-        }
+
+        LogError("No Enemies found!");
+        return null;
     }
 
     private void PointTowardsTarget(Transform enemy)
