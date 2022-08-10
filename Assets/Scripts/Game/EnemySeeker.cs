@@ -43,10 +43,13 @@ public class EnemySeeker : MonoBehaviour
         Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, _range);
         
         GameObject enemy = null;
+        
+        //Check to see if any of the found collider objects are enemies
         bool _isInDistance = colliderArray.Any(c => c.CompareTag("Enemy"));
         
         if (_isInDistance)
         {
+            //Select the GameObjects for all colliders that are tagged "Enemy" and store them in an array
             GameObject[] enemies = colliderArray
                 .Where(c => c.CompareTag("Enemy"))
                 .Select(c => c.gameObject)
