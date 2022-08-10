@@ -14,7 +14,7 @@ public class LaserBeam : Laser
         base.Start();
         SetOffsetPosition();
 
-        RaycastHit2D[] hits = new RaycastHit2D[] { };
+        RaycastHit2D[] hits = { };
         Vector3 bottomOfScreenFromLaser = default;
         if (_viewportBounds is {})
         {

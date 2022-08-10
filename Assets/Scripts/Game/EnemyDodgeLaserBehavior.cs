@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -27,6 +25,8 @@ public class EnemyDodgeLaserBehavior : MonoBehaviour
     void Update()
     {
         Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, _range);
+        
+        //Check to see if any of the found collider objects are player lasers
         bool _isInDistance = colliderArray.Any(c =>
         {
             Laser laser = c.GetComponent<Laser>();
@@ -34,6 +34,7 @@ public class EnemyDodgeLaserBehavior : MonoBehaviour
         });
         if (_isInDistance)
         {
+            //Select the laser components of all of the found collider objects that are player lasers
             Laser[] lasers = colliderArray
                 .Where(c => {
                     Laser laser = c.GetComponent<Laser>();

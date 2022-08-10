@@ -37,6 +37,8 @@ public class PlayerSeeker : MonoBehaviour
     {
         Collider2D[] colliderArray = Physics2D.OverlapCircleAll(transform.position, _range);
         Player player = null;
+        
+        //Check to see if any of the found collider objects are players and store the player in the above variable if found
         bool _isInDistance = colliderArray.Any(c => c.TryGetComponent(out player));
         
         if (_isInDistance)
