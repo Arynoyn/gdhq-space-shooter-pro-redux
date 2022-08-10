@@ -1,6 +1,5 @@
 #region
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -269,6 +268,8 @@ public class SpawnManager : MonoBehaviour
     
     private void InitializePowerupWeightsTable()
     {
+        //Iterate through the powerup prefabs, grab the powerup type and the spawn weight of each, and construct
+        //a powerup weight object. Store all of these objects in a list field for other functions to use.
         _powerupWeights = _powerupPrefabs.Select(powerup =>
             {
                 var powerupComponent = powerup.Value.GetComponent<Powerup>();
